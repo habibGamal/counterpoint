@@ -1,151 +1,145 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Vex, Formatter, StaveNote, Voice, StaveConnector, EasyScore } from "vexflow";
-import { RenderContext, Stave } from "vexflow/build/types/src";
-import DrawNotes from "./DrawNotes";
-let stave: Stave | null = null;
-let context: RenderContext | null = null;
-let voice: Voice | null = null;
+import abcjs, { TuneBook } from "abcjs";
+import { load } from "./test";
+import 'abcjs/abcjs-audio.css'
 function App() {
-  const { Renderer, Stave, Beam } = Vex.Flow;
-  const [currentNote, setCurrentNote] = useState<StaveNote | null>(null)
-  // useEffect(() => {
-  //   const { Factory, EasyScore, System } = Vex.Flow;
-
-  //   const div = document.getElementById("output") as HTMLDivElement;
-  //   // delete old svg
-  //   let child = div.lastElementChild;
-  //   while (child) {
-  //     div.removeChild(child);
-  //     child = div.lastElementChild;
-  //   }
-
-  //   const f =  new Factory({
-  //     renderer: { elementId: 'output', width: 900, height: 500 },
-  //   });
-  // }, [])
+  const [tab, setTab] = useState(
+    `X:1
+T:Keys and modes
+M:4/4
+K:C
+V:RH clef=treble
+V:LH clef=bass 
+L:1
+[V: RH]z|z|z|z|z|z|z|z|]
+L:1
+[V: LH]_F,|^F,|F,|^^F,|(D,|E),|D,|E,|]
+    `
+  );
+  const [currentElement, setCurrentElement] = useState<abcjs.AbcElem | null>(null);
   useEffect(() => {
-    const div = document.getElementById("output") as HTMLDivElement;
-    new DrawNotes(
-      {
-        clef: 'treble',
-        staves: 7,
-      },
-      {
-        clef: 'bass',
-        staves: 7,
-        notes: [
-          'c4/w',
-          'd4/w',
-          'e4/w',
-          'f4/w',
-          'g4/w',
-          'a4/w',
-          'b4/w',
-        ]
-      },
-      div,
-
-    )
-    // delete old svg
-    // let child = div.lastElementChild;
-    // while (child) {
-    //   div.removeChild(child);
-    //   child = div.lastElementChild;
-    // }
-
-    // const renderer = new Renderer(div, Renderer.Backends.SVG);
-    // renderer.resize(720, 800);
-    // context = renderer.getContext();
-    // context.clear();
-    // stave = new Stave(10, 40, 400);
-
-    // // Add a clef and time signature.
-    // stave.addClef("treble").addTimeSignature("4/4");
-
-    // Connect it to the rendering context and draw!
-    // stave.setContext(context).draw();
-    // Create the notes
-    // const notes = [
-    //   // new StaveNote({
-    //   //   keys: ['e/4'],
-    //   //   duration: "w",
-    //   // }),
-
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    //   new StaveNote({ keys: ["c/4"], duration: "8" }),
-    // ];
-
-    // const staveMeasure1 = new Stave(10, 0, 300);
-    // staveMeasure1.addClef("treble").setContext(context).draw();
-
-    // const notesMeasure1 = [new StaveNote({ keys: ["c/4"], duration: "q" }), new StaveNote({ keys: ["d/4"], duration: "q" }), new StaveNote({ keys: ["b/4"], duration: "qr" }), new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })];
-
-    // // Helper function to justify and draw a 4/4 voice
-    // Formatter.FormatAndDraw(context, staveMeasure1, notesMeasure1);
-
-    // // Measure 2 - second measure is placed adjacent to first measure.
-    // const staveMeasure2 = new Stave(10, 100, 400);
-    // // staveMeasure2.addClef("treble").setContext(context).draw();
-    // const score = new EasyScore();
-    // const notesMeasure2 = [new StaveNote({ keys: ["c/4"], duration: "q" }), new StaveNote({ keys: ["d/4"], duration: "q" }), new StaveNote({ keys: ["b/4"], duration: "qr" }), new StaveNote({ keys: ["c/4", "e/4", "g/4"], duration: "q" })];
-    // // draw the stave
-    // staveMeasure2.setContext(context).draw();
-    // const finalstave = new StaveConnector(staveMeasure1, staveMeasure2)
-    // finalstave.setContext(context).draw();
-    // // draw the notes on the stave
-    // Formatter.FormatAndDraw(context, staveMeasure2, notesMeasure2);
+    // const t = {tab,setTab,currentElement,setCurrentElement}
+    load({tab,setTab,currentElement,setCurrentElement});
 
 
-  }, []);
-  // useEffect(() => {
-  //   document.onkeydown = (e) => {
-  //     if (currentNote && context && stave && voice) {
+    // const editor = new abcjs.Editor("editor", {
+    //   canvas_id: "paper",
+    //   abcjsParams: {
+    //     clickListener:
+    //       (abcElem, tuneNumber, classes, analysis, drag) => {
+    //         // console.log(abcElem.abselem.counters.note);
 
-  //       const key = currentNote.getKeyLine(0);
-  //       if (e.key === 'ArrowUp' && key < 7.5) {
-  //         context.clear();
-  //         stave.setContext(context).draw();
-  //         currentNote.setKeyLine(0, key + .5)
-  //         voice.draw(context, stave);
-  //         console.log(key);
-  //       }
+    //         if (abcElem.abselem.counters.voice == 0)
+    //           setCurrentElement(abcElem);
+    //       }
+    //     ,
+    //     responsive: "resize"
+    //   },
 
-  //       if (e.key === 'ArrowDown' && key > -1.5) {
-  //         context.clear();
-  //         stave.setContext(context).draw();
-  //         currentNote.setKeyLine(0, key - .5)
-  //         voice.draw(context, stave);
-  //         console.log(currentNote.getKeyLine(0));
-  //       }
-  //     }
-  //   }
-    // document.onclick = ()=>{
-    //   setCurrentNote(null);
-    // }
-  //   return () => {
-  //     document.onkeydown = null;
-  //   }
-  // }, [currentNote]);
-  const unselectNote = () => {
-    console.log('unselect');
-    if (currentNote)
-      (currentNote.getAttributes().el as HTMLElement).onclick = () => {
-        setCurrentNote(currentNote);
-      }
-    setCurrentNote(null);
+    // });
+
+  }, [tab]);
+
+  const changeNote = (char: string) => {
+    if (currentElement === null) return;
+    const part1 = tab.substring(0, currentElement.startChar);
+    const part2 = tab.substring(currentElement.endChar);
+    const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
+    const length = orginalLength ? '/' + orginalLength : '';
+    setCurrentElement(null);
+    setTab(part1 + char + length + part2)
+  }
+  const changeNoteLength = (length: number) => {
+    if (currentElement === null) return;
+    const part1 = tab.substring(0, currentElement.startChar);
+    const part2 = tab.substring(currentElement.endChar);
+    const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
+    setCurrentElement(null);
+    setTab(part1 + note + '/' + length + part2)
+  }
+  const deleteNote = () => {
+    if (currentElement === null) return;
+    const part1 = tab.substring(0, currentElement.startChar);
+    const part2 = tab.substring(currentElement.endChar);
+    const nextMeasure = currentElement.abselem.counters.measure
+    const { measures } = abcjs.extractMeasures(part1 + part2)[0];
+    if (measures[nextMeasure].abc[0] !== '|') {
+      setCurrentElement(null);
+      setTab(part1 + part2)
+    }
+  }
+  const addNote = () => {
+    if (currentElement === null) return;
+    const part1 = tab.substring(0, currentElement.endChar);
+    const part2 = tab.substring(currentElement.endChar);
+    setCurrentElement(null);
+    setTab(part1 + 'z' + part2)
   }
   return (
     <div className="container bg">
-      <div id='dismissable' style={{ width: '100vw', height: currentNote ? '100vh' : '0px', position: 'absolute', top: 0, left: 0 }} onClick={unselectNote} ></div>
-      <h1>Welcome to Tauriii!</h1>
-      <div id="output"></div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => deleteNote()} className="rounded p-1 px-2 bg-gray-300">delete</button>
+        <button onClick={() => addNote()} className="rounded p-1 px-2 bg-gray-300">add</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNoteLength(1)} className="rounded p-1 px-2 bg-gray-300">Note = 1</button>
+        <button onClick={() => changeNoteLength(2)} className="rounded p-1 px-2 bg-gray-300">Note = /2</button>
+        <button onClick={() => changeNoteLength(4)} className="rounded p-1 px-2 bg-gray-300">Note = /4</button>
+        <button onClick={() => changeNoteLength(8)} className="rounded p-1 px-2 bg-gray-300">Note = /8</button>
+        <button onClick={() => changeNoteLength(16)} className="rounded p-1 px-2 bg-gray-300">Note = /16</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNote('C,,')} className="rounded p-1 px-2 bg-gray-300">C2</button>
+        <button onClick={() => changeNote('D,,')} className="rounded p-1 px-2 bg-gray-300">D2</button>
+        <button onClick={() => changeNote('E,,')} className="rounded p-1 px-2 bg-gray-300">E2</button>
+        <button onClick={() => changeNote('F,,')} className="rounded p-1 px-2 bg-gray-300">F2</button>
+        <button onClick={() => changeNote('G,,')} className="rounded p-1 px-2 bg-gray-300">G2</button>
+        <button onClick={() => changeNote('A,,')} className="rounded p-1 px-2 bg-gray-300">A2</button>
+        <button onClick={() => changeNote('B,,')} className="rounded p-1 px-2 bg-gray-300">B2</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNote('C,')} className="rounded p-1 px-2 bg-gray-300">C3</button>
+        <button onClick={() => changeNote('D,')} className="rounded p-1 px-2 bg-gray-300">D3</button>
+        <button onClick={() => changeNote('E,')} className="rounded p-1 px-2 bg-gray-300">E3</button>
+        <button onClick={() => changeNote('F,')} className="rounded p-1 px-2 bg-gray-300">F3</button>
+        <button onClick={() => changeNote('G,')} className="rounded p-1 px-2 bg-gray-300">G3</button>
+        <button onClick={() => changeNote('A,')} className="rounded p-1 px-2 bg-gray-300">A3</button>
+        <button onClick={() => changeNote('B,')} className="rounded p-1 px-2 bg-gray-300">B3</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNote('C')} className="rounded p-1 px-2 bg-gray-300">C4</button>
+        <button onClick={() => changeNote('D')} className="rounded p-1 px-2 bg-gray-300">D4</button>
+        <button onClick={() => changeNote('E')} className="rounded p-1 px-2 bg-gray-300">E4</button>
+        <button onClick={() => changeNote('F')} className="rounded p-1 px-2 bg-gray-300">F4</button>
+        <button onClick={() => changeNote('G')} className="rounded p-1 px-2 bg-gray-300">G4</button>
+        <button onClick={() => changeNote('A')} className="rounded p-1 px-2 bg-gray-300">A4</button>
+        <button onClick={() => changeNote('B')} className="rounded p-1 px-2 bg-gray-300">B4</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNote('C\'')} className="rounded p-1 px-2 bg-gray-300">C5</button>
+        <button onClick={() => changeNote('D\'')} className="rounded p-1 px-2 bg-gray-300">D5</button>
+        <button onClick={() => changeNote('E\'')} className="rounded p-1 px-2 bg-gray-300">E5</button>
+        <button onClick={() => changeNote('F\'')} className="rounded p-1 px-2 bg-gray-300">F5</button>
+        <button onClick={() => changeNote('G\'')} className="rounded p-1 px-2 bg-gray-300">G5</button>
+        <button onClick={() => changeNote('A\'')} className="rounded p-1 px-2 bg-gray-300">A5</button>
+        <button onClick={() => changeNote('B\'')} className="rounded p-1 px-2 bg-gray-300">B5</button>
+      </div>
+      <div className="rounded p-2 bg-gray-200 mt-4 flex gap-4">
+        <button onClick={() => changeNote('C\'\'')} className="rounded p-1 px-2 bg-gray-300">C6</button>
+        <button onClick={() => changeNote('D\'\'')} className="rounded p-1 px-2 bg-gray-300">D6</button>
+        <button onClick={() => changeNote('E\'\'')} className="rounded p-1 px-2 bg-gray-300">E6</button>
+        <button onClick={() => changeNote('F\'\'')} className="rounded p-1 px-2 bg-gray-300">F6</button>
+        <button onClick={() => changeNote('G\'\'')} className="rounded p-1 px-2 bg-gray-300">G6</button>
+        <button onClick={() => changeNote('A\'\'')} className="rounded p-1 px-2 bg-gray-300">A6</button>
+        <button onClick={() => changeNote('B\'\'')} className="rounded p-1 px-2 bg-gray-300">B6</button>
+      </div>
+      <textarea className="border border-gray-600" name="" id="editor" cols={90} rows={10} value={tab} onChange={e => setTab(e.target.value)}></textarea>
+      {/* <div id="output"></div> */}
+      <div id="paper"></div>
+      <div className="midi">MIDI</div>
+      <div id="audio"></div>
+      <p className="click-explanation" style={{display:'none'}}>Click on a note to play that note.</p>
     </div>
   );
 }
