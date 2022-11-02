@@ -1,3 +1,57 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+    font-family: mudir;
+    src: url('./assets/MUDIRMAZ-1.ttf');
+    font-weight: bold;
+}
+
+
+body {
+    background-image: linear-gradient(279deg,#CE7672,#544667);
+    background-repeat: no-repeat;
+    font-family: mudir;
+    min-height: 100vh;
+}
+
+body * {
+    background: none;
+}
+body::-webkit-scrollbar {
+    width: 4px;
+}
+
+body::-webkit-scrollbar-track {
+box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+   
+body::-webkit-scrollbar-thumb {
+@apply bg-primary-600;
+border-radius: 20px;
+}
+.rtl {
+    direction: rtl;
+}
+.rtl * {
+    direction: rtl;
+}
+
+.piano-bg {
+    background-image: url('./assets/piano.png');
+    background-size: 180px;
+    opacity: 0.15;
+}
+.rules-ul  li{
+    @apply my-8;
+    line-height: 150%;
+}
+.rules-ul {
+    @apply mr-8;
+}
+.rules-ul > li {
+    @apply list-disc;
+}
+
+/* .rules-ul li: */
