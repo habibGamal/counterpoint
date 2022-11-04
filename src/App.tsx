@@ -6,23 +6,39 @@ import Home from './pages/Home';
 import Rules from './pages/Rules';
 import { routerSlice, Tab } from './slices/routerSlice';
 import { motion } from 'framer-motion';
+import Play from './Play';
+import Tests from './pages/Tests';
+import About from './pages/About';
+import Type1 from './pages/conterpoint_types/Type1';
+import Type2 from './pages/conterpoint_types/Type2';
+import Type3 from './pages/conterpoint_types/Type3';
+import Type4 from './pages/conterpoint_types/Type4';
+import Type5 from './pages/conterpoint_types/Type5';
 export default function App() {
-    const currentTabName = useAppSelector(state => state.routerSlice.currentTab);
+    const routeStack = useAppSelector(state => state.routerSlice.routeStack);
     const dispach = useAppDispatch();
-
-    const renderTab = (currentTab: Tab) => {
+    const renderTab = (routeStack: Tab[]) => {
+        const currentTab = routeStack[routeStack.length - 1];
         if (currentTab === 'Home') return <Home />;
         if (currentTab === 'Rules') return <Rules />;
         if (currentTab === 'ConterpointTypes') return <ConterpointTypes />;
+        if (currentTab === 'Play') return <Play />;
+        if (currentTab === 'Tests') return <Tests />;
+        if (currentTab === 'About') return <About />;
+        if (currentTab === 'Type1') return <Type1 />;
+        if (currentTab === 'Type2') return <Type2 />;
+        if (currentTab === 'Type3') return <Type3 />;
+        if (currentTab === 'Type4') return <Type4 />;
+        if (currentTab === 'Type5') return <Type5 />;
     }
     return (
         <motion.div
             className='app rtl relative'>
             <div className="w-full h-[100px] piano-bg"></div>
-            {renderTab(currentTabName)}
+            {renderTab(routeStack)}
             {
-                currentTabName === 'Home' ||
-                <button onClick={() => dispach(routerSlice.actions.changeTab('Home'))} className="rounded-full bg-secondary-400 w-[70px] h-[70px] flex items-center justify-center fixed bottom-4 left-4 shadow-xl">
+                routeStack[routeStack.length - 1] === 'Home' ||
+                <button onClick={() => dispach(routerSlice.actions.pop())} className="rounded-full bg-secondary-400 w-[70px] h-[70px] flex items-center justify-center fixed bottom-4 left-4 shadow-xl">
                     <FontAwesomeIcon color='#fff' size='2x' icon={faAngleLeft} />
                 </button>
             }

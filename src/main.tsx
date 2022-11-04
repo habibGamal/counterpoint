@@ -9,8 +9,8 @@ import Play from "./Play";
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
-      {/* <App /> */}
-      <Play />
+      <App />
+      {/* <Play /> */}
     </Provider>
   </React.StrictMode>
 );

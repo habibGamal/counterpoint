@@ -28,11 +28,11 @@ export default function Home() {
                 <img className="w-[500px]" src={hero_image} />
             </div>
             <div className="grid grid-cols-5 gap-4 m-16">
-                <TabBtn onClick={() => dispatch(routerSlice.actions.changeTab('Rules'))} name='قواعد' icon={faListCheck} />
-                <TabBtn onClick={() => dispatch(routerSlice.actions.changeTab('ConterpointTypes'))} name='انواع الكونتربوينت' icon={faShapes} />
-                <TabBtn onClick={() => null} name='تمارين' icon={faChalkboardUser} />
-                <TabBtn onClick={() => null} name='اختبر نفسك' icon={faClipboardCheck} />
-                <TabBtn onClick={() => null} name='عنا' icon={faCircleInfo} />
+                <TabBtn onClick={() => dispatch(routerSlice.actions.pushTab('Rules'))} name='قواعد' icon={faListCheck} />
+                <TabBtn onClick={() => dispatch(routerSlice.actions.pushTab('ConterpointTypes'))} name='انواع الكونتربوينت' icon={faShapes} />
+                <TabBtn onClick={() => dispatch(routerSlice.actions.pushTab('Play'))} name='تمارين' icon={faChalkboardUser} />
+                <TabBtn onClick={() =>  dispatch(routerSlice.actions.pushTab('Tests'))} name='اختبر نفسك' icon={faClipboardCheck} />
+                <TabBtn onClick={() => dispatch(routerSlice.actions.pushTab('About'))} name='عنا' icon={faCircleInfo} />
             </div>
         </>
     );

@@ -31,13 +31,12 @@ body::-webkit-scrollbar-thumb {
 @apply bg-primary-600;
 border-radius: 20px;
 }
-.rtl {
+.rtl,.rtl * {
     direction: rtl;
 }
-.rtl * {
-    direction: rtl;
+.ltr,.ltr *  {
+    direction: ltr;
 }
-
 .piano-bg {
     background-image: url('./assets/piano.png');
     background-size: 180px;
@@ -52,6 +51,10 @@ border-radius: 20px;
 }
 .rules-ul > li {
     @apply list-disc;
+}
+
+.custom-shadow {
+    box-shadow: 0 0 4px #00000040;
 }
 
 /* .rules-ul li: */

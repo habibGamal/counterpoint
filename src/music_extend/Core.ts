@@ -1,7 +1,8 @@
 
-import abcjs, { TuneBook } from "abcjs";
-import { DragCalculator } from "./music_extend/DragCalculator";
-import { Actions } from "./Play";
+import abcjs from "../lib/abc/abc";
+console.log(abcjs)
+import { DragCalculator } from "./DragCalculator";
+import { Actions } from "../Play";
 class CursorControl {
 
     onReady() {
@@ -71,6 +72,8 @@ interface SettingTune {
     setAction: React.Dispatch<React.SetStateAction<Actions>>;
     actionMemory: any;
     setActionMemory: React.Dispatch<any>;
+    tune: abcjs.TuneObject | undefined;
+    setTuneObj: React.Dispatch<React.SetStateAction<abcjs.TuneObject | undefined>>;
 }
 
 export function load(settingTune: SettingTune) {
@@ -83,7 +86,7 @@ export function load(settingTune: SettingTune) {
     setTune(false, settingTune);
 }
 
-function setTune(userAction: boolean, { tab, setTab, currentElement, setCurrentElement, action, setAction, actionMemory, setActionMemory }: SettingTune) {
+function setTune(userAction: boolean, { tab, setTab, currentElement, setCurrentElement, action, setAction,setTuneObj }: SettingTune) {
 
     synthControl.disable(true);
     const playTune = (midiPitches: abcjs.MidiPitches) => {
@@ -94,8 +97,7 @@ function setTune(userAction: boolean, { tab, setTab, currentElement, setCurrentE
         });
     }
     const clickListener: abcjs.ClickListener = (abcElem, tuneNumber, classes, analysis, drag) => {
-        console.log(drag);
-        
+
         // to make the first stave only able to control
         if (abcElem.abselem.counters.voice == 0)
             setCurrentElement(abcElem);
@@ -119,14 +121,28 @@ function setTune(userAction: boolean, { tab, setTab, currentElement, setCurrentE
     const visualObj = abcjs.renderAbc("paper", tab, {
         add_classes: true, dragging: true, clickListener: clickListener,
         staffwidth: window.innerWidth - 300,
+        // showDebug:['box',],
+        // wrap: { minSpacing: 1.8, maxSpacing: 1.8, preferredMeasuresPerLine: 160 },
         afterParsing: (tune, tuneNumber, abcString) => {
             if (currentElement) {
                 setTimeout(() => {
+                    setTuneObj(tune);
                     let newElement: abcjs.AbcElem;
                     if (action === 'ADD') {
                         newElement = tune.getElementFromChar(currentElement.endChar) as abcjs.AbcElem
                         setCurrentElement(newElement);
                         setAction('');
+                    } else if (action === 'TIE') {
+                        // +1 because we add char '('
+                        newElement = tune.getElementFromChar(currentElement.endChar + 1) as abcjs.AbcElem
+                        if (newElement.el_type === 'bar')
+                            newElement = tune.getElementFromChar(currentElement.endChar + 2) as abcjs.AbcElem
+                        const part1 = tab.substring(0, newElement.startChar);
+                        const part2 = tab.substring(newElement.endChar);
+                        const note = tab.slice(newElement.startChar, newElement.endChar);
+                        const newNote = part1 + note + ')' + part2;
+                        setAction('');
+                        setTab(newNote)
                     } else {
                         newElement = tune.getElementFromChar(currentElement.startChar) as abcjs.AbcElem
                         setCurrentElement(newElement);
@@ -143,8 +159,9 @@ function setTune(userAction: boolean, { tab, setTab, currentElement, setCurrentE
         },
         selectionColor: 'blue',
         dragColor: 'blue',
+        // responsive:'resize'
 
-    }, { scale: 1})[0];
+    },{scale:1.4})[0];
 
     const midi = abcjs.synth.getMidiFile(tab, { fileName: "i-was-not-insane.midi" });
     const midiButton = document.querySelector(".midi") as HTMLDivElement;
