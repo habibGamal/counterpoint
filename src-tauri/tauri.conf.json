@@ -3,10 +3,11 @@
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
     "devPath": "http://localhost:1420",
-    "distDir": "../dist"
+    "distDir": "../dist",
+    "withGlobalTauri": true
   },
   "package": {
-    "productName": "tauriii",
+    "productName": "County Voice",
     "version": "0.0.0"
   },
   "tauri": {
@@ -57,8 +58,8 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "tauriii",
-        "width": 800
+        "title": "County Voice",
+        "width": 1024
       }
     ]
   }

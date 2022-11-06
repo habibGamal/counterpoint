@@ -21,28 +21,33 @@ import Check from "./music_extend/Check";
 import Button from "./compontents/Button";
 import ButtonGroup from "./compontents/ButtonGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faPause, faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
 import BtnSeparator from "./compontents/BtnSeparator";
 import PageTitle from "./compontents/PageTitle";
 export type Actions = '' | 'ADD' | 'TIE'
-
-function Play() {
+// cantus up => index =1 ,check voice2
+// cantus down => index =0 , check voice1
+function Play({ editable, key1, key2, voice1, voice2, index }: { editable: boolean, key1: string, key2: string, voice1: string, voice2: string, index?: number }) {
+  const emptyVoice = index === 0 ? (voice1.split('|')).map(n => 'z') : (voice2.split('|')).map(n => 'z');
+  emptyVoice.pop()
   const [tab, setTab] = useState(
     `X:1
 M:4/4
 K:C
-V:RH clef=treble
-V:LH clef=bass 
+V:RH clef=${key1}
+V:LH clef=${key2}
 L:1
-[V: RH]z/2D'/2|C'/2B/2|A/2C'/2|D'/2C'/2|B/2D'/2|C'/2D'/2|E'/2B/2|D'/2A/2|B/2^C'/2|D'|]
+[V: RH]${index === 0 ? emptyVoice.join('|')+'|]':voice1}
 L:1
-[V: LH]D,|A,|F,|D,|G,|E,|G,|F,|E,|D,|]
+[V: LH]${index === 1 ? emptyVoice.join('|')+'|]':voice2}
+        
     `
   );
   const [currentElement, setCurrentElement] = useState<abcjs.AbcElem | null>(null);
   const [action, setAction] = useState<Actions>('');
   const [actionMemory, setActionMemory] = useState<any>();
   const [tune, setTune] = useState<abcjs.TuneObject>();
+  const [playing, setPlaying] = useState(false);
   const setCurrentElementFocus = (newElement: abcjs.AbcElem | null) => {
     setCurrentElement((oldElement) => {
       if (oldElement)
@@ -53,7 +58,21 @@ L:1
       (newElement.abselem.elemset[0] as SVGAElement).setAttribute('fill', 'blue')
   }
   useEffect(() => {
-    load({ tab, setTab, currentElement, setCurrentElement: setCurrentElementFocus, action, setAction, actionMemory, setActionMemory, tune, setTuneObj: setTune });
+    load(
+      {
+        editable,
+        tab,
+        setTab,
+        currentElement,
+        setCurrentElement: setCurrentElementFocus,
+        action,
+        setAction,
+        actionMemory,
+        setActionMemory,
+        tune,
+        setTuneObj: setTune,
+        index,
+      });
   }, [tab]);
   useEffect(() => {
     if (action === 'TIE') {
@@ -124,61 +143,70 @@ L:1
     setTab(newNote)
   }
   const check = () => {
+    const voiceToCheck = index === 0 ? voice1.split('|') : voice2.split('|');
+    voiceToCheck.pop();
     if (tune)
-      new Check(tune, ["z/2", "D'/2", "C'/2", "B/2", "A/2", "C'/2", "D'/2", "C'/2", "B/2", "D'/2", "C'/2", "D'/2", "E'/2", "B/2", "D'/2", "A/2", "B/2", "^C'/2", "D'",], tab)
+      new Check(tune, index!, voiceToCheck, tab)
   }
   return (
     <>
-      <PageTitle title="التمرين الاول"/>
-      <div className="ltr font-sans ">
-        <ButtonGroup>
-          <Button onClick={() => deleteNote()} content="delete" />
-          <Button onClick={() => addNote()} content="add" />
-        </ButtonGroup>
-        <div className="flex gap-8 justify-center">
-          <ButtonGroup>
-            <Button onClick={() => changeNoteLength(1)} content={<img src={note1} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => changeNoteLength(2)} content={<img src={note2} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => changeNoteLength(4)} content={<img src={note4} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => changeNoteLength(8)} content={<img src={note8} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => changeNoteLength(16)} content={<img src={note16} className="w-6 h-8 object-contain" />} />
-            <BtnSeparator />
-            <Button onClick={() => changeNoteLength(16)} content={<img src={z} className="w-6 h-8 object-contain" />} />
-            <BtnSeparator />
-            <Button onClick={() => addTie()} content={<img src={tie} className="w-6 h-8 object-contain" />} />
-          </ButtonGroup>
-          <ButtonGroup>
-            <Button onClick={() => addAccidental('__')} content={<img src={b} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => addAccidental('_')} content={<img src={bb} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => addAccidental('=')} content={<img src={sq} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => addAccidental('^')} content={<img src={hash} className="w-6 h-8 object-contain" />} />
-            <Button onClick={() => addAccidental('^^')} content={<img src={x} className="w-6 h-8 object-contain" />} />
-            <BtnSeparator />
-            <Button onClick={() => addAccidental('')} content={<FontAwesomeIcon icon={faTrash} />} />
-          </ButtonGroup>
-        </div>
-        <ButtonGroup className="text-2xl font-bold mx-auto">
-          <Button className="w-10 h-10 text-red-600" onClick={() => changeNote('C')} content="C" />
-          <Button className="w-10 h-10 text-orange-600" onClick={() => changeNote('D')} content="D" />
-          <Button className="w-10 h-10 text-yellow-600" onClick={() => changeNote('E')} content="E" />
-          <Button className="w-10 h-10 text-green-600" onClick={() => changeNote('F')} content="F" />
-          <Button className="w-10 h-10 text-sky-600" onClick={() => changeNote('G')} content="G" />
-          <Button className="w-10 h-10 text-purple-600" onClick={() => changeNote('A')} content="A" />
-          <Button className="w-10 h-10 text-pink-600" onClick={() => changeNote('B')} content="B" />
-        </ButtonGroup>
+      <div className="ltr font-sans flex flex-col items-center justify-center min-h-screen">
+        {
+          editable &&
+          <>
+            <ButtonGroup>
+              <Button onClick={() => deleteNote()} content="delete" />
+              <Button onClick={() => addNote()} content="add" />
+            </ButtonGroup>
+            <div className="flex gap-8 justify-center">
+              <ButtonGroup>
+                <Button onClick={() => changeNoteLength(1)} content={<img src={note1} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => changeNoteLength(2)} content={<img src={note2} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => changeNoteLength(4)} content={<img src={note4} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => changeNoteLength(8)} content={<img src={note8} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => changeNoteLength(16)} content={<img src={note16} className="w-6 h-8 object-contain" />} />
+                <BtnSeparator />
+                <Button onClick={() => changeNote('z')} content={<img src={z} className="w-6 h-8 object-contain" />} />
+                <BtnSeparator />
+                <Button onClick={() => addTie()} content={<img src={tie} className="w-6 h-8 object-contain" />} />
+              </ButtonGroup>
+              <ButtonGroup>
+                <Button onClick={() => addAccidental('_')} content={<img src={b} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => addAccidental('__')} content={<img src={bb} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => addAccidental('=')} content={<img src={sq} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => addAccidental('^')} content={<img src={hash} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => addAccidental('^^')} content={<img src={x} className="w-6 h-8 object-contain" />} />
+                <BtnSeparator />
+                <Button onClick={() => addAccidental('')} content={<FontAwesomeIcon icon={faTrash} />} />
+              </ButtonGroup>
+            </div>
+            <ButtonGroup className="text-2xl font-bold mx-auto">
+              <Button className="w-10 h-10 text-red-600" onClick={() => changeNote('C')} content="C" />
+              <Button className="w-10 h-10 text-orange-600" onClick={() => changeNote('D')} content="D" />
+              <Button className="w-10 h-10 text-yellow-600" onClick={() => changeNote('E')} content="E" />
+              <Button className="w-10 h-10 text-green-600" onClick={() => changeNote('F')} content="F" />
+              <Button className="w-10 h-10 text-sky-600" onClick={() => changeNote('G')} content="G" />
+              <Button className="w-10 h-10 text-purple-600" onClick={() => changeNote('A')} content="A" />
+              <Button className="w-10 h-10 text-pink-600" onClick={() => changeNote('B')} content="B" />
+            </ButtonGroup>
+          </>
+        }
         <textarea className="border hidden border-gray-600" name="" id="editor" cols={90} rows={10} value={tab} onChange={e => setTab(e.target.value)}></textarea>
         {/* <div id="output"></div> */}
         <div className="bg-white mx-auto rounded-xl w-fit pb-1">
           <div id="paper" className=" mx-auto m-8 rounded-xl bg-white h-[500px]" ></div>
         </div>
         <ButtonGroup className="mx-auto my-8">
-          <Button className="w-8 h-8" onClick={() => check()} content={<FontAwesomeIcon icon={faCheck} />} />
+          {
+            editable &&
+            <Button className="w-8 h-8" onClick={() => check()} content={<FontAwesomeIcon icon={faCheck} />} />
+          }
           <Button className="w-8 h-8" onClick={() => {
             const btn = (document.querySelector('button.abcjs-midi-start.abcjs-btn') as HTMLButtonElement);
-            console.log(btn);
             btn.click();
+            setPlaying(!playing)
 
-          }} content={<FontAwesomeIcon icon={faPlay} />} />
+          }} content={<FontAwesomeIcon icon={playing ? faPause : faPlay} />} />
         </ButtonGroup>
         <div className="hidden">
           <div className="midi ">MIDI</div>

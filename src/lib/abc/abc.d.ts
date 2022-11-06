@@ -1017,7 +1017,7 @@ declare module abcjs {
 	//
 	let signature: string;
 
-	export function renderAbc(target: Selector, code: string, params?: AbcVisualParams): TuneObjectArray
+	export function renderAbc(target: Selector, code: string, params?: AbcVisualParams,{scale:number}): TuneObjectArray
 
 	export function parseOnly(abc: string, params?: AbcVisualParams) : TuneObjectArray
 

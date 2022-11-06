@@ -3,7 +3,6 @@
 // instrument = the instrument name (e.g. "acoustic_grand_piano")
 // name = the pitch name (e.g. "A3")
 var soundsCache = require("./sounds-cache");
-let t = require('../audio/FluidR3_GM_acoustic_grand_piano-mp3_A3.mp3')
 var getNote = function (url, instrument, name, audioContext) {
 	if (!soundsCache[instrument]) soundsCache[instrument] = {};
 	var instrumentCache = soundsCache[instrument];
@@ -12,16 +11,18 @@ var getNote = function (url, instrument, name, audioContext) {
 			var xhr = new XMLHttpRequest();
 			let noteUrl = url + instrument + "-mp3/" + name + ".mp3";
 			// xhr.open("GET", noteUrl, true);
-			xhr.open("GET",'http://localhost:1420/src/lib/abc/src/audio/FluidR3_GM_acoustic_grand_piano-mp3_'+name+'.mp3',true)
+			// if (import.meta.env.MODE === 'development')
+				// xhr.open("GET", 'http://localhost:1420/src/lib/abc/src/audio/FluidR3_GM_acoustic_grand_piano-mp3_' + name + '.mp3', true)
+			// else
+				xhr.open("GET", window.location.href + 'audio/FluidR3_GM_acoustic_grand_piano-mp3_' + name + '.mp3', true)
 			xhr.responseType = "arraybuffer";
 			xhr.onload = function () {
-				console.log(xhr);
-				if (xhr.status !== 200) { 
+				if (xhr.status !== 200) {
 					reject(Error("Can't load sound at " + noteUrl));
 					return
 				}
-				var noteDecoded = function(audioBuffer) {
-					resolve({instrument: instrument, name: name, status: "loaded", audioBuffer: audioBuffer})
+				var noteDecoded = function (audioBuffer) {
+					resolve({ instrument: instrument, name: name, status: "loaded", audioBuffer: audioBuffer })
 				}
 				var maybePromise = audioContext.decodeAudioData(xhr.response, noteDecoded, function () {
 					reject(Error("Can't decode sound at " + noteUrl));
@@ -34,10 +35,10 @@ var getNote = function (url, instrument, name, audioContext) {
 			};
 			xhr.send();
 		})
-		.catch(err => {
-			console.error("Didn't load note", instrument, name, ":", err.message);
-			throw err;
-		});
+			.catch(err => {
+				console.error("Didn't load note", instrument, name, ":", err.message);
+				throw err;
+			});
 	return instrumentCache[name];
 };
 // var getNote = function (url, instrument, name, audioContext) {

@@ -26,6 +26,7 @@
     "vextab": "^3.0.6"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^23.0.2",
     "@tauri-apps/cli": "^1.1.0",
     "@types/node": "^18.7.10",
     "@types/react": "^18.0.15",

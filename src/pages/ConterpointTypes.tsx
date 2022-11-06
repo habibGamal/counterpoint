@@ -1,59 +1,57 @@
 import React from 'react'
-import image1 from '../assets/notes/image013.png';
-import image2 from '../assets/notes/image015.png';
-import image3 from '../assets/notes/image017.jpg';
-import image4 from '../assets/notes/image019.jpg';
-import image5 from '../assets/notes/image021.jpg';
-import musicIcon from '../assets/sol.png';
 import { motion } from 'framer-motion';
 import PageTitle from '../compontents/PageTitle';
-import Illustration from '../compontents/Illustration';
 import { faShapes } from '@fortawesome/free-solid-svg-icons';
-import Section from '../compontents/Section';
-import ListItems from '../compontents/ListItems';
-import AnimatedP from '../compontents/AnimatedP';
-import ListItem from '../compontents/ListItem';
 import { useAppDispatch } from '../hooks';
-import {routerSlice} from '../slices/routerSlice';
-
+import { routerSlice } from '../slices/routerSlice';
+import { cardAnimation } from '../animation/card';
+const Type = ({ name, onClick,delay }: { name: string, onClick: () => {},delay?:number }) => {
+    return (
+        <>
+            <motion.div {...cardAnimation(delay)} onClick={onClick} className="custom-shadow rounded text-center w-[400px] cursor-pointer ">
+                <h2 className="p-8 text-3xl text-primary-100">{name}</h2>
+            </motion.div>
+        </>
+    )
+}
 
 export default function ConterpointTypes() {
     const dispatch = useAppDispatch();
     return (
         <div className='my-8'>
             <PageTitle title='انواع الكونتربوينت' icon={faShapes} />
-            <div className="grid grid-cols-2 gap-8 mt-8">
-                <Illustration
-                    onClick={()=>dispatch(routerSlice.actions.pushTab('Type1'))}
-                    description="مثال النوع الأول (روند مقابل روند)"
-                    src={image1}
+            <div className="grid-cols-2 grid gap-8 justify-items-center my-16 max-w-[900px] mx-auto">
+                <Type
+                // delay={.05}
+                    name="النوع الأول"
+                    onClick={() => dispatch(routerSlice.actions.pushTab({ tab: 'Type1' }))}
                 />
 
-                <Illustration
-                    onClick={()=>dispatch(routerSlice.actions.pushTab('Type2'))}
-                    description="مثال النوع الثاني (روند مقابل 2 بلانش)"
-                    src={image2}
+                <Type
+                // delay={.1}
+                    onClick={() => dispatch(routerSlice.actions.pushTab({ tab: 'Type2' }))}
+                    name="النوع الثاني"
                 />
 
-                <Illustration
-                    onClick={()=>dispatch(routerSlice.actions.pushTab('Type3'))}
-                    description="مثال النوع الثالث (روند مقابل 4 نوار)"
-                    src={image3}
+                <Type
+                // delay={.15}
+                    onClick={() => dispatch(routerSlice.actions.pushTab({ tab: 'Type3' }))}
+                    name="النوع الثالث"
                 />
 
-                <Illustration
-                    onClick={()=>dispatch(routerSlice.actions.pushTab('Type4'))}
-                    description="مثال النوع الرابع (السنكوب)"
-                    src={image4}
+                <Type
+                // delay={.2}
+                    onClick={() => dispatch(routerSlice.actions.pushTab({ tab: 'Type4' }))}
+                    name="النوع الرابع"
                 />
 
-                <Illustration
-                    onClick={()=>dispatch(routerSlice.actions.pushTab('Type5'))}
-                    description="مثال النوع الخامس (الكونتربوينت المزخرف)"
-                    src={image5}
+                <Type
+                // delay={.25}
+                    onClick={() => dispatch(routerSlice.actions.pushTab({ tab: 'Type5' }))}
+                    name="النوع الخامس"
                 />
             </div>
-            
+
         </div>
     )
 }

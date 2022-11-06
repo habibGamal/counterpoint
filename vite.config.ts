@@ -1,10 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
+import commonjs from '@rollup/plugin-commonjs';
+// import commonjs from '@rollup/plugin-commonjs';
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [viteCommonjs(),react()],
-
+  plugins: [viteCommonjs(), react()],
   // Vite optons tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
   clearScreen: false,
@@ -17,6 +18,9 @@ export default defineConfig({
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ["VITE_", "TAURI_"],
   build: {
+    rollupOptions:{
+      plugins:[commonjs()]
+    },
     // Tauri supports es2021
     target: ["es2021", "chrome100", "safari13"],
     // don't minify for debug builds

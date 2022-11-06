@@ -78,4 +78,4 @@ abcjs['EditArea'] = require('./src/edit/abc_editarea');
 
 module.exports = abcjs;
 
-// export  abcjs;
+// export default abcjs;
