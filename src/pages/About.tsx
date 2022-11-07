@@ -84,22 +84,26 @@ export default function About() {
                     desc="أستاذ النظريات والتأليف المساعد بقسم التربية الموسيقية كلية التربية النوعية – جامعة أسيوط "
                 />
                 <Card
-                    title="د/ سعد حسن"
+                    title="د/ سعد حسن محي الدين"
                     desc="مدرس تكنولوجيا التعليم – بقسم تكنولوجيا التعليم كلية التربية النوعية – جامعة أسيوط  "
                 />
+            </div>
+            <div className="my-24 text-center">
+                <motion.div {...animationProps()}  className="flex mx-auto w-fit mb-6 items-center gap-4">
+                    <FontAwesomeIcon icon={faHandsPraying} size="2x" className="text-primary-200" />
+                    <h2 className="text-primary-100 text-3xl">على ماقدمته لي من دعم ومساعدة خلال تنفيذ البرنامج</h2>
+                </motion.div>
                 <Card
                     title="والدى الغالى المهندس فكتور إميل سعيد أنطون"
                     desc=""
                 />
                 <Card
-                    title="على ماقدمته لي من دعم ومساعدة خلال تنفيذ البرنامج"
-                    desc={
-                        <>
-                            م/ حبيب جمال حبيب
-                            <br />
-                            م/ روبرتو أيمن إيميل
-                        </>
-                    }
+                    title="م/ روبرتو أيمن إيميل"
+                    desc="مصمم البرنامج"
+                />
+                <Card
+                    title="م/ حبيب جمال حبيب"
+                    desc="مطور البرنامج "
                 />
             </div>
         </div>

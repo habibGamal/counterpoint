@@ -4,7 +4,7 @@ import Modal from '../compontents/Modal'
 import PageTitle from '../compontents/PageTitle'
 import { useAppDispatch } from '../hooks'
 import { routerSlice } from '../slices/routerSlice'
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
 import { cardAnimation } from '../animation/card'
 const data: any = {
     type1: {
@@ -78,6 +78,8 @@ const ExersizeModal = ({ state, close, exersizeType }: {
                     <Option onClick={() => play('lydian')} title="مقام ليديان" />
                     <Option onClick={() => play('mixolydian')} title="مقام مكسوليديان" />
                     <Option onClick={() => play('aeolian')} title="مقام الأيوليان" />
+                    <Option onClick={() => null} title="مقام اوكريان" />
+                    <Option onClick={() => null} title="مقام ايونيان" />
                 </ul>
             </div>
         </Modal>

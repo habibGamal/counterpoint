@@ -4,7 +4,7 @@ import Modal from '../compontents/Modal'
 import PageTitle from '../compontents/PageTitle'
 import { useAppDispatch } from '../hooks'
 import { routerSlice } from '../slices/routerSlice'
-import {motion} from 'framer-motion'
+import { motion } from 'framer-motion'
 import { cardAnimation } from '../animation/card'
 const data: any = {
     type1: {
@@ -118,9 +118,9 @@ const ChooseCantusModal = ({ state, close, examType, stage }: {
         <Modal state={state} close={close}>
             <div className="p-4 font-sans min-w-[300px]">
                 <h4 className='text-center text-2xl mb-4'>Cantus firmus</h4>
-                <ul className='text-xl'>
-                    <Option onClick={() => play('up')} title="الجزء العلوي" />
-                    <Option onClick={() => play('down')} title="الجزء السفلي" />
+                <ul className='text-xl text-left'>
+                    <Option onClick={() => play('up')} title="Soprano" />
+                    <Option onClick={() => play('down')} title="Bass" />
                 </ul>
             </div>
         </Modal>
@@ -151,6 +151,8 @@ const ExamModal = ({ state, close, examType }: {
                         <Option onClick={() => open('lydian')} title="مقام ليديان" />
                         <Option onClick={() => open('mixolydian')} title="مقام مكسوليديان" />
                         <Option onClick={() => open('aeolian')} title="مقام الأيوليان" />
+                        <Option onClick={() => null} title="مقام اوكريان" />
+                        <Option onClick={() => null} title="مقام ايونيان" />
                     </ul>
                 </div>
             </Modal>
