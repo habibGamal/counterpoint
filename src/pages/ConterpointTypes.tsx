@@ -18,7 +18,7 @@ const Type = ({ name, onClick,delay }: { name: string, onClick: () => {},delay?:
 export default function ConterpointTypes() {
     const dispatch = useAppDispatch();
     return (
-        <div className='my-8'>
+        <div className='mb-8'>
             <PageTitle title='انواع الكونتربوينت' icon={faShapes} />
             <div className="grid-cols-2 grid gap-8 justify-items-center my-16 max-w-[900px] mx-auto">
                 <Type

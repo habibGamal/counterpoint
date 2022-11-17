@@ -8,7 +8,7 @@ import image1 from '../../assets/notes/image013.png';
 
 export default function Type1() {
     return (
-        <Section title='النوع الأول (روند مقابل روند)' musicIcon={musicIcon}>
+        <Section className='mt-8' title='النوع الأول (روند مقابل روند)' musicIcon={musicIcon}>
             <AnimatedP
                 text='وهو نغمة مقابل نغمة، حيث يكون لحن C.F عبارة عن نغمة مدونة بأي شكل إيقاعي (روند أو بلانش أو نوار .....) ويقابلها في لحن C.P نفس الشكل الإيقاعي مع مراعاة القواعد السابقة في وضع لحن C.P من الناحية الأفقية والرأسية، هناك بعض القوانين الخاصة للنوع الأول ومنها :'
             />

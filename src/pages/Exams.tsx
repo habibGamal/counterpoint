@@ -174,7 +174,7 @@ const Exam = ({ name, examType }: { name: string, examType: number }) => {
 }
 export default function Exams() {
     return (
-        <div className="my-8">
+        <div className="mb-8">
             <PageTitle title='اختبر نفسك' icon={faClipboardCheck} />
             <div className="grid-cols-2 grid gap-8 justify-items-center my-16 max-w-[900px] mx-auto">
                 <Exam

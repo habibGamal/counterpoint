@@ -73,7 +73,7 @@ interface SettingTune {
     setActionMemory: React.Dispatch<any>;
     tune: abcjs.TuneObject | undefined;
     setTuneObj: React.Dispatch<React.SetStateAction<abcjs.TuneObject | undefined>>;
-    index?:number;
+    index?: number;
 }
 
 export function load(settingTune: SettingTune) {
@@ -86,7 +86,7 @@ export function load(settingTune: SettingTune) {
     setTune(false, settingTune);
 }
 
-function setTune(userAction: boolean, { editable, tab, setTab, currentElement, setCurrentElement, action, setAction, setTuneObj,index }: SettingTune) {
+function setTune(userAction: boolean, { editable, tab, setTab, currentElement, setCurrentElement, action, setAction, setTuneObj, index }: SettingTune) {
 
     synthControl.disable(true);
     const playTune = (midiPitches: abcjs.MidiPitches) => {
@@ -142,22 +142,12 @@ function setTune(userAction: boolean, { editable, tab, setTab, currentElement, s
                         newElement = tune.getElementFromChar(currentElement.endChar) as abcjs.AbcElem
                         setCurrentElement(newElement);
                         setAction('');
-                    } else if (action === 'TIE') {
-                        // +1 because we add char '('
-                        newElement = tune.getElementFromChar(currentElement.endChar + 1) as abcjs.AbcElem
-                        if (newElement.el_type === 'bar')
-                            newElement = tune.getElementFromChar(currentElement.endChar + 2) as abcjs.AbcElem
-                        const part1 = tab.substring(0, newElement.startChar);
-                        const part2 = tab.substring(newElement.endChar);
-                        const note = tab.slice(newElement.startChar, newElement.endChar);
-                        const newNote = part1 + note + ')' + part2;
-                        setAction('');
-                        setTab(newNote)
                     } else {
                         newElement = tune.getElementFromChar(currentElement.startChar) as abcjs.AbcElem
+                        if (newElement.el_type === 'bar')
+                            newElement = tune.getElementFromChar(newElement.endChar) as abcjs.AbcElem
                         setCurrentElement(newElement);
                     }
-
                     let midiPitches = (newElement as any).midiPitches;
                     if (!midiPitches)
                         return tune;

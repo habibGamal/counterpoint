@@ -12,7 +12,7 @@ export default class Check {
     validate() {
         this.correctAns.forEach((correctNote, i) => {
             const voice = this.voices![i] as abcjs.VoiceItemNote;
-            if (this.tab.substring(voice.startChar, voice.endChar) !== correctNote)
+            if (this.tab.substring(voice.startChar, voice.endChar).replace(/".*"/g,'') !== correctNote)
                 this.incorrectNotes.push(voice);
         })
     }

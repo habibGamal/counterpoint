@@ -19,18 +19,12 @@ export class DragCalculator {
     private sanitizer(note: string) {
         const pitches = note.match(/\'|,/g) || [] as string[];
         const difference = pitches?.filter(p => p === ',').length - pitches?.filter(p => p === '\'').length
-        console.log(difference);
         let [noteWithoutPiches, length, tie] = note.match(/.*[CDEFGAB]|\)|\/([2468]|16)/g) || [];
         length = length || ''
         tie = tie || '';
         if (difference === 0) return noteWithoutPiches + '' + length + tie
         if (difference > 0) return noteWithoutPiches + ','.repeat(difference) + length + tie;
         if (difference < 0) return noteWithoutPiches + '\''.repeat(-1 * difference) + length + tie;
-    }
-    private strictBoundries(note: string){
-        const pitches = (note.match(/\'|,/g) || [] as string[]).length;
-        // const  = note.match(/\'|,/g) || [] as string[];
-
     }
     move() {
         let up = 0;
@@ -51,7 +45,6 @@ export class DragCalculator {
         }
         recusiveCountMovement();
         const newChar = this.mapNumberToItsChar(newPosition) + ('\'').repeat(up) + (',').repeat(down)
-        console.log(this.sanitizer(this.note.replace(this.musicChar, newChar)));
         return this.sanitizer(this.note.replace(this.musicChar, newChar))
     }
 }

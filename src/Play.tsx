@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import abcjs from "./lib/abc/abc";
 import "./lib/abc/abcjs-audio.css";
@@ -38,9 +38,9 @@ K:C
 V:RH clef=${key1} name=${index === 1 ? 'C.F' : 'C.P'}
 V:LH clef=${key2} name=${index === undefined || index === 0 ? 'C.F' : 'C.P'}
 L:1
-[V: RH]${index === 0 ? emptyVoice.join('|') + '|]' : voice1}
+[V: RH]${index === 0 && editable ? emptyVoice.join('|') + '|]' : voice1}
 L:1
-[V: LH]${index === 1 ? emptyVoice.join('|') + '|]' : voice2}
+[V: LH]${index === 1 && editable ? emptyVoice.join('|') + '|]' : voice2}
         
     `
   );
@@ -49,6 +49,7 @@ L:1
   const [actionMemory, setActionMemory] = useState<any>();
   const [tune, setTune] = useState<abcjs.TuneObject>();
   const [playing, setPlaying] = useState(false);
+  const addTextInput = useRef<HTMLInputElement>(null);
   const setCurrentElementFocus = (newElement: abcjs.AbcElem | null) => {
     setCurrentElement((oldElement) => {
       if (oldElement)
@@ -77,7 +78,7 @@ L:1
   }, [tab]);
   useEffect(() => {
     const preventScroll = (e: KeyboardEvent) => {
-      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+      if (["ArrowUp", "ArrowDown"/*, "ArrowLeft", "ArrowRight"*/].indexOf(e.code) > -1) {
         e.preventDefault();
       }
     }
@@ -111,8 +112,29 @@ L:1
     setCurrentElementFocus(newElement);
   }
   useEffect(() => {
-    if (currentElement) {
+    if (currentElement && document.activeElement !== addTextInput.current) {
       document.onkeydown = (e) => {
+        if (e.code === "KeyC") {
+          changeNote('C')
+        }
+        if (e.code === "KeyD") {
+          changeNote('D')
+        }
+        if (e.code === "KeyE") {
+          changeNote('E')
+        }
+        if (e.code === "KeyF") {
+          changeNote('F')
+        }
+        if (e.code === "KeyG") {
+          changeNote('G')
+        }
+        if (e.code === "KeyA") {
+          changeNote('A')
+        }
+        if (e.code === "KeyB") {
+          changeNote('B')
+        }
         if (e.code === "ArrowUp") {
           move(-1)
         }
@@ -126,6 +148,7 @@ L:1
           selectPrev()
         }
       }
+
     }
     return () => {
       document.onkeydown = null;
@@ -151,18 +174,8 @@ L:1
     if (currentElement === null) return;
     const part1 = tab.substring(0, currentElement.startChar);
     const part2 = tab.substring(currentElement.endChar);
-    const prevMeasureIndex = currentElement.abselem.counters.measure - 1
-    const { measures } = abcjs.extractMeasures(part1 + part2)[0];
-    console.log(measures, prevMeasureIndex);
-    if (prevMeasureIndex === -1) {
-      if (measures[0].abc[0] !== '|') {
-        setTab(part1 + part2)
-      }
-      return
-    }
-    const prevMeasure = measures[prevMeasureIndex].abc;
-    if (!prevMeasure.includes('||')) {
-      // setCurrentElement(null);
+    const newTab = part1 + part2;
+    if (!newTab.includes('||') && !newTab.includes(']|')) {
       setTab(part1 + part2)
     }
   }
@@ -171,19 +184,54 @@ L:1
     const part1 = tab.substring(0, currentElement.endChar);
     const part2 = tab.substring(currentElement.endChar);
     const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
-    // setCurrentElement(null);
     const newNote = orginalLength ? part1 + 'z/' + orginalLength + part2 : part1 + 'z' + part2
     setAction('ADD')
     setTab(newNote)
   }
-  const addTie = () => {
+  const removeTie = () => {
     if (currentElement === null) return;
     const part1 = tab.substring(0, currentElement.startChar);
-    const part2 = tab.substring(currentElement.endChar);
     const note = tab.slice(currentElement.startChar, currentElement.endChar);
+
+    let note2Element = tune!.getElementFromChar(currentElement.endChar) as abcjs.AbcElem;
+    if (!note2Element) return;
+    if (note2Element.el_type === 'bar') {
+      note2Element = tune!.getElementFromChar(note2Element.endChar) as abcjs.AbcElem;
+    }
+    const betweenNote1Note2 = tab.slice(currentElement.endChar, note2Element.startChar)
+    const note2 = tab.slice(note2Element.startChar, note2Element.endChar);
+    const part2 = tab.substring(note2Element!.endChar);
+    const newNote = part1 + note + betweenNote1Note2 + note2 + part2;
+
+    setTab(newNote.replaceAll(/\(|\)/g, ''))
+  }
+  const addTie = () => {
+    if (currentElement === null || tune === undefined) return;
+    const part1 = tab.substring(0, currentElement.startChar);
+    const note = tab.slice(currentElement.startChar, currentElement.endChar);
+    if (note.includes('(')) {
+      removeTie();
+      return;
+    }
+    let note2Element = tune!.getElementFromChar(currentElement.endChar) as abcjs.AbcElem;
+    if (!note2Element) return;
+    if (note2Element.el_type === 'bar') {
+      note2Element = tune!.getElementFromChar(note2Element.endChar) as abcjs.AbcElem;
+    }
+    if (note2Element.rest) return;
+    const betweenNote1Note2 = tab.slice(currentElement.endChar, note2Element.startChar)
+    const note2 = tab.slice(note2Element.startChar, note2Element.endChar);
+    const part2 = tab.substring(note2Element!.endChar);
     // setCurrentElement(null);
-    const newNote = part1 + '(' + note + part2;
-    setAction('TIE')
+    if (note.includes('z')) return;
+    const preText = (note.match(/".*"/g) || [null])[0]
+    let noteWithPreTie = ''
+    if (preText)
+      noteWithPreTie = note.replace(preText, preText + '(');
+    else
+      noteWithPreTie = '(' + note
+    const newNote = part1 + noteWithPreTie + betweenNote1Note2 + note2 + ')' + part2;
+    // setAction('TIE')
     setTab(newNote)
   }
   const addAccidental = (accidental: string) => {
@@ -200,15 +248,42 @@ L:1
     if (tune)
       new Check(tune, index!, voiceToCheck, tab)
   }
+  const [text, setText] = useState('');
+  const addText = () => {
+    if (currentElement === null) return;
+    const element = currentElement.abselem.elemset[0] as HTMLElement
+    (addTextInput.current as HTMLInputElement).focus();
+    (addTextInput.current as HTMLInputElement).onblur = ()=>{
+      setCurrentElementFocus(null);
+    }
+    document.onkeydown = null;
+    const note = tab.slice(currentElement.startChar, currentElement.endChar);
+    setText((note.match(/".*"/g) || [''])[0].replaceAll('\"', ''))
+  }
+  const onTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (currentElement === null) return;
+    const part1 = tab.substring(0, currentElement.startChar);
+    const part2 = tab.substring(currentElement.endChar);
+    let note = tab.slice(currentElement.startChar, currentElement.endChar);
+
+    if (note.match(/".*"/g))
+      note = note.replace(/".*"/g, `"${e.target.value}"`);
+    else
+      note = `"${e.target.value}"` + note;
+    setText(e.target.value)
+    setTab(part1 + note + part2);
+  }
   return (
     <>
-      <div className="ltr font-sans flex flex-col items-center justify-center min-h-screen">
+
+      <div className="ltr font-sans flex flex-col gap-4 items-center justify-center min-h-[calc(100vh-200px)]">
         {
           editable &&
           <>
             <ButtonGroup>
               <Button onClick={() => deleteNote()} content="delete" />
               <Button onClick={() => addNote()} content="add" />
+              <Button onClick={() => addText()} content="add Text" />
             </ButtonGroup>
             <div className="flex gap-8 justify-center">
               <ButtonGroup>
@@ -248,18 +323,23 @@ L:1
         <div className="bg-white mx-auto rounded-xl w-fit pb-1">
           <div id="paper" className=" mx-auto m-8 rounded-xl bg-white h-[500px]" ></div>
         </div>
-        <ButtonGroup className="mx-auto my-8">
-          {
-            editable &&
-            <Button className="w-8 h-8" onClick={() => check()} content={<FontAwesomeIcon icon={faCheck} />} />
-          }
-          <Button className="w-8 h-8" onClick={() => {
-            const btn = (document.querySelector('button.abcjs-midi-start.abcjs-btn') as HTMLButtonElement);
-            btn.click();
-            setPlaying(!playing)
+        <div className="flex gap-8 items-center">
+          <div className=" transition-transform z-50 rounded shadow p-2 custom-shadow w-fit font-sans text-black ltr">
+            <input ref={addTextInput} type="text" value={text} onChange={(e) => onTextChange(e)} className="rounded px-2 py-1 border border-secondary-400" placeholder="Type here..." />
+          </div>
+          <ButtonGroup className="mx-auto">
+            {
+              editable &&
+              <Button className="w-8 h-8" onClick={() => check()} content={<FontAwesomeIcon icon={faCheck} />} />
+            }
+            <Button className="w-8 h-8" onClick={() => {
+              const btn = (document.querySelector('button.abcjs-midi-start.abcjs-btn') as HTMLButtonElement);
+              btn.click();
+              setPlaying(!playing)
 
-          }} content={<FontAwesomeIcon icon={playing ? faPause : faPlay} />} />
-        </ButtonGroup>
+            }} content={<FontAwesomeIcon icon={playing ? faPause : faPlay} />} />
+          </ButtonGroup>
+        </div>
         <div className="hidden">
           <div className="midi ">MIDI</div>
           <div id="audio"></div>

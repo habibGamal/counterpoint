@@ -9,7 +9,7 @@ import ListItem from '../../compontents/ListItem';
 
 export default function Type5() {
     return (
-        <Section title='النوع الخامس (الكونتربوينت المزخرف)' musicIcon={musicIcon}>
+        <Section className='mt-8' title='النوع الخامس (الكونتربوينت المزخرف)' musicIcon={musicIcon}>
             <AnimatedP
                 text='وهو نغمة مقابل مجموعة نغمات تختلف في أشكالها الإيقاعية ولكن تتمثل في مجموعها زمن نغمة لحن C.F'
             />

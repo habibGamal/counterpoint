@@ -8,7 +8,7 @@ import image1 from '../../assets/notes/image019.jpg';
 
 export default function Type4() {
     return (
-        <Section title='النوع الرابع (السنكوب)' musicIcon={musicIcon}>
+        <Section className='mt-8' title='النوع الرابع (السنكوب)' musicIcon={musicIcon}>
             <AnimatedP
                 text='نغمة مقابل نغمتين، بناء هذا النوع مثل بناء النوع الثاني على نغمة من لحن C.F تقابلها نغمتين من لحن C.P ولكن باستخدام الرباط الزمني حيث تقع نغمة لحن C.P نصفها الأول على الضغط الضعيف المقابل لنغمة لحنC.F'
             />

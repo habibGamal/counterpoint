@@ -16,7 +16,7 @@ import AnimatedP from '../compontents/AnimatedP';
 
 export default function Rules() {
     return (
-        <div className='my-8'>
+        <div className='mb-8'>
             <PageTitle title='قواعد' icon={faListCheck} />
 
             <Section title='قواعد اللحن الأساسي C.F أو لحن الكونتربوينت C.P الافقي' musicIcon={musicIcon}>

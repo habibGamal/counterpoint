@@ -8,8 +8,8 @@ import { ReactNode } from "react";
 
 function TabBtn({ name, icon, onClick }: { name: ReactNode, icon: IconProp, onClick: () => void }) {
     return (
-        <div onClick={onClick} className="p-4 rounded shadow text-primary-50 flex flex-col gap-4 justify-center items-center  hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
-            <FontAwesomeIcon size='3x' icon={icon} />
+        <div onClick={onClick} className="p-4 rounded shadow text-primary-50 flex flex-col gap-4 justify-center items-center whitespace-nowrap hover:shadow-xl hover:scale-105 transition-all cursor-pointer">
+            <FontAwesomeIcon className="text-[2.7rem]" icon={icon} />
             <span className="md:text-2xl text-3xl font-bold text-center">{name}</span>
         </div>
     );
@@ -19,19 +19,19 @@ export default function Home() {
     return (
         <div className="grid xl:grid-rows-[60%50%] grid-rows-2 h-[calc(100vh-100px)] items-center">
             <div className="grid grid-cols-2 justify-items-center items-center mt-16 mx-8">
-                <div>
-                    <h1 className="text-primary-100 text-6xl xl:text-8xl font-bold mb-4">تعلُم الكونتربوينت</h1>
+                <div className="mr-16">
+                    <h1 className="text-primary-100 text-6xl 2xl:text-8xl font-bold mb-4">تعلُم الكونتربوينت</h1>
                     <p className="text-primary-200 text-4xl font-bold">
                         برنامج تعلم اساسيات الكونتربوينت
                         بالتمارين والاختبارات
                     </p>
                 </div>
-                <img className="max-w-[300px] xl:max-w-[500px]" src={hero_image} />
+                <img className="max-w-[300px] xl:max-w-[400px] 2xl:max-w-[500px]" src={hero_image} />
             </div>
-            <div className="grid grid-cols-5 gap-4 m-16">
+            <div className="grid grid-cols-5 gap-4 m-8">
                 <TabBtn onClick={() => dispatch(routerSlice.actions.pushTab({tab:'Rules'}))} name={
                     <>
-                        قواعد االلحن الاساسية
+                        قواعد اللحن الافقي
                         <br />
                         (C.F)
                     </>

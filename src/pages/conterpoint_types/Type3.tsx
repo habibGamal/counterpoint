@@ -9,7 +9,7 @@ import image1 from '../../assets/notes/image017.jpg';
 export default function Type3() {
     return (
 
-        <Section title='النوع الثالث (روند مقابل 4 نوار)' musicIcon={musicIcon}>
+        <Section className='mt-8' title='النوع الثالث (روند مقابل 4 نوار)' musicIcon={musicIcon}>
             <AnimatedP
                 text='وهو نغمة مقابل أربعة نغمات، فيكون لحن C.F نغمة يقابلها أربعة نغمات، والنغمة الواحدة تمثل ربع القيمة الزمنية للنغمة التي في لحن C.F، '
             />

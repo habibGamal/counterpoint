@@ -30,7 +30,7 @@ function Card({ title, desc, delay }: { title: string, desc: React.ReactNode, de
 
 export default function About() {
     return (
-        <div className='my-8'>
+        <div className='mb-8'>
             <PageTitle title='عنا' icon={faInfoCircle} />
             <div className="my-12 text-center">
                 <motion.div
@@ -44,20 +44,20 @@ export default function About() {
                     تخصص التربية الموسيقية (نظريات وتأليف)
                 </motion.p>
             </div>
-            <div className="my-24 text-center">
+            <div className="my-20 2xl:my-24 text-center">
                 <motion.div {...animationProps(.15)} className="flex mx-auto w-fit mb-6 items-center gap-4">
                     <img className="w-10" src={supervisor} alt="" />
                     <h2 className="text-primary-100 text-3xl">تحت عنوان</h2>
                 </motion.div>
                 <motion.h3 {...animationProps(.2)} className="text-4xl text-primary-200 mb-4">“برنامج إلكتروني قائم على الكونتربوينت المقيد (صوت مقابل صوت) “</motion.h3>
             </div>
-            <div className="my-24 text-center">
+            <div className="my-20 2xl:my-24 text-center">
                 <motion.div {...animationProps(.25)} className="flex mx-auto w-fit mb-6 items-center gap-4">
                     <img className="w-10" src={title} alt="" />
                     <h2 className="text-primary-100 text-3xl">تحت إشراف كلاً من</h2>
                 </motion.div>
                 <Card
-                delay={.3}
+                    delay={.3}
                     title="أ.د/ أبرار مصطفى إبراهيم علي"
                     desc="أستاذ النظريات والتأليف بقسم التربية الموسيقية ووكيل شئون التعليم والطلاب – كلية التربية النوعية"
                 />
@@ -70,8 +70,8 @@ export default function About() {
                     desc="مدرس تكنولوجيا التعليم – بقسم تكنولوجيا التعليم كلية التربية النوعية – جامعة أسيوط  "
                 />
             </div>
-            <div className="my-24 text-center">
-                <motion.div {...animationProps()}  className="flex mx-auto w-fit mb-6 items-center gap-4">
+            <div className="my-20 2xl:my-24 text-center">
+                <motion.div {...animationProps()} className="flex mx-auto w-fit mb-6 items-center gap-4">
                     <FontAwesomeIcon icon={faHandsPraying} size="2x" className="text-primary-200" />
                     <h2 className="text-primary-100 text-3xl">ويسعدني أن أشكر كلاً من</h2>
                 </motion.div>
@@ -87,9 +87,17 @@ export default function About() {
                     title="د/ سعد حسن محي الدين"
                     desc="مدرس تكنولوجيا التعليم – بقسم تكنولوجيا التعليم كلية التربية النوعية – جامعة أسيوط  "
                 />
+                <Card
+                    title="م/ روبرتو أيمن إميل"
+                    desc="مصمم البرنامج"
+                />
+                <Card
+                    title="م/ حبيب جمال حبيب"
+                    desc="مطور البرنامج "
+                />
             </div>
-            <div className="my-24 text-center">
-                <motion.div {...animationProps()}  className="flex mx-auto w-fit mb-6 items-center gap-4">
+            <div className="my-20 2xl:my-24 text-center">
+                <motion.div {...animationProps()} className="flex mx-auto w-fit mb-6 items-center gap-4">
                     <FontAwesomeIcon icon={faHandsPraying} size="2x" className="text-primary-200" />
                     <h2 className="text-primary-100 text-3xl">على ماقدمته لي من دعم ومساعدة خلال تنفيذ البرنامج</h2>
                 </motion.div>
@@ -97,14 +105,7 @@ export default function About() {
                     title="والدى الغالى المهندس فكتور إميل سعيد أنطون"
                     desc=""
                 />
-                <Card
-                    title="م/ روبرتو أيمن إيميل"
-                    desc="مصمم البرنامج"
-                />
-                <Card
-                    title="م/ حبيب جمال حبيب"
-                    desc="مطور البرنامج "
-                />
+
             </div>
         </div>
     )
