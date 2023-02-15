@@ -25,6 +25,7 @@ import { faCheck, faPause, faPlay, faTrash } from "@fortawesome/free-solid-svg-i
 import BtnSeparator from "./compontents/BtnSeparator";
 import PageTitle from "./compontents/PageTitle";
 import { DragCalculator } from "./music_extend/DragCalculator";
+import Control from "./music_extend/Control";
 export type Actions = '' | 'ADD' | 'TIE'
 // cantus up => index =1 ,check voice2
 // cantus down => index =0 , check voice1
@@ -95,7 +96,6 @@ L:1
     setTab(part1 + dragCalc.move() + part2);
   }
   const selectNext = () => {
-
     let newElement = tune!.getElementFromChar(currentElement!.endChar) as abcjs.AbcElem
     if (newElement.el_type !== 'note') {
       newElement = tune!.getElementFromChar(newElement.endChar) as abcjs.AbcElem
@@ -104,36 +104,44 @@ L:1
   }
   const selectPrev = () => {
     let newElement = tune!.getElementFromChar(currentElement!.startChar - 1) as abcjs.AbcElem
-    console.log(newElement);
-
     if (newElement.el_type !== 'note') {
       newElement = tune!.getElementFromChar(newElement.startChar - 1) as abcjs.AbcElem
     }
     setCurrentElementFocus(newElement);
   }
+  const control = new Control(tune, tab, setTab, currentElement, setCurrentElementFocus, setAction);
   useEffect(() => {
     if (currentElement && document.activeElement !== addTextInput.current) {
       document.onkeydown = (e) => {
-        if (e.code === "KeyC") {
-          changeNote('C')
+
+        const mapChangeNoteKeys = {
+          Digit0: 'z',
+          KeyC: 'C',
+          KeyD: 'D',
+          KeyE: 'E',
+          KeyF: 'F',
+          KeyG: 'G',
+          KeyA: 'A',
+          KeyB: 'B',
         }
-        if (e.code === "KeyD") {
-          changeNote('D')
+        if (Object.keys(mapChangeNoteKeys).indexOf(e.code) > -1) {
+          control.changeNote(mapChangeNoteKeys[e.code as keyof typeof mapChangeNoteKeys]);
         }
-        if (e.code === "KeyE") {
-          changeNote('E')
+        const mapChangeNoteLengthKeys = {
+          Digit1: 1,
+          Digit2: 2,
+          Digit3: 4,
+          Digit4: 8,
+          Digit5: 16,
         }
-        if (e.code === "KeyF") {
-          changeNote('F')
+        if (Object.keys(mapChangeNoteLengthKeys).indexOf(e.code) > -1) {
+          control.changeNoteLength(mapChangeNoteLengthKeys[e.code as keyof typeof mapChangeNoteLengthKeys]);
         }
-        if (e.code === "KeyG") {
-          changeNote('G')
+        if (e.code === "Delete") {
+          control.deleteNote()
         }
-        if (e.code === "KeyA") {
-          changeNote('A')
-        }
-        if (e.code === "KeyB") {
-          changeNote('B')
+        if (e.code === "NumpadAdd") {
+          control.addNote()
         }
         if (e.code === "ArrowUp") {
           move(-1)
@@ -154,94 +162,6 @@ L:1
       document.onkeydown = null;
     }
   }, [currentElement])
-  const changeNote = (char: string) => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const part2 = tab.substring(currentElement.endChar);
-    const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
-    const length = orginalLength ? '/' + orginalLength : '';
-    // setCurrentElement(null);
-    setTab(part1 + char + length + part2)
-  }
-  const changeNoteLength = (length: number) => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const part2 = tab.substring(currentElement.endChar);
-    const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
-    setTab(part1 + note + '/' + length + part2)
-  }
-  const deleteNote = () => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const part2 = tab.substring(currentElement.endChar);
-    const newTab = part1 + part2;
-    if (!newTab.includes('||') && !newTab.includes(']|')) {
-      setTab(part1 + part2)
-    }
-  }
-  const addNote = () => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.endChar);
-    const part2 = tab.substring(currentElement.endChar);
-    const [note, orginalLength] = tab.slice(currentElement.startChar, currentElement.endChar).split('/');
-    const newNote = orginalLength ? part1 + 'z/' + orginalLength + part2 : part1 + 'z' + part2
-    setAction('ADD')
-    setTab(newNote)
-  }
-  const removeTie = () => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const note = tab.slice(currentElement.startChar, currentElement.endChar);
-
-    let note2Element = tune!.getElementFromChar(currentElement.endChar) as abcjs.AbcElem;
-    if (!note2Element) return;
-    if (note2Element.el_type === 'bar') {
-      note2Element = tune!.getElementFromChar(note2Element.endChar) as abcjs.AbcElem;
-    }
-    const betweenNote1Note2 = tab.slice(currentElement.endChar, note2Element.startChar)
-    const note2 = tab.slice(note2Element.startChar, note2Element.endChar);
-    const part2 = tab.substring(note2Element!.endChar);
-    const newNote = part1 + note + betweenNote1Note2 + note2 + part2;
-
-    setTab(newNote.replaceAll(/\(|\)/g, ''))
-  }
-  const addTie = () => {
-    if (currentElement === null || tune === undefined) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const note = tab.slice(currentElement.startChar, currentElement.endChar);
-    if (note.includes('(')) {
-      removeTie();
-      return;
-    }
-    let note2Element = tune!.getElementFromChar(currentElement.endChar) as abcjs.AbcElem;
-    if (!note2Element) return;
-    if (note2Element.el_type === 'bar') {
-      note2Element = tune!.getElementFromChar(note2Element.endChar) as abcjs.AbcElem;
-    }
-    if (note2Element.rest) return;
-    const betweenNote1Note2 = tab.slice(currentElement.endChar, note2Element.startChar)
-    const note2 = tab.slice(note2Element.startChar, note2Element.endChar);
-    const part2 = tab.substring(note2Element!.endChar);
-    // setCurrentElement(null);
-    if (note.includes('z')) return;
-    const preText = (note.match(/".*"/g) || [null])[0]
-    let noteWithPreTie = ''
-    if (preText)
-      noteWithPreTie = note.replace(preText, preText + '(');
-    else
-      noteWithPreTie = '(' + note
-    const newNote = part1 + noteWithPreTie + betweenNote1Note2 + note2 + ')' + part2;
-    // setAction('TIE')
-    setTab(newNote)
-  }
-  const addAccidental = (accidental: string) => {
-    if (currentElement === null) return;
-    const part1 = tab.substring(0, currentElement.startChar);
-    const part2 = tab.substring(currentElement.endChar);
-    const note = tab.slice(currentElement.startChar, currentElement.endChar);
-    const newNote = part1 + (new Accidental(note, accidental)).change() + part2;
-    setTab(newNote)
-  }
   const check = () => {
     const voiceToCheck = index === 0 ? voice1.split('|') : voice2.split('|');
     voiceToCheck.pop();
@@ -253,7 +173,7 @@ L:1
     if (currentElement === null) return;
     const element = currentElement.abselem.elemset[0] as HTMLElement
     (addTextInput.current as HTMLInputElement).focus();
-    (addTextInput.current as HTMLInputElement).onblur = ()=>{
+    (addTextInput.current as HTMLInputElement).onblur = () => {
       setCurrentElementFocus(null);
     }
     document.onkeydown = null;
@@ -281,44 +201,44 @@ L:1
           editable &&
           <>
             <ButtonGroup>
-              <Button onClick={() => deleteNote()} content="delete" />
-              <Button onClick={() => addNote()} content="add" />
+              <Button onClick={() => control.deleteNote()} content="delete" />
+              <Button onClick={() => control.addNote()} content="add" />
               <Button onClick={() => addText()} content="add Text" />
             </ButtonGroup>
             <div className="flex gap-8 justify-center">
               <ButtonGroup>
-                <Button onClick={() => changeNoteLength(1)} content={<img src={note1} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => changeNoteLength(2)} content={<img src={note2} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => changeNoteLength(4)} content={<img src={note4} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => changeNoteLength(8)} content={<img src={note8} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => changeNoteLength(16)} content={<img src={note16} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNoteLength(1)} content={<img src={note1} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNoteLength(2)} content={<img src={note2} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNoteLength(4)} content={<img src={note4} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNoteLength(8)} content={<img src={note8} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNoteLength(16)} content={<img src={note16} className="w-6 h-8 object-contain" />} />
                 <BtnSeparator />
-                <Button onClick={() => changeNote('z')} content={<img src={z} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.changeNote('z')} content={<img src={z} className="w-6 h-8 object-contain" />} />
                 <BtnSeparator />
-                <Button onClick={() => addTie()} content={<img src={tie} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addTie()} content={<img src={tie} className="w-6 h-8 object-contain" />} />
               </ButtonGroup>
               <ButtonGroup>
-                <Button onClick={() => addAccidental('_')} content={<img src={b} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => addAccidental('__')} content={<img src={bb} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => addAccidental('=')} content={<img src={sq} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => addAccidental('^')} content={<img src={hash} className="w-6 h-8 object-contain" />} />
-                <Button onClick={() => addAccidental('^^')} content={<img src={x} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addAccidental('_')} content={<img src={b} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addAccidental('__')} content={<img src={bb} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addAccidental('=')} content={<img src={sq} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addAccidental('^')} content={<img src={hash} className="w-6 h-8 object-contain" />} />
+                <Button onClick={() => control.addAccidental('^^')} content={<img src={x} className="w-6 h-8 object-contain" />} />
                 <BtnSeparator />
-                <Button onClick={() => addAccidental('')} content={<FontAwesomeIcon icon={faTrash} />} />
+                <Button onClick={() => control.addAccidental('')} content={<FontAwesomeIcon icon={faTrash} />} />
               </ButtonGroup>
             </div>
             <ButtonGroup className="text-2xl font-bold mx-auto">
-              <Button className="w-10 h-10 text-red-600" onClick={() => changeNote('C')} content="C" />
-              <Button className="w-10 h-10 text-orange-600" onClick={() => changeNote('D')} content="D" />
-              <Button className="w-10 h-10 text-yellow-600" onClick={() => changeNote('E')} content="E" />
-              <Button className="w-10 h-10 text-green-600" onClick={() => changeNote('F')} content="F" />
-              <Button className="w-10 h-10 text-sky-600" onClick={() => changeNote('G')} content="G" />
-              <Button className="w-10 h-10 text-purple-600" onClick={() => changeNote('A')} content="A" />
-              <Button className="w-10 h-10 text-pink-600" onClick={() => changeNote('B')} content="B" />
+              <Button className="w-10 h-10 text-red-600" onClick={() => control.changeNote('C')} content="C" />
+              <Button className="w-10 h-10 text-orange-600" onClick={() => control.changeNote('D')} content="D" />
+              <Button className="w-10 h-10 text-yellow-600" onClick={() => control.changeNote('E')} content="E" />
+              <Button className="w-10 h-10 text-green-600" onClick={() => control.changeNote('F')} content="F" />
+              <Button className="w-10 h-10 text-sky-600" onClick={() => control.changeNote('G')} content="G" />
+              <Button className="w-10 h-10 text-purple-600" onClick={() => control.changeNote('A')} content="A" />
+              <Button className="w-10 h-10 text-pink-600" onClick={() => control.changeNote('B')} content="B" />
             </ButtonGroup>
           </>
         }
-        <textarea className="border hidden border-gray-600" name="" id="editor" cols={90} rows={10} value={tab} onChange={e => setTab(e.target.value)}></textarea>
+        <textarea className="border border-gray-600" name="" id="editor" cols={90} rows={10} value={tab} onChange={e => setTab(e.target.value)}></textarea>
         {/* <div id="output"></div> */}
         <div className="bg-white mx-auto rounded-xl w-fit pb-1">
           <div id="paper" className=" mx-auto m-8 rounded-xl bg-white h-[500px]" ></div>
