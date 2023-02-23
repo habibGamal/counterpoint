@@ -31,10 +31,12 @@ export const routerSlice = createSlice({
             state.routeStack.pop();
         },
         changeTab: (state, action: PayloadAction<Tab>) => {
-            if (state.routeStack.length > 0)
-                state.routeStack[state.routeStack.length - 1] = action.payload;
-            else
-                state.routeStack[0] = action.payload;
+            // if (state.routeStack.length > 0)
+            //     state.routeStack[state.routeStack.length - 1] = action.payload;
+            // else
+            //     state.routeStack[0] = action.payload;
+            state.routeStack = [];
+            state.routeStack[0] = action.payload;
         },
     },
 })

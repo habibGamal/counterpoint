@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import "./App.css";
+// import "./App.css";
 import abcjs from "./lib/abc/abc";
 import "./lib/abc/abcjs-audio.css";
 import { load } from "./music_extend/Core";
@@ -18,11 +18,11 @@ import tie from './assets/buttons/tie.png';
 // import 'abcjs/abcjs-audio.css'
 import Accidental from "./music_extend/Accidentals";
 import Check from "./music_extend/Check";
-import Button from "./compontents/Button";
-import ButtonGroup from "./compontents/ButtonGroup";
+import Button from "./compontents/old/Button";
+import ButtonGroup from "./compontents/old/ButtonGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faPause, faPlay, faTrash } from "@fortawesome/free-solid-svg-icons";
-import BtnSeparator from "./compontents/BtnSeparator";
+import BtnSeparator from "./compontents/old/BtnSeparator";
 import PageTitle from "./compontents/PageTitle";
 import { DragCalculator } from "./music_extend/DragCalculator";
 import Control from "./music_extend/Control";
@@ -79,7 +79,7 @@ L:1
   }, [tab]);
   useEffect(() => {
     const preventScroll = (e: KeyboardEvent) => {
-      if (["ArrowUp", "ArrowDown"/*, "ArrowLeft", "ArrowRight"*/].indexOf(e.code) > -1) {
+      if (["ArrowUp", "ArrowDown"].indexOf(e.code) > -1) {
         e.preventDefault();
       }
     }
@@ -88,32 +88,11 @@ L:1
       window.removeEventListener("keydown", preventScroll, false);
     }
   }, []);
-  const move = (to: number) => {
-    const part1 = tab.substring(0, currentElement!.startChar);
-    const part2 = tab.substring(currentElement!.endChar);
-    const note = tab.slice(currentElement!.startChar, currentElement!.endChar)
-    const dragCalc = new DragCalculator(note, to);
-    setTab(part1 + dragCalc.move() + part2);
-  }
-  const selectNext = () => {
-    let newElement = tune!.getElementFromChar(currentElement!.endChar) as abcjs.AbcElem
-    if (newElement.el_type !== 'note') {
-      newElement = tune!.getElementFromChar(newElement.endChar) as abcjs.AbcElem
-    }
-    setCurrentElementFocus(newElement);
-  }
-  const selectPrev = () => {
-    let newElement = tune!.getElementFromChar(currentElement!.startChar - 1) as abcjs.AbcElem
-    if (newElement.el_type !== 'note') {
-      newElement = tune!.getElementFromChar(newElement.startChar - 1) as abcjs.AbcElem
-    }
-    setCurrentElementFocus(newElement);
-  }
   const control = new Control(tune, tab, setTab, currentElement, setCurrentElementFocus, setAction);
   useEffect(() => {
     if (currentElement && document.activeElement !== addTextInput.current) {
       document.onkeydown = (e) => {
-
+        if(document.activeElement === addTextInput.current) return;
         const mapChangeNoteKeys = {
           Digit0: 'z',
           KeyC: 'C',
@@ -144,19 +123,19 @@ L:1
           control.addNote()
         }
         if (e.code === "ArrowUp") {
-          move(-1)
+          control.move(-1)
         }
         if (e.code === "ArrowDown") {
-          move(+1)
+          control.move(+1)
         }
         if (e.code === "ArrowRight" && tune) {
-          selectNext()
+          control.selectNext()
         }
         if (e.code === "ArrowLeft" && tune) {
-          selectPrev()
+          control.selectPrev()
         }
       }
-
+      setText('')
     }
     return () => {
       document.onkeydown = null;
@@ -195,7 +174,6 @@ L:1
   }
   return (
     <>
-
       <div className="ltr font-sans flex flex-col gap-4 items-center justify-center min-h-[calc(100vh-200px)]">
         {
           editable &&

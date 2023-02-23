@@ -1,12 +1,33 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { faListCheck } from '@fortawesome/free-solid-svg-icons';
-
-export default function PageTitle({ title, icon }: { title: string, icon?: IconProp }) {
-    return (
-        <div className="rounded-l-lg shadow w-fit py-4 px-8 flex gap-8 items-center bg-secondary-400 text-secondary-100">
-            {icon && <FontAwesomeIcon className='text-[2.7rem] 2xl:text-[3rem]' icon={icon} />}
-            <span className="text-4xl 2xl:text-5xl font-bold mt-1">{title}</span>
+import React from "react";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { routerSlice } from "../slices/routerSlice";
+export default function PageTitle({
+  title,
+  subTitle,
+  iconSrc,
+}: {
+  title: string;
+  subTitle: string;
+  iconSrc: string;
+}) {
+  const { routeStack } = useAppSelector((state) => state.routerSlice);
+  const dispatch = useAppDispatch();
+  return (
+    <div className="bg-[#DBF8FD] p-8 flex justify-between">
+      <div className="shrink-0">
+        <div className="flex gap-2 text-2xl text-sky-900">
+          <img className="w-8  icon-indigoo" src={iconSrc} />
+          <h1 className="font-medium">{title}</h1>
         </div>
-    );
+        <span className="block mt-1 text-sky-700 font-medium">{subTitle}</span>
+      </div>
+      {routeStack.length > 1 && (
+        <ArrowLeftOutlined
+          onClick={() => dispatch(routerSlice.actions.pop())}
+          className="text-3xl text-[#0E3069] cursor-pointer transition hover:scale-110"
+        />
+      )}
+    </div>
+  );
 }
