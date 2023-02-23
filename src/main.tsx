@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         {/* <App2 /> */}
         <Play
           editable={true}
-          index={1}
+          index={undefined}
           key1="treble"
           key2="treble"
           voice1="D/4E/4F/4G/4|A/4B/4C'/4D'/4|E'/4D'/4B/4C'/4|_B/4C'/4D'/4E'/4|F'/4F/4A/4_B/4|C'/4A/4_B/4C'/4|_B/4A/4G/4B/4|A/4D/4E/4F/4|G/4A/4B/4^C'/4|D'|]"

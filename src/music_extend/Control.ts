@@ -34,7 +34,7 @@ export default class Control {
     if (this.currentElement === null) return;
     const [part1, part2, note, orginalLength] = this.fullDestructionTab();
     const length = orginalLength ? "/" + orginalLength : "";
-    const newNote = note.replace(/[A-G]/, char);
+    const newNote = note.replace(/a|b|c|d|e|f|g|z/, char);
     this.setTab(part1 + newNote + length + part2);
   }
   public changeNoteLength(length: number) {

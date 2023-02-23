@@ -99,7 +99,7 @@ function setTune(userAction: boolean, { editable, tab, setTab, currentElement, s
     const clickListener: abcjs.ClickListener = (abcElem, tuneNumber, classes, analysis, drag) => {
         if (editable) {
             // to make the first stave only able to control
-            if (abcElem.abselem.counters.voice == index) {
+            if (abcElem.abselem.counters.voice == index || index === undefined) {
 
                 setCurrentElement(abcElem);
                 // on Drag

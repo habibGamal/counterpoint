@@ -92,7 +92,7 @@ L:1
   useEffect(() => {
     if (currentElement && document.activeElement !== addTextInput.current) {
       document.onkeydown = (e) => {
-        if(document.activeElement === addTextInput.current) return;
+        if (document.activeElement === addTextInput.current) return;
         const mapChangeNoteKeys = {
           Digit0: 'z',
           KeyC: 'C',
@@ -164,13 +164,27 @@ L:1
     const part1 = tab.substring(0, currentElement.startChar);
     const part2 = tab.substring(currentElement.endChar);
     let note = tab.slice(currentElement.startChar, currentElement.endChar);
-
     if (note.match(/".*"/g))
       note = note.replace(/".*"/g, `"${e.target.value}"`);
     else
       note = `"${e.target.value}"` + note;
     setText(e.target.value)
     setTab(part1 + note + part2);
+  }
+  const addSection = () => {
+    if (currentElement === null) return;
+    console.log(currentElement, tune);
+    // get the next |
+    const getCharIndexOfSeparator = (charIndex: number = currentElement.endChar): number => {
+      if (tab.at(charIndex) === '|') return charIndex;
+      return getCharIndexOfSeparator(charIndex + 1)
+    }
+    const charIndexOfSeparator = getCharIndexOfSeparator();
+    const part1 = tab.substring(0, charIndexOfSeparator);
+    const part2 = tab.substring(charIndexOfSeparator);
+    console.log(part1);
+    console.log(part2);
+    setTab(part1 + '|z' + part2)
   }
   return (
     <>
@@ -179,9 +193,10 @@ L:1
           editable &&
           <>
             <ButtonGroup>
-              <Button onClick={() => control.deleteNote()} content="delete" />
-              <Button onClick={() => control.addNote()} content="add" />
-              <Button onClick={() => addText()} content="add Text" />
+              <Button onClick={() => control.deleteNote()} content="Delete" />
+              <Button onClick={() => control.addNote()} content="Add" />
+              <Button onClick={() => addText()} content="Add Text" />
+              <Button onClick={() => addSection()} content="Add Section" />
             </ButtonGroup>
             <div className="flex gap-8 justify-center">
               <ButtonGroup>
