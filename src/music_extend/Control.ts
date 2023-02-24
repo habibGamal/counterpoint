@@ -34,7 +34,7 @@ export default class Control {
     if (this.currentElement === null) return;
     const [part1, part2, note, orginalLength] = this.fullDestructionTab();
     const length = orginalLength ? "/" + orginalLength : "";
-    const newNote = note.replace(/a|b|c|d|e|f|g|z/, char);
+    const newNote = note.replace(/A|B|C|D|E|G|G|Z/, char);
     this.setTab(part1 + newNote + length + part2);
   }
   public changeNoteLength(length: number) {
@@ -62,9 +62,11 @@ export default class Control {
       .slice(this.currentElement.startChar, this.currentElement.endChar)
       .split("/");
     const newNote = orginalLength
-      ? part1 + "z/" + orginalLength + part2
+      ? part1 + "z/" + orginalLength.replace(")","") + part2
       : part1 + "z" + part2;
     this.setAction("ADD");
+    console.log(newNote);
+    
     this.setTab(newNote);
   }
   private getNextNonBarElement() {
@@ -98,9 +100,10 @@ export default class Control {
     // get text of note 2
     const note2 = this.tab.slice(note2Element.startChar, note2Element.endChar);
     const part2 = this.tab.substring(note2Element!.endChar);
-    const newNote = part1 + note + betweenNote1Note2 + note2 + part2;
-
-    this.setTab(newNote.replaceAll(/\(|\)/g, ""));
+    const partToBeChanged = note + betweenNote1Note2 + note2;
+    // remove first and last char
+    const newNote = part1 + partToBeChanged.slice(1,-1) + part2;
+    this.setTab(newNote);
   }
   public addTie() {
     if (this.currentElement === null || this.tune === undefined) return;
@@ -171,7 +174,7 @@ export default class Control {
   }
   public selectPrev() {
     let newElement = this.tune!.getElementFromChar(
-        this.currentElement!.startChar - 1
+      this.currentElement!.startChar - 1
     ) as abcjs.AbcElem;
     if (newElement.el_type !== "note") {
       newElement = this.tune!.getElementFromChar(
@@ -179,5 +182,33 @@ export default class Control {
       ) as abcjs.AbcElem;
     }
     this.setCurrentElementFocus(newElement);
+  }
+  private getNextCharIndexOfSeparator(
+    charIndex: number = this.currentElement!.endChar
+  ): number {
+    if (this.tab.at(charIndex) === "|") return charIndex;
+    return this.getNextCharIndexOfSeparator(charIndex + 1);
+  }
+  private getPrevCharIndexOfSeparator(
+    charIndex: number = this.currentElement!.startChar
+  ): number {
+    if (this.tab.at(charIndex) === "|" || this.tab.at(charIndex) === "]")
+      return charIndex;
+    return this.getPrevCharIndexOfSeparator(charIndex - 1);
+  }
+  public addSection() {
+    if (this.currentElement === null) return;
+    const nextCharIndexOfSeparator = this.getNextCharIndexOfSeparator();
+    const part1 = this.tab.substring(0, nextCharIndexOfSeparator);
+    const part2 = this.tab.substring(nextCharIndexOfSeparator);
+    this.setTab(part1 + "|z" + part2);
+  }
+  public deleteSection() {
+    if (this.currentElement === null) return;
+    const charPrevIndexOfSeparator = this.getPrevCharIndexOfSeparator();
+    const charNextIndexOfSeparator = this.getNextCharIndexOfSeparator();
+    const part1 = this.tab.substring(0, charPrevIndexOfSeparator + 1);
+    const part2 = this.tab.substring(charNextIndexOfSeparator + 1);
+    this.setTab(part1 + part2);
   }
 }

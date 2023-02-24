@@ -16,48 +16,38 @@ export default function CounterpointTypes() {
       <Container>
         <div className="relative">
           <ul className="bg-sky-900 text-2xl py-4 px-8 my-16 rounded-lg">
-            <li
+            <ListItem
               onClick={() =>
                 dispatch(routerSlice.actions.pushTab({ tab: "Type1" }))
               }
-              className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
-            >
-              النوع الاول
-            </li>
-            <li
+              text="النوع الاول"
+            />
+            <ListItem
               onClick={() =>
                 dispatch(routerSlice.actions.pushTab({ tab: "Type2" }))
               }
-              className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
-            >
-              النوع الثاني
-            </li>
-            <li
+              text="النوع الثاني"
+            />
+            <ListItem
               onClick={() =>
                 dispatch(routerSlice.actions.pushTab({ tab: "Type3" }))
               }
-              className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
-            >
-              النوع الثالث
-            </li>
-            <li
+              text="النوع الثالث"
+            />
+            <ListItem
               onClick={() =>
                 dispatch(routerSlice.actions.pushTab({ tab: "Type4" }))
               }
-              className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
-            >
-              النوع الرابع
-            </li>
-            <li
+              text="النوع الرابع"
+            />
+            <ListItem
               onClick={() =>
                 dispatch(routerSlice.actions.pushTab({ tab: "Type5" }))
               }
-              className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
-            >
-              النوع الخامس
-            </li>
+              text="النوع الخامس"
+            />
           </ul>
-          <div className="absolute border-2 border-sky-900 bg-[#f7f7f7] w-2/3 left-0 top-0  rounded-r-full h-full grid place-items-center">
+          <div className="absolute border-2 border-sky-900 bg-[#f7f7f7] w-1/2 2xl:w-2/3 left-0 top-0  rounded-r-full h-full grid place-items-center">
             <img src="illustrations/counterpoint_types.png" />
           </div>
         </div>
@@ -65,3 +55,19 @@ export default function CounterpointTypes() {
     </div>
   );
 }
+const ListItem = ({
+  onClick,
+  text,
+}: {
+  onClick: () => void;
+  text: React.ReactNode;
+}) => {
+  return (
+    <li
+      onClick={() => onClick()}
+      className="bg-white my-8 p-4 rounded-lg transition hover:scale-[1.01] cursor-pointer"
+    >
+      {text}
+    </li>
+  );
+};

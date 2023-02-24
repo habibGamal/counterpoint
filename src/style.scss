@@ -134,3 +134,11 @@ body::-webkit-scrollbar-thumb {
 .ant-btn-default {
     background-color: #ffffff;
 }
+.ant-form-item *, .ant-form-item .ant-form-label > label {
+    font-family: Tajawal;
+    font-size: 1.3rem !important;
+}
+
+.ant-radio-group.wrong > label {
+    color:red;
+}

@@ -14,7 +14,7 @@ export default function PageTitle({
   const { routeStack } = useAppSelector((state) => state.routerSlice);
   const dispatch = useAppDispatch();
   return (
-    <div className="bg-[#DBF8FD] p-8 flex justify-between">
+    <div className="bg-[#DBF8FD] p-8 flex justify-between pr-20">
       <div className="shrink-0">
         <div className="flex gap-2 text-2xl text-sky-900">
           <img className="w-8  icon-indigoo" src={iconSrc} />

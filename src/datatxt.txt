@@ -1,0 +1,12 @@
+Fig. 36
+---------
+X:1
+M:4/4
+K:C
+V:RH clef=treble name=C.P
+V:LH clef=bass name=C.F
+L:1
+[V: RH]z/2B/2|C'/2B/2|A/2B/2|C'/2G/2|A/2B/2|C'/2A/2|B/2D'/2|E'/2D'/2|C'/2D'/2|E'|]
+L:1
+[V: LH]E,|C,|D,|C,|A,,|A,|G,|E,|F,|E,|]
+        
