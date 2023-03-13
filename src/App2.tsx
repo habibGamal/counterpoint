@@ -15,6 +15,7 @@ import Play from "./Play";
 import Questions from "./pages/Questions";
 import Exersizes from "./pages/Exersizes";
 import About from "./pages/About";
+import Home from "./pages/Home";
 
 export default function App2() {
   const { routeStack, routeParams } = useAppSelector(
@@ -29,7 +30,7 @@ export default function App2() {
     const currentTab = routeStack[routeStack.length - 1];
     console.log(currentTab);
     
-    if (currentTab === "Home") setCurrentTabRender(<Unimplemented />);
+    if (currentTab === "Home") setCurrentTabRender(<Home />);
     if (currentTab === "Rules") setCurrentTabRender(<Rules />);
     if (currentTab === "ConterpointTypes")
       setCurrentTabRender(<CounterpointTypes />);

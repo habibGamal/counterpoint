@@ -22,7 +22,7 @@ interface RouterState {
 
 // Define the initial state using that type
 const initialState: RouterState = {
-  routeStack: ["Rules"],
+  routeStack: ["Home"],
   routeParams: null,
 };
 

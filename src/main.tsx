@@ -6,6 +6,11 @@ import store from "./store";
 import Play from "./Play";
 import App2 from "./App2";
 import { ConfigProvider } from "antd";
+import { Editor } from "./lib/aiharmony/Editor";
+// import { Editor } from "./lib/aiharmony/editor";
+// import editor from './lib/aiharmony/editor.html?raw'
+// import { Editor } from "./lib/abc/abc";
+// var perf =require('../public/editor.html');
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Provider store={store}>
@@ -13,21 +18,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
         direction="rtl"
         theme={{
           token: {
-            colorPrimary: "#5247c7",
+            colorPrimary: "#49A3DC",
             // fontSize: 18,
           },
         }}
       >
-        <App2 />
-        {/* <Play
-          editable={true}
-          index={undefined}
-          key1="treble"
-          key2="treble"
-          voice1="D/4E/4F/4G/4|A/4B/4C'/4D'/4|E'/4D'/4B/4C'/4|_B/4C'/4D'/4E'/4|F'/4F/4A/4_B/4|C'/4A/4_B/4C'/4|_B/4A/4G/4B/4|A/4D/4E/4F/4|G/4A/4B/4^C'/4|D'|]"
-          voice2="D|F|E|G|F|A|G|F|E|D|]"
-        /> */}
-        {/* <App /> */}
+        {/* <App2 /> */}
+        <Editor />
+        {/* <div dangerouslySetInnerHTML={{__html:editor}}></div> */}
       </ConfigProvider>
     </Provider>
   </React.StrictMode>
