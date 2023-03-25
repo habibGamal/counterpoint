@@ -3,6 +3,8 @@ import NavItem from "./NavItem";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { Tab, routerSlice } from "../slices/routerSlice";
 import { MenuOutlined } from "@ant-design/icons";
+import { UserAuth } from "../context/AuthContext";
+import { auth } from "../firebase";
 const Navbar = ({ toggleState }: { toggleState: boolean }) => {
     const activeTab = useAppSelector(
         (state) =>
@@ -20,16 +22,21 @@ const Navbar = ({ toggleState }: { toggleState: boolean }) => {
     useEffect(() => {
         setToggle(toggleState);
     }, [toggleState]);
+    const {setCanAccess} = UserAuth()!;
+    const logout = ()=>{
+        auth.signOut();
+        setCanAccess!(false);
+    }
     return (
         <>
             <div
                 onClick={() => setToggle(!toggle)}
-                className="fixed select-none active:scale-95 cursor-pointer transition z-10 top-8 right-8 rounded-xl bg-white shadow-xl w-10 aspect-square grid place-items-center"
+                className="fixed select-none active:scale-95 cursor-pointer transition z-50 top-8 right-8 rounded-xl bg-white shadow-xl w-10 aspect-square grid place-items-center"
             >
                 <MenuOutlined />
             </div>
             {toggle == false && (
-                <nav className="w-[300px] shrink-0 navigation-gradient h-screen flex flex-col justify-evenly sticky top-0">
+                <nav className="w-[300px] shrink-0 navigation-gradient h-screen flex flex-col justify-evenly sticky top-0 z-40">
                     <ul className="flex flex-col gap-2  text-white justify-center mt-8">
                         <NavItem
                             onClick={() => changeTab("Home")}
@@ -66,6 +73,19 @@ const Navbar = ({ toggleState }: { toggleState: boolean }) => {
                                 dispatch(
                                     routerSlice.actions.pushTab({
                                         tab: "Play",
+                                    })
+                                );
+                                // setActiveTab("Play");
+                            }}
+                            active={isActive("Play")}
+                            icon="note-add"
+                            text="انشاء مقطوعة"
+                        />
+                        {/* <NavItem
+                            onClick={() => {
+                                dispatch(
+                                    routerSlice.actions.pushTab({
+                                        tab: "PlayOLD",
                                         params: {
                                             editable: true,
                                             key1: "treble",
@@ -81,7 +101,7 @@ const Navbar = ({ toggleState }: { toggleState: boolean }) => {
                             active={isActive("Play")}
                             icon="note-add"
                             text="انشاء مقطوعة"
-                        />
+                        /> */}
                         <NavItem
                             onClick={() => changeTab("Questions")}
                             active={isActive("Questions")}
@@ -99,6 +119,11 @@ const Navbar = ({ toggleState }: { toggleState: boolean }) => {
                             active={isActive("About")}
                             icon="info-circle"
                             text="عنا"
+                        />
+                        <NavItem
+                            onClick={() => logout()}
+                            icon="logout"
+                            text="تسجيل خروج"
                         />
                     </ul>
                     <div className="rounded-xl bg-[#ffffff73] w-[250px] p-8 mx-auto text-lg font-medium">

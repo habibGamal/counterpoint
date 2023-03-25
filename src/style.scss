@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-$primary-color: #49A3DC;
+$primary-color: #49a3dc;
+img {
+    height: unset;
+}
 // add font Tajawal with all weights
 @font-face {
     font-family: Tajawal;
@@ -38,10 +41,11 @@ body {
     background-repeat: no-repeat;
     font-family: Tajawal;
     min-height: 100vh;
+    padding: 0;
 }
 
 body * {
-    background: none;
+    // background: none;
 }
 body::-webkit-scrollbar {
     width: 4px;
@@ -52,7 +56,7 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-    background-color: #0E3069;
+    background-color: #0e3069;
 }
 .rtl,
 .rtl * {
@@ -93,7 +97,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .bg-home-image {
-    background-image: url("./illustrations/spikes.png");
+    background-image: url("./assets/spikes.png");
     // background-size: cover;
     // background-position: center;
     // background-repeat: no-repeat;
@@ -140,11 +144,13 @@ body::-webkit-scrollbar-thumb {
 .ant-btn-default {
     background-color: #ffffff;
 }
-.ant-form-item *, .ant-form-item .ant-form-label > label {
+.ant-form-item *,
+.ant-form-item .ant-form-label > label {
     font-family: Tajawal;
     font-size: 1.3rem !important;
 }
 
 .ant-radio-group.wrong > label {
-    color:red;
+    color: red;
 }
+

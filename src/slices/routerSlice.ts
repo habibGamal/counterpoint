@@ -7,6 +7,7 @@ export type Tab =
   | "ConterpointTypes"
   | "Exersizes"
   | "Play"
+  | "PlayOLD"
   | "Exams"
   | "About"
   | "Type1"

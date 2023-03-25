@@ -1,5 +1,5 @@
 import abcjs from "../lib/abc/abc";
-import { Actions } from "../Play";
+import { Actions } from "../PlayOLD";
 import Accidental from "./Accidentals";
 import { DragCalculator } from "./DragCalculator";
 

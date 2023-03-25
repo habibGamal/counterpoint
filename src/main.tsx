@@ -1,32 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import "./style.scss";
 import { Provider } from "react-redux";
 import store from "./store";
-import Play from "./Play";
 import App2 from "./App2";
 import { ConfigProvider } from "antd";
-import { Editor } from "./lib/aiharmony/Editor";
-// import { Editor } from "./lib/aiharmony/editor";
-// import editor from './lib/aiharmony/editor.html?raw'
-// import { Editor } from "./lib/abc/abc";
-// var perf =require('../public/editor.html');
+
+import { init } from "./lib/extend/js/init.js";
+import Play from "./Play";
+import "./style.scss";
+import "./bootstrap/bootstrap.scss";
+import { AuthContextProvider } from "./context/AuthContext";
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ConfigProvider
-        direction="rtl"
-        theme={{
-          token: {
-            colorPrimary: "#49A3DC",
-            // fontSize: 18,
-          },
-        }}
-      >
-        {/* <App2 /> */}
-        <Editor />
-        {/* <div dangerouslySetInnerHTML={{__html:editor}}></div> */}
-      </ConfigProvider>
-    </Provider>
-  </React.StrictMode>
+    <React.StrictMode>
+        <Provider store={store}>
+            <ConfigProvider
+                direction="rtl"
+                theme={{
+                    token: {
+                        colorPrimary: "#49A3DC",
+                        // fontSize: 18,
+                    },
+                }}
+            >
+                <AuthContextProvider>
+                    <App2 />
+                </AuthContextProvider>
+                {/* <Play /> */}
+                {/* <div dangerouslySetInnerHTML={{__html:editor}}></div> */}
+            </ConfigProvider>
+        </Provider>
+    </React.StrictMode>
 );
