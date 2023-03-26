@@ -97,12 +97,14 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
                     id="toolbar3"
                     className="no-print flex flex-wrap rounded-xl shadow-xl w-fit mx-auto  p-2 px-3 bg-[#ffffff0a] gap-1 items-center"
                 />
+                
                 <div className="h-[500px] w-fit mx-auto rounded-xl shadow-xl bg-white pb-4" id="abc"></div>
 
                 <div
                     id="toolbar4"
                     className="no-print relative z-50 flex flex-wrap rounded-xl shadow-xl w-fit mx-auto  p-2 px-3 bg-[#ffffff0a] gap-1"
                 />
+                <div id="customResults"></div>
                 <div id="audio" className="hidden"></div>
                 <div className="p-1" id="testResult" />
                 <div id="testResult2" />
@@ -132,9 +134,9 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
                 <div id="jplayer" />
             </div>
             <div>
-                <div className="modal" id="Modal1" tabIndex={-1} role="dialog">
+                <div className="modal bg-[#00000038]" id="Modal1" tabIndex={-1} role="dialog">
                     <div id="ModalDialog1" className="modal-dialog" role="document">
-                        <div className="modal-content">
+                        <div className="modal-content !bg-sky-50">
                             <div className="modal-header">
                                 <h5 className="modal-title" id="ModalTitle1" />
                                 <button type="button" className="close" data-dismiss="modal" aria-label="Close">
@@ -160,7 +162,7 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
                         </div>
                     </div>
                 </div>
-                <div style={{ display: "none" }} className="p-2" id="analysisConsole" />
+                <div  className="p-2 hidden" id="analysisConsole" />
                 <div style={{ display: "none" }} id="console"></div>
             </div>
         </div>

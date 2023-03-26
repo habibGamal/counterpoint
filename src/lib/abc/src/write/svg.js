@@ -185,11 +185,13 @@ Svg.prototype.text = function(text, attr, target) {
 		if (lines[i].indexOf("\x03") !== -1) {
 			var parts = lines[i].split('\x03')
 			line.textContent = parts[0];
+			line.dataset.content = parts[0];
 			if (parts[1]) {
 				var ts2 = document.createElementNS(svgNS, 'tspan');
 				ts2.setAttribute("dy", "-0.3em");
 				ts2.setAttribute("style", "font-size:0.7em");
 				ts2.textContent = parts[1];
+				line.dataset.content = parts[1];
 				line.appendChild(ts2);
 			}
 			if (parts[2]) {
@@ -198,10 +200,14 @@ Svg.prototype.text = function(text, attr, target) {
 				ts3.setAttribute("dy", dist);
 				ts3.setAttribute("style", "font-size:0.7em");
 				ts3.textContent = parts[2];
+				line.dataset.content = parts[2];
 				line.appendChild(ts3);
 			}
-		} else
+		} else{
 			line.textContent = lines[i];
+			line.dataset.content = lines[i]
+			
+		}
 		el.appendChild(line);
 	}
 	if (target)

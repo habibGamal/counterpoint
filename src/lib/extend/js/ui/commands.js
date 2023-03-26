@@ -141,7 +141,7 @@ export function toolbarButtonHtml(command, showHints) {
   if (command.toolbar.type === 'image') {
     st += `<img id='${command.id}i' src=img/toolbar/${command.id}.png style="height:${mobileOpt[mobileOrTablet].toolbar_img_height}px">`;
     if (showHints && command.toolbar.hintText) {
-      st += `&nbsp;<span style='font-size: 0.8em'>${command.toolbar.hintText}</span>`;
+      st += `&nbsp;<span class="text-lg mx-2">${command.toolbar.hintText}</span>`;
     }
   }
   if (command.toolbar.type === 'text') {
@@ -295,7 +295,7 @@ export let commands = [
   // },
   {
     id: 'share',
-    toolbar: {type: 'image', toolbar_id: 1, hintText: 'Share'},
+    toolbar: {type: 'image', toolbar_id: 1, hintText: 'مشاركة'},
     event: 'onclick',
     keys: ['Ctrl+R'],
     command: () => { showShareModal() },

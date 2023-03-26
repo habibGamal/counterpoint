@@ -61,21 +61,21 @@ export function showTextModal(v, n, type) {
     title = 'Add lyric below note';
   } else {
     text = nd.voices[v].notes[n].text;
-    title = 'Add text above note';
+    title = 'أضف نص فوق النغمة';
   }
   text = text ? text : "";
   let st = '';
   st += `<div class="input-group mb-3">`;
   st += ` <textarea id=textArea type="text" rows=3 class="form-control">${text}</textarea>`;
   st += `</div>`;
-  st += showSymbols();
-  if (!mobileOrTablet) {
-    st += `<span style='color:#aaaaaa'><img src=img/keyboard3.png height=20 style='vertical-align:middle; opacity:0.3'> Press Shift+Enter to add new row</span>`
-  }
+  // st += showSymbols();
+  // if (!mobileOrTablet) {
+  //   st += `<span style='color:#aaaaaa'><img src=img/keyboard3.png height=20 style='vertical-align:middle; opacity:0.3'> Press Shift+Enter to add new row</span>`
+  // }
   let footer = '';
-  footer += `<button type="button" class="btn btn-primary" id=modalOk>OK</button>`;
-  footer += `<button type="button" class="btn btn-danger" id=modalDelete>Delete</button>`;
-  footer += `<button type="button" class="btn btn-secondary" data-dismiss="modal" id=modalCancel>Cancel</button>`;
+  footer += `<button type="button" class="btn btn-primary" id=modalOk>تم</button>`;
+  // footer += `<button type="button" class="btn btn-danger" id=modalDelete>Delete</button>`;
+  // footer += `<button type="button" class="btn btn-secondary" data-dismiss="modal" id=modalCancel>Cancel</button>`;
   showModal(1, title, st, footer, ["right"], [], true, () =>
     {
       let el = document.querySelector('#textArea');
