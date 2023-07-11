@@ -14,21 +14,17 @@ export function dataToAbc(instrument) {
     abc += "%%score {V0 *M| V1}\n";
     $("#tempo").html(`Tempo: ♩=${nd.tempo}`);
     abc += `Q:1/4=${nd.tempo}\n`;
-    abc +=
-        "M:" + nd.timesig.beats_per_measure + "/" + nd.timesig.beat_type + "\n";
+    abc += "M:" + nd.timesig.beats_per_measure + "/" + nd.timesig.beat_type + "\n";
     abc += "K:" + nd.keysig.name + "\n";
     abc += "L:1/16\n";
+    console.log(ares);
     for (let v = 0; v < nd.voices.length; ++v) {
         let vc = nd.voices[v];
         let name = vc.name;
         if (nd.algo === "CA3") {
             let vocra = ares.getVocra(v);
             let spec = ares.getSpecies(v);
-            if (
-                vocra != null &&
-                vc.name.slice(0, 3).toLowerCase() !==
-                    vocra.slice(0, 3).toLowerCase()
-            )
+            if (vocra != null && vc.name.slice(0, 3).toLowerCase() !== vocra.slice(0, 3).toLowerCase())
                 name += `\\n[${vocra}]`;
             if (spec != null && ares.av_cnt > 1) {
                 if (spec === 0) {
@@ -65,9 +61,10 @@ export function dataToAbc(instrument) {
             let flags = ares.getFlagsInInterval(v, s, s + nt.len);
             nd.abc_charStarts[abc.length] = { voice: v, note: n };
             nt.abc_charStarts = abc.length;
-
-            if (flags.red > 0) abc += '"^⚑"';
-            else if (flags.yellow > 0) abc += '"^⚠"';
+            if (flags.red > 0) {
+                // console.log(flags);
+                if (flags.notPart == false) abc += '"^⚑"';
+            } else if (flags.yellow > 0) abc += '"^⚠"';
             // custom rules
             const currentNote = nt;
             const nextNote = vc.notes[n + 1];
@@ -75,14 +72,15 @@ export function dataToAbc(instrument) {
                 currentNote.d != 0 &&
                 currentNote.d === nextNote?.d &&
                 currentNote.len === 16 &&
-                nextNote.len === 16
+                nextNote.len === 16 &&
+                nd.algo === "CA3"
             ) {
-                // abc += '"^✘"';
                 nd.styles.push({
-                    style: `.abcjs-note.abcjs-d1.abcjs-p${currentNote.abcelem.pitches[0].pitch}.abcjs-l0.abcjs-m${m}.abcjs-v${v}.abcjs-n${note_in_measure}`,
-                    fill: "#f0932b",
+                    style: `.abcjs-note.abcjs-d1.abcjs-p${currentNote.abcelem?.pitches?.[0].pitch}.abcjs-l0.abcjs-m${
+                        m + 1
+                    }.abcjs-v${v}.abcjs-n${note_in_measure}`,
+                    fill: "#8c7aef",
                 });
-                console.log("should be error", currentNote.abcelem.pitches[0].pitch);
             }
             // if (ares.harm != null && s in ares.harm && ares.vid != null && v === ares.vid[0] && settings.show_harmony) {
             //   let harm_st = '';
@@ -131,11 +129,7 @@ export function dataToAbc(instrument) {
                 if (nt.alter == 10) {
                     if (!(d in altmap)) {
                         // First unaltered
-                        if (
-                            d in prev_altmap &&
-                            prev_altmap[d] != nt.alter &&
-                            prev_altmap[d] != nd.keysig.imprint[dc]
-                        ) {
+                        if (d in prev_altmap && prev_altmap[d] != nt.alter && prev_altmap[d] != nd.keysig.imprint[dc]) {
                             // First unaltered after alter in previous measure
                             show_alter = nd.keysig.imprint[dc];
                         }
@@ -148,12 +142,7 @@ export function dataToAbc(instrument) {
                         // Same altered
                         show_alter = 10;
                     }
-                    if (
-                        n &&
-                        vc.notes[n - 1].startsTie &&
-                        vc.notes[n - 1].d &&
-                        nt.d
-                    ) {
+                    if (n && vc.notes[n - 1].startsTie && vc.notes[n - 1].d && nt.d) {
                         // Hide alteration after tie
                         show_alter = 10;
                     }

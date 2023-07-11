@@ -103,10 +103,10 @@ window.onload = function () {
     window.onresize = () => {
         if (window.innerWidth == lastWidth) return;
         lastWidth = window.innerWidth;
-        $("body").css("padding-top", $("#toolbar").height() + 4);
+        // $("body").css("padding-top", $("#toolbar").height() + 4);
         async_redraw();
     };
-    $("body").css("padding-top", $("#toolbar").height() + 4);
+    // $("body").css("padding-top", $("#toolbar").height() + 4);
 };
 
 // init();

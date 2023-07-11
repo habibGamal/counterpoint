@@ -18,24 +18,19 @@ export const SEVERITY_RED_COLOR = "red";
 export const SEVERITY_YELLOW_COLOR = "#F19900";
 
 const slur_flag_ids = new Set([
-    8, 22, 58, 88, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111,
-    112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126,
-    127, 128, 129, 130, 131, 132, 133, 134, 140, 141, 142, 143, 144, 145, 146,
-    147, 148, 149, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186,
-    191, 192, 203, 204, 205, 206, 207, 267, 268, 269, 270, 271, 277, 278, 279,
-    280, 281, 296, 297, 298, 299, 300, 304, 315, 316, 317, 318, 319, 327, 328,
-    329, 330, 331, 336, 337, 338, 339, 340, 348, 351, 352, 353, 354, 355, 386,
-    389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 414, 415, 416, 417, 418,
-    421, 422, 423, 424, 425, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447,
-    448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 459, 460, 461, 462, 463,
-    464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474, 475, 476, 477, 478,
-    506, 507, 508, 509, 510,
+    8, 22, 58, 88, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+    120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 140, 141, 142, 143, 144, 145, 146, 147,
+    148, 149, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 191, 192, 203, 204, 205, 206, 207, 267, 268,
+    269, 270, 271, 277, 278, 279, 280, 281, 296, 297, 298, 299, 300, 304, 315, 316, 317, 318, 319, 327, 328, 329, 330,
+    331, 336, 337, 338, 339, 340, 348, 351, 352, 353, 354, 355, 386, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398,
+    414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 438, 439, 440, 441, 442, 443, 444, 445, 446, 447, 448, 449, 450,
+    451, 452, 453, 454, 455, 456, 457, 459, 460, 461, 462, 463, 464, 465, 466, 467, 468, 469, 470, 471, 472, 473, 474,
+    475, 476, 477, 478, 506, 507, 508, 509, 510,
 ]);
 
 const glis_flag_ids = new Set([
-    84, 85, 481, 482, 248, 376, 249, 284, 385, 250, 259, 224, 484, 485, 488,
-    490, 491, 492, 260, 225, 208, 212, 210, 166, 262, 72, 73, 76, 167, 263, 209,
-    213, 211, 168, 264, 169, 276, 173, 174,
+    84, 85, 481, 482, 248, 376, 249, 284, 385, 250, 259, 224, 484, 485, 488, 490, 491, 492, 260, 225, 208, 212, 210,
+    166, 262, 72, 73, 76, 167, 263, 209, 213, 211, 168, 264, 169, 276, 173, 174,
 ]);
 
 export const vocra_name = {
@@ -96,11 +91,7 @@ class AnalysisResults {
         this.mode = b256_ui(st, pos, 1);
         const hli_size = b256_ui(st, pos, 2);
         for (let hs = 0; hs < hli_size; ++hs) {
-            this.harm[b256_ui(st, pos, 2) + this.s_start] = b256_safeString(
-                st,
-                pos,
-                1
-            );
+            this.harm[b256_ui(st, pos, 2) + this.s_start] = b256_safeString(st, pos, 1);
         }
         for (let v = 0; v < this.av_cnt; ++v) {
             let va = b256_ui(st, pos, 1);
@@ -135,11 +126,7 @@ class AnalysisResults {
                         paragraph_num: b256_ui(st, pos, 1),
                     };
                     if (!environment.startsWith("prod")) {
-                        if (
-                            Object.keys(nd.rules_whitelist).length &&
-                            !(flag.fl in nd.rules_whitelist)
-                        )
-                            continue;
+                        if (Object.keys(nd.rules_whitelist).length && !(flag.fl in nd.rules_whitelist)) continue;
                         if (flag.fl in nd.rules_blacklist) continue;
                     }
                     this.flag[v][s + this.s_start].push(flag);
@@ -176,9 +163,7 @@ class AnalysisResults {
         if (verbosity > 1 && fla.subComment) st += " (" + fla.subComment + ")";
         if (!showLinks) return st;
         let sl_st = "";
-        sl_st = `bar ${Math.floor(fla.fsl / npm) + 1}, beat ${
-            Math.floor((fla.fsl % npm) / 4) + 1
-        }`;
+        sl_st = `bar ${Math.floor(fla.fsl / npm) + 1}, beat ${Math.floor((fla.fsl % npm) / 4) + 1}`;
         if (this.flag.length > 2 && fla.fvl !== fla.v) {
             if (this.vid[fla.fvl] < nd.voices.length) {
                 st += " - with " + nd.voices[this.vid[fla.fvl]].name;
@@ -197,8 +182,7 @@ class AnalysisResults {
     }
 
     static getRulesPdfUrl() {
-        if (mobileOrTablet)
-            return "https://www.docdroid.net/T62f497/artinfuser-counterpoint-rules-pdf";
+        if (mobileOrTablet) return "https://www.docdroid.net/T62f497/artinfuser-counterpoint-rules-pdf";
         else return "md/pdf/Artinfuser_Counterpoint_rules.pdf";
     }
 
@@ -240,9 +224,7 @@ class AnalysisResults {
         if (this.mode == null || this.mode === 13 || this.modName !== "CA3") {
             $("#mode").html("");
         } else if (nd.keysig.mode === this.mode) {
-            $("#mode").html(
-                "<b>" + modeName(nd.keysig.fifths, this.mode) + "</b>"
-            );
+            $("#mode").html("<b>" + modeName(nd.keysig.fifths, this.mode) + "</b>");
         } else {
             $("#mode").html(modeName(nd.keysig.fifths, this.mode));
         }
@@ -265,10 +247,7 @@ class AnalysisResults {
                 let beat = Math.floor((s % npm) / 4);
                 n = nd.getClosestNote(vi, s, n);
                 if (n >= nd.voices[vi].notes.length) continue;
-                let noteName = d2name(
-                    nd.voices[vi].notes[n].d,
-                    nd.get_realAlter(vi, n)
-                );
+                let noteName = d2name(nd.voices[vi].notes[n].d, nd.get_realAlter(vi, n));
                 if (noteName !== "rest") noteName = "note " + noteName;
                 for (let f in this.flag[v][s]) {
                     const fla = this.flag[v][s][f];
@@ -303,27 +282,14 @@ class AnalysisResults {
                         if (this.flag.length > 1) {
                             st += `${nd.voices[vi].name} `;
                         }
-                        st += `[bar ${m + 1}, beat ${
-                            beat + 1
-                        }] ${noteName}</a>\n`;
+                        st += `[bar ${m + 1}, beat ${beat + 1}] ${noteName}</a>\n`;
                         st += `<td>&nbsp;<td style="vertical-align:top">`;
                         noteClick.push({ vi: vi, n: n });
                     }
-                    const paragraph_link =
-                        AnalysisResults.getParagraphLink(fla);
-                    let alertText = this.getRuleString(
-                        fla,
-                        settings.rule_verbose,
-                        false,
-                        false
-                    );
+                    const paragraph_link = AnalysisResults.getParagraphLink(fla);
+                    let alertText = this.getRuleString(fla, settings.rule_verbose, false, false);
                     let tooltipText = AnalysisResults.getRuleTooltip(fla);
-                    let htmlText = this.getRuleString(
-                        fla,
-                        settings.rule_verbose,
-                        true,
-                        false
-                    );
+                    let htmlText = this.getRuleString(fla, settings.rule_verbose, true, false);
                     st += `<a data-html=true data-container=body data-bondary=window data-placement=bottom title="${encodeHtmlSpecialChars(
                         tooltipText
                     )}" href=# class='ares ares_${vi}_${s}_${f}' style='color: ${col}'>\n`;
@@ -338,10 +304,7 @@ class AnalysisResults {
                         s2: fla.fsl,
                         f: f,
                         severity: fla.severity,
-                        text:
-                            encodeHtmlSpecialChars(alertText) +
-                            " " +
-                            paragraph_link,
+                        text: encodeHtmlSpecialChars(alertText) + " " + paragraph_link,
                         num: this.pFlag.length,
                     };
                     this.pFlag.push(pf);
@@ -353,13 +316,13 @@ class AnalysisResults {
             }
         }
         st += `</table>`;
-        let correct = '';
+        let correct = "";
         if (!this.errors.length && !fcnt) {
             correct = `<span class="rtl block w-fit mx-auto py-1 px-2 my-2 bg-white rounded-xl" style='color:green'><b>&#10004; لا توجد اخطاء في التمرين</b></span> `;
             // st += `<span class="absolute block top-0" style='color:green'><b>&#x2705; No mistakes</b></span> `;
             st += AnalysisResults.getRulesPdfLink();
         }
-        document.getElementById('customResults').innerHTML = correct;
+        document.getElementById("customResults").innerHTML = correct;
         // if (this.previous_print_st !== st) {
         // this.previous_print_st = st;
         if (!environment.startsWith("prod")) {
@@ -371,14 +334,10 @@ class AnalysisResults {
             }
             st += `<a href=# id=rules_filter><img class=imgmo2 alt='Rules filter' src=img/filter.png height=24 /></a> `;
             if (Object.keys(nd.rules_whitelist).length) {
-                st += ` Rules whitelist: ${Object.keys(nd.rules_whitelist).join(
-                    ","
-                )}`;
+                st += ` Rules whitelist: ${Object.keys(nd.rules_whitelist).join(",")}`;
             }
             if (Object.keys(nd.rules_blacklist).length) {
-                st += ` Rules blacklist: <strike>${Object.keys(
-                    nd.rules_blacklist
-                ).join(",")}</strike)`;
+                st += ` Rules blacklist: <strike>${Object.keys(nd.rules_blacklist).join(",")}</strike)`;
             }
         }
         st += "<br><br>";
@@ -399,15 +358,9 @@ class AnalysisResults {
         if (!environment.startsWith("prod")) {
             $("#harmony_dev").click(() => {
                 if (window.location.href.includes("/exercise/")) {
-                    window.location.href = window.location.href.replace(
-                        /\/exercise\//,
-                        "/harmony-dev/"
-                    );
+                    window.location.href = window.location.href.replace(/\/exercise\//, "/harmony-dev/");
                 } else {
-                    window.location.href = window.location.href.replace(
-                        /\/harmony-dev\//,
-                        "/exercise/"
-                    );
+                    window.location.href = window.location.href.replace(/\/harmony-dev\//, "/exercise/");
                 }
             });
             $("#rules_filter").click(() => {
@@ -457,8 +410,10 @@ class AnalysisResults {
         let red = 0;
         let yellow_slur = 0;
         let red_slur = 0;
+        let name = "";
         for (const fla of this.flag[va][pos]) {
             if (fla.accept !== 0) continue;
+            if (fla.name == "Note is not part of the mode") name = fla.name;
             if (fla.severity > SEVERITY_RED) {
                 if (glis_flag_ids.has(fla.fl)) {
                 } else if (slur_flag_ids.has(fla.fl)) red_slur++;
@@ -474,6 +429,7 @@ class AnalysisResults {
             yellow: yellow,
             red_slur: red_slur,
             yellow_slur: yellow_slur,
+            name: name,
         };
     }
 
@@ -481,13 +437,15 @@ class AnalysisResults {
         if (this.vid2 == null || !(v in this.vid2)) return {};
         let va = this.vid2[v];
         if (!this.flag || va >= this.flag.length) return {};
-        let total = { red: 0, yellow: 0, red_slur: 0, yellow_slur: 0 };
+        let total = { red: 0, yellow: 0, red_slur: 0, yellow_slur: 0, notPart: false };
         for (let pos = pos1; pos < pos2; ++pos) {
             let flags = this.getFlags(va, pos);
             if (flags.red) total.red += flags.red;
             if (flags.yellow) total.yellow += flags.yellow;
             if (flags.red_slur) total.red_slur += flags.red_slur;
             if (flags.yellow_slur) total.yellow_slur += flags.yellow_slur;
+            console.log(flags.name);
+            if (flags.name == "Note is not part of the mode") total.notPart = true;
         }
         return total;
     }
@@ -600,11 +558,7 @@ class AnalysisResults {
         if (!pf) return;
         let color = "#A36F00";
         if (pf.severity > SEVERITY_RED) color = "red";
-        alertify.notify(
-            `<span style='color: ${color}'><b>${pf.text}</b></span>`,
-            "custom",
-            60
-        );
+        alertify.notify(`<span style='color: ${color}'><b>${pf.text}</b></span>`, "custom", 60);
     }
 
     static notifyFlags(st) {

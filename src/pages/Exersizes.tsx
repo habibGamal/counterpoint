@@ -103,7 +103,7 @@ const Exersize = ({ name, examType }: { name: string; examType: number }) => {
 };
 export default function Exersizes() {
     return (
-        <div className="w-full">
+        <div className="w-full bg-home-image">
             <PageTitle
                 title="تمارين محلولة"
                 subTitle="هذه بعض التمارين المحلولة لمساعدتك"

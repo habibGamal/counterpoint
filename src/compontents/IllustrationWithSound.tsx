@@ -32,7 +32,7 @@ const IllustrationWithSound = ({
         <div className="relative rounded-xl my-4 text-xl shadow-lg bg-[#DBF8FD] border border-sky-900 text-sky-900 font-medium overflow-hidden">
             <img className="w-full  border-b-2 border-sky-900" src={src} />
             <div
-                className="bg-sky-900 h-1 w-0 transition-[width]"
+                className="bg-sky-900 h-1 w-0 float-left transition-[width]"
                 style={{
                     width: `${(currentTime / 16) * 100}%`,
                 }}

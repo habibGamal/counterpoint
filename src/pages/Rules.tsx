@@ -10,7 +10,7 @@ export default function Rules() {
     var audio = new Audio("staves/aeolian.mpeg");
     // audio.currentTime
     return (
-        <div className="w-full">
+        <div className="w-full ">
             <PageTitle
                 title="قواعد الكونتربوينت"
                 subTitle="قواعد الكونتربوينت التي يجب معرفتها اولا"

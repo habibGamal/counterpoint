@@ -53,6 +53,7 @@ export function showShareModal() {
             <p class="text-lg font-medium">Copy</p>
             <div class="input-group mb-3">
              <div class="input-group mb-3">
+              <input readonly onClick="this.setSelectionRange(0, this.value.length)" id=shareurl type="text" class="w-0 form-control" value="${url}">
               <button style='margin-top:0px !important; margin-bottom:0px !important' data-clipboard-target=#shareurl class=" mx-auto btn btn-outline-secondary" type="button">
               <img class="h-[20px]" src=img/copy.png alt='Copy to clipboard'>
               </button>

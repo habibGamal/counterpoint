@@ -7,7 +7,7 @@ export default function Home() {
     const changeTab = (tab: Tab) =>
         dispatch(routerSlice.actions.changeTab(tab));
     return (
-        <div className="flex flex-col justify-center gap-8 items-center bg-home-image min-h-screen">
+        <div className="flex flex-col justify-center gap-8 items-center bg-home-image w-full min-h-screen">
             <div className="grid grid-cols-2 -mt-24 justify-items-center items-center mx-8">
                 <div className="mr-16">
                     <h1 className="text-sky-900 text-5xl 2xl:text-8xl font-bold mb-4">

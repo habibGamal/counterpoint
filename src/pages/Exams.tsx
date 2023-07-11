@@ -71,7 +71,7 @@ const Exam = ({ name, stage }: { name: string; stage: string }) => {
 };
 export default function Exams() {
     return (
-        <div className="w-full">
+        <div className="w-full bg-home-image">
             <PageTitle title="اختبر نفسك" subTitle="هذه بعض الاختبارت لتقييم ادائك" iconSrc="icons/edit.svg" />
             <Container>
                 <div className="relative">

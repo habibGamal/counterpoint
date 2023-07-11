@@ -8,7 +8,7 @@ const data: any = {
     dorian: {
         soprano:
             "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtiYASABERgDJ7EByFmAUg4AoP2GzBtwZ0GMFnGxpSAQwDO8xBwniV6tZoYbtiOGgDKAewAOAOjQAhBWYAEYYpVKFZ-YgBNb8ogFcA5n6UXviyhPgAlgB2fgC0ACwA7ACs9o5kLm7uMd6E.oHE2SFhUbGJSQAx4vCI7gBIADoAvUA_",
-        bass: "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9rt-bNUgIYBnITAB4LADgsAuFJYAsFgEIWAAhYS6AfE0cmcNAGUA9gAcAdGgBCwi2rDFKpQgPzEAJmqFEArgHN.Sm98AUJ8AEsAO38AWgAWAHYAVgcnMld3D1ifQgCg4hzQ8Oi4pOSAGIZ4GABIDwAkAH0AXqA__",
+        bass: "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOgmAFwWAfBYACFgDwWAQhmT5LcdzhoAygHsADgDo0AISGHpYYpVKF--YgBNpgogFcA5h8ov8.QvgAlgB2HgC0ACwA7ACsltZkdg6OYa6Ent7EqX4BIeHRMQAxDHQAEI4AKAA.2EA__",
     },
     lydian: {
         soprano:
@@ -23,7 +23,7 @@ const data: any = {
     maxolidian: {
         soprano:
             "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtiYByABERgCp7EBKFmACg-YYBoOAag4A6DgIa9EwhuwbcGdRHGxpSAQwDOmxBxh6DDfUcMNTuk5bNW4aAMoB7AA4i0AIS0iABGGKVShOr4xAAmXppEAK4A5tGU4fjqhPgAlgB20QC0ACwA7ACsPn5kgcEhmRGEMXHEFYnJ6Vl5-QAxRgwgIQBIAB7AQA_",
-        bass: "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9rtn11hNKQCGAZxEwAmCwA4LANgsAWDJYA8FgFwWAAjUq6WugrrK6UxHDQBlAPYAHAHRoAQqIfawxSqUJD8xABNtESIAVwBzcMpg.CFCfABLADtwgFoAFgB2AFYPLzJffwDUkMIIqOIS2PjktKzsgBiGeBgQAIAkADcAbiA_",
+        bass: "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9rtn11hNKQCGAZxEwAmCwA4LANgsAWDJYA8FgFwWAfDUq6WugrrK6UxHDQBlAPYAHAHRoAQqIcACMMUqlCQ.MQAJu4iRACuAOYRlCH4QoT4AJYAdhEAtAAsAOwArJ7eZH4BgWmhhJHRxKVxCSnp2TkAMQwMgQCouBJAA",
     },
     iolian: {
         soprano:
@@ -43,23 +43,20 @@ const data: any = {
     default: "",
 };
 export default function Play({ stage, cantus }: { stage?: string; cantus?: string }) {
+    console.log('executed');
+    
     const dispatch = useAppDispatch();
     useEffect(() => {
-        // console.log(stage , cantus );
-        // init(
-        //     "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup--bNUgQwGdvX.GDFoPhoAygHsADgDo0AIR4yABGGKVShTvmIATZdyIBXAOYnKB.J0L4AlgDsTAWgAsAdgCsq9WS07dToaEpubEgVY2Ds7uHgAxDHQgugBIALEAlEA"
-        // );
-
         if (stage && cantus && data[stage] && data[stage][cantus]) init(data[stage][cantus]);
         else
             init(
-                "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9rt-bNUgIYBnITAB4LADgsAuFJYAsFgEIWAAhYS6AfE0cmcNAGUA9gAcAdGgBCwi2rDFKpQgPzEAJmqFEArgHN.Sm98AUJ8AEsAO38AWgAWAHYAVgcnMld3D1ifQgCg4hzQ8Oi4pOSAGIZ4GABIDwAkAH0AXqA__"
+                // with analisys
+                // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtiYASABERgDJ7EByFmAUg4AoP2GzBtwZ0GMFnGxpSAQwDO8mAFwOALA4BMDgBx1LABABsDqsS09DMw0loAygHsADgDo0AIQUuABGGKVSQll8YgATb3kiAFcAcxjKCPxZQnwASwA7GIBaABYAdgBWX38yIJDQrMjCWPjiSqSUjOz8goAY8XgYAFBQgH8AagBFoA___"
+                // without analisys
+                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
             );
-        console.log("mounted");
-
         window.onkeydown = onkeydownEvent
         return () => {
-            console.log("unmount");
             window.onkeydown = null;
         };
     }, []);
@@ -102,10 +99,10 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
 
                 <div
                     id="toolbar4"
-                    className="no-print relative z-50 flex flex-wrap rounded-xl shadow-xl w-fit mx-auto  p-2 px-3 bg-[#ffffff0a] gap-1"
+                    className="no-print relative z-20 flex flex-wrap rounded-xl shadow-xl w-fit mx-auto  p-2 px-3 bg-[#ffffff0a] gap-1"
                 />
                 <div id="customResults"></div>
-                <div id="audio" className="hidden"></div>
+                <div id="audio" className=""></div>
                 <div className="p-1" id="testResult" />
                 <div id="testResult2" />
                 <table style={{ display: "none" }}>
