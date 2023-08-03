@@ -6,8 +6,8 @@ import ABCJS from '../../../../abc/abc.js'
 export let clefs = {
   'treble': {name: 'Treble', transpose: 0, middleD: 41},
   'bass': {name: 'Bass', transpose: 0, middleD: 29},
-  // 'alto': {name: 'Alto', transpose: 0, middleD: 35},
-  // 'tenor': {name: 'Tenor', transpose: 0, middleD: 33},
+  'alto': {name: 'Alto', transpose: 0, middleD: 35},
+  'tenor': {name: 'Tenor', transpose: 0, middleD: 33},
   // 'treble-8': {name: 'Treble down 8', transpose: -7, middleD: 34},
   // 'treble+8': {name: 'Treble up 8', transpose: 7, middleD: 48},
   // 'bass-8': {name: 'Bass down 8', transpose: -7, middleD: 22},

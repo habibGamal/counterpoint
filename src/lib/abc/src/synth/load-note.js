@@ -18,7 +18,6 @@ var getNote = function (url, instrument, name, audioContext) {
             xhr.open("GET", window.location.origin + "/audio/FluidR3_GM_acoustic_grand_piano-mp3_" + name + ".mp3", true);
             xhr.responseType = "arraybuffer";
             xhr.onload = function () {
-				console.log(xhr);
                 if (xhr.status !== 200) {
                     reject(Error("Can't load sound at " + noteUrl));
                     return;

@@ -7,8 +7,8 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "County Voice",
-    "version": "0.0.0"
+    "productName": "County Voice- totaa only",
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -58,7 +58,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "County Voice",
+        "title": "County Voice - totaa only",
         "width": 1024
       }
     ]

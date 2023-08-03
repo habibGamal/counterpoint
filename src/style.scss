@@ -154,3 +154,8 @@ body::-webkit-scrollbar-thumb {
     color: red;
 }
 
+.hide-text-btn {
+    #add_text {
+        display: none !important;
+    }
+}

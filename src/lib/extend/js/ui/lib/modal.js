@@ -10,6 +10,7 @@ export function showModal(id, title, body, footer, classes, classesDialog, pause
     document.getElementById(`ModalTitle${id}`).innerHTML = title;
     document.getElementById(`ModalBody${id}`).innerHTML = body;
     document.getElementById(`ModalFooter${id}`).innerHTML = footer;
+    console.log('error here');
     for (const clas of classes) {
         $(`#Modal${id}`).addClass(clas);
     }

@@ -444,7 +444,6 @@ class AnalysisResults {
             if (flags.yellow) total.yellow += flags.yellow;
             if (flags.red_slur) total.red_slur += flags.red_slur;
             if (flags.yellow_slur) total.yellow_slur += flags.yellow_slur;
-            console.log(flags.name);
             if (flags.name == "Note is not part of the mode") total.notPart = true;
         }
         return total;

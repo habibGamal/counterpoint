@@ -4,8 +4,6 @@ import Modal from "../compontents/Modal";
 import PageTitle from "../compontents/PageTitle";
 import { useAppDispatch } from "../hooks";
 import { routerSlice } from "../slices/routerSlice";
-import { motion } from "framer-motion";
-import { cardAnimation } from "../animation/card";
 import Container from "../compontents/Container";
 import { data } from "../Data";
 
@@ -32,14 +30,12 @@ const ChooseCantusModal = ({
 }) => {
     const dispatch = useAppDispatch();
     const play = (cantus: string) => {
-        if (data[`type${examType}`][stage][cantus] === undefined) return;
+        if (!data[`type${examType}`]?.[stage]?.[cantus]) return;
         dispatch(
             routerSlice.actions.pushTab({
-                tab: "PlayOLD",
+                tab: "PlayWithNoControls",
                 params: {
-                    editable: false,
-                    ...data[`type${examType}`][stage][cantus],
-                    index: cantus === "up" ? 1 : 0,
+                    code: data[`type${examType}`][stage][cantus],
                 },
             })
         );
@@ -73,12 +69,12 @@ const ChooseStageModal = ({ state, close, examType }: { state: boolean; close: (
                     <h4 className="text-center text-2xl mb-4">أختر المقام</h4>
                     <ul className="text-xl">
                         <Option onClick={() => open("dourian")} title="مقام دوريان" />
-                        <Option onClick={() => open("phrygian")} title="مقام فريجيان" />
+                        <Option onClick={() => open("frigian")} title="مقام فريجيان" />
                         <Option onClick={() => open("lydian")} title="مقام ليديان" />
-                        <Option onClick={() => open("mixolydian")} title="مقام مكسوليديان" />
-                        <Option onClick={() => open("aeolian")} title="مقام الأيوليان" />
-                        <Option onClick={() => null} title="مقام اوكريان" />
-                        <Option onClick={() => null} title="مقام ايونيان" />
+                        <Option onClick={() => open("maxolidian")} title="مقام مكسوليديان" />
+                        <Option onClick={() => open("iolian")} title="مقام الأيوليان" />
+                        <Option onClick={() => open("locrian")} title="مقام لوكريان" />
+                        <Option onClick={() => open("ionian")} title="مقام ايونيان" />
                     </ul>
                 </div>
             </Modal>
@@ -122,8 +118,6 @@ export default function Exersizes() {
                         <img src="illustrations/counterpoint_types.png" />
                     </div>
                 </div>
-                {/* <div className="grid-cols-2 grid gap-8 justify-items-center my-16 max-w-[900px] mx-auto">
-        </div> */}
             </Container>
         </div>
     );

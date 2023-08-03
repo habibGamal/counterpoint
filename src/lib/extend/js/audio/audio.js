@@ -58,7 +58,7 @@ class CursorControl {
     }
 }
 const cursorControl = new CursorControl();
-const synthControl = new ABCJS.synth.SynthController();
+export const synthControl = new ABCJS.synth.SynthController();
 function setPlayIcon(img) {
     if (document.getElementById("playi").src.endsWith(img)) return;
     document.getElementById("playi").src = img;
@@ -104,6 +104,8 @@ function play(fromSelection) {
             visualObj: abcjs[0],
             options: {
                 onEnded: stop,
+                onabort: stop,
+                // on
             },
         })
         .then(() => {

@@ -21,6 +21,7 @@ import { Button } from "antd";
 import Auth from "./Auth";
 import { UserAuth } from "./context/AuthContext";
 import MelodyHorizontalRules from "./pages/MelodyHorizontalRules";
+import PlayWithNoControls from "./PlayWithNoControls";
 
 export default function App() {
     const { routeStack, routeParams } = useAppSelector((state) => state.routerSlice);
@@ -28,7 +29,7 @@ export default function App() {
     const [currentTabRender, setCurrentTabRender] = React.useState(<Unimplemented />);
     useEffect(() => {
         const currentTab = routeStack[routeStack.length - 1];
-        console.log(currentTab);
+        console.log(currentTab,routeStack);
 
         if (currentTab === "Home") setCurrentTabRender(<Home />);
         if (currentTab === "Rules") setCurrentTabRender(<Rules />);
@@ -36,6 +37,7 @@ export default function App() {
         if (currentTab === "MelodyHorizontalRules") setCurrentTabRender(<MelodyHorizontalRules />);
         if (currentTab === "Exersizes") setCurrentTabRender(<Exams />);
         if (currentTab === "Play") setCurrentTabRender(<Play key={Date()} {...routeParams} />);
+        if (currentTab === "PlayWithNoControls") setCurrentTabRender(<PlayWithNoControls key={Date()} {...routeParams} />);
         if (currentTab === "PlayOLD") setCurrentTabRender(<PlayOLD key={Date()} {...routeParams} />);
         if (currentTab === "Exams") setCurrentTabRender(<Exersizes />);
         if (currentTab === "Questions") setCurrentTabRender(<Questions />);

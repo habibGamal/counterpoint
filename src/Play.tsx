@@ -4,6 +4,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useAppDispatch } from "./hooks";
 import { routerSlice } from "./slices/routerSlice";
 import { onkeydownEvent } from "./lib/extend/js/ui/commands";
+import { synthControl } from "./lib/extend/js/audio/audio";
 const data: any = {
     dorian: {
         soprano:
@@ -43,21 +44,24 @@ const data: any = {
     default: "",
 };
 export default function Play({ stage, cantus }: { stage?: string; cantus?: string }) {
-    console.log('executed');
-    
+    console.log("executed");
+
     const dispatch = useAppDispatch();
     useEffect(() => {
         if (stage && cantus && data[stage] && data[stage][cantus]) init(data[stage][cantus]);
         else
             init(
+                // debug
+                "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjE1EYASNOADkQDJHYYBSLAagCZEDOADZEAYkYBWIYzEwAFB0QByZTHaYBq5QAgAlNLbq1WgCzG4nYS25zjWgOyIeomAfUAqPYa2DFjLbsbgFWOn6ISmH09jBq0ZraccoACJIhdCnM8NhopACGAM6FMAC4KbQA-BWIAHg1ZQ0ABA0AhA3VtPW05YhwaADKAPYADgB0aABCRWNNYMSUpIT5-MQAJk2FRACuAOa7lJv4-YT4AJYAdrsAtGaOUnMLZMura9dbhHsHxO.Hp5c3O5SAAxtDBAGg1gApgATAG-gA___"
                 // with analisys
-                // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtiYASABERgDJ7EByFmAUg4AoP2GzBtwZ0GMFnGxpSAQwDO8mAFwOALA4BMDgBx1LABABsDqsS09DMw0loAygHsADgDo0AIQUuABGGKVSQll8YgATb3kiAFcAcxjKCPxZQnwASwA7GIBaABYAdgBWX38yIJDQrMjCWPjiSqSUjOz8goAY8XgYAFBQgH8AagBFoA___"
-                // without analisys
-                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
+                // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
+                // // without analisys
+                // "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
             );
-        window.onkeydown = onkeydownEvent
+        window.onkeydown = onkeydownEvent;
         return () => {
             window.onkeydown = null;
+            synthControl.pause();
         };
     }, []);
     useLayoutEffect(() => {
@@ -94,7 +98,7 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
                     id="toolbar3"
                     className="no-print flex flex-wrap rounded-xl shadow-xl w-fit mx-auto  p-2 px-3 bg-[#ffffff0a] gap-1 items-center"
                 />
-                
+
                 <div className="h-[500px] w-fit mx-auto rounded-xl shadow-xl bg-white pb-4" id="abc"></div>
 
                 <div
@@ -159,7 +163,7 @@ export default function Play({ stage, cantus }: { stage?: string; cantus?: strin
                         </div>
                     </div>
                 </div>
-                <div  className="p-2 hidden" id="analysisConsole" />
+                <div className="p-2 hidden" id="analysisConsole" />
                 <div style={{ display: "none" }} id="console"></div>
             </div>
         </div>

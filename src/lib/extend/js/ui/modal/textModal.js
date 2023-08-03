@@ -74,7 +74,7 @@ export function showTextModal(v, n, type) {
   // }
   let footer = '';
   footer += `<button type="button" class="btn btn-primary" id=modalOk>تم</button>`;
-  // footer += `<button type="button" class="btn btn-danger" id=modalDelete>Delete</button>`;
+  footer += `<button type="button" class="btn btn-danger" id=modalDelete>Delete</button>`;
   // footer += `<button type="button" class="btn btn-secondary" data-dismiss="modal" id=modalCancel>Cancel</button>`;
   showModal(1, title, st, footer, ["right"], [], true, () =>
     {
@@ -86,11 +86,11 @@ export function showTextModal(v, n, type) {
     () => {
     }
   );
-  for (const i in symbols) {
-    document.getElementById('asymbol' + i).onclick = () => {
-      add_symbol(i);
-    }
-  }
+  // for (const i in symbols) {
+  //   document.getElementById('asymbol' + i).onclick = () => {
+  //     add_symbol(i);
+  //   }
+  // }
   $("#textArea").keypress(function (e) {
     if((e.which == 10 || e.which == 13) && !e.ctrlKey && !e.metaKey && !e.altKey && !e.shiftKey && !mobileOrTablet) {
       submitText(v, n, type);
