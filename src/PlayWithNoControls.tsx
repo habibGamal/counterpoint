@@ -5,16 +5,24 @@ import { useAppDispatch } from "./hooks";
 import { routerSlice } from "./slices/routerSlice";
 import { onkeydownEvent } from "./lib/extend/js/ui/commands";
 import { synthControl } from "./lib/extend/js/audio/audio";
+const controlState = (nd: any) => {
+    nd.algo = "";
+    nd.algoMode = 0;
+    nd.voices.forEach((v: any) => {
+        v.locked = true;
+    });
+};
 export default function PlayWithNoControls({ code }: { code: string }) {
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (code) init(code);
+        if (code) init(code,controlState);
         else
             init(
                 // with analisys
                 // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
                 // without analisys
-                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
+                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__",
+                controlState
             );
         window.onkeydown = onkeydownEvent;
         return () => {

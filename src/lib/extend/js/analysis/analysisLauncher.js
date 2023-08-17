@@ -52,7 +52,6 @@ async function workerMessageReceiver(event) {
         // debugLog(10, 'Debug result:' + b256_debug(data), data.length);
         // Show analysis results only if analysis mode did not change
         if (modName === nd.algo) {
-            console.log(data, modName);
             ares.import(data, modName);
             ares.printFlags();
             if (mgen_login === "rualark@gmail.com" && nd.eid) {
@@ -68,7 +67,6 @@ async function workerMessageReceiver(event) {
 }
 
 export function launchAnalysis(modName, funcName, data, options) {
-    console.log(data, options);
     if (workers[modName] == null) {
         workers[modName] = {};
         workers[modName].worker = createWorker();

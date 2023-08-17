@@ -58,7 +58,7 @@ class CursorControl {
     }
 }
 const cursorControl = new CursorControl();
-export const synthControl = new ABCJS.synth.SynthController();
+export let synthControl = new ABCJS.synth.SynthController();
 function setPlayIcon(img) {
     if (document.getElementById("playi").src.endsWith(img)) return;
     document.getElementById("playi").src = img;
@@ -84,7 +84,9 @@ function stop() {
 }
 
 function play(fromSelection) {
+    console.log(abcjs);
     play_state.synth = new ABCJS.synth.CreateSynth();
+    synthControl = new ABCJS.synth.SynthController()
     synthControl.load("#audio", cursorControl, {
         displayLoop: true,
         displayRestart: true,
@@ -104,7 +106,7 @@ function play(fromSelection) {
             visualObj: abcjs[0],
             options: {
                 onEnded: stop,
-                onabort: stop,
+                // onabort: stop,
                 // on
             },
         })

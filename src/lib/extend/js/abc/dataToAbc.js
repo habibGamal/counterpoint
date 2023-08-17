@@ -63,7 +63,8 @@ export function dataToAbc(instrument) {
             nt.abc_charStarts = abc.length;
             if (flags.red > 0) {
                 // console.log(flags);
-                if (flags.notPart == false) abc += '"^⚑"';
+                // if (flags.notPart == false) 
+                abc += '"^⚑"';
             } else if (flags.yellow > 0) abc += '"^⚠"';
             // custom rules
             const currentNote = nt;

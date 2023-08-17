@@ -19,23 +19,16 @@ const Option = ({ title, onClick }: { title: string; onClick: () => void }) => {
         </li>
     );
 };
-const ChooseCantusModal = ({
-    state,
-    close,
-    stage,
-}: {
-    state: boolean;
-    close: () => void;
-    stage: string;
-}) => {
+const ChooseCantusModal = ({ state, close, stage }: { state: boolean; close: () => void; stage: string }) => {
     const dispatch = useAppDispatch();
-    const play = (cantus:string) => {
+    const play = (type: string, cantus: string) => {
         // if (data[`type${exersizeType}`][stage][cantus] === undefined) return;
         dispatch(
             routerSlice.actions.pushTab({
                 tab: "Play",
                 params: {
                     stage,
+                    type,
                     cantus,
                 },
             })
@@ -46,8 +39,12 @@ const ChooseCantusModal = ({
             <div className="p-4 font-sans min-w-[300px]">
                 <h4 className="text-center text-2xl mb-4">Cantus firmus</h4>
                 <ul className="text-xl text-left">
-                    <Option onClick={() => play("soprano")} title="Soprano" />
-                    <Option onClick={() => play("bass")} title="Bass" />
+                    <Option onClick={() => play("sop_bass","up")} title="Soprano" />
+                    <Option onClick={() => play("sop_bass","down")} title="Bass" />
+                    <Option onClick={() => play("doalto","up")} title="Alto - Up" />
+                    <Option onClick={() => play("doalto","down")} title="Alto - Down" />
+                    <Option onClick={() => play("tenor","up")} title="Tenor - Up" />
+                    <Option onClick={() => play("tenor","down")} title="Tenor - Down" />
                 </ul>
             </div>
         </Modal>

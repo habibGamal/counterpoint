@@ -29,12 +29,12 @@ function checkBrowserSupported() {
     }
 }
 
-export const loadFromState = (state) => {
+export const loadFromState = (state,controlState) => {
     trackEvent("AiHarmony", "open_shared");
     storage2archiveStorage(5);
     nd.reset();
     try {
-        url2state(state);
+        url2state(state,controlState);
         const root_eid = getUrlParam("rid");
         if (root_eid) nd.set_root_eid(root_eid);
         const eid = getUrlParam("eid");
@@ -52,7 +52,7 @@ export const loadFromState = (state) => {
     async_redraw();
 };
 
-export function init(state) {
+export function init(state,controlState) {
     init_base64();
     // update_browser_id();
     console.log("init()");
@@ -61,7 +61,7 @@ export function init(state) {
     init_abcjs(element_click);
     // loadState();
     if (state) {
-        loadFromState(state);
+        loadFromState(state,controlState);
     } else if (getUrlParam("load")) {
         trackEvent("AiHarmony", "open", "Open server MusicXML");
         nd.reset();

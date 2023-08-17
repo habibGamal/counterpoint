@@ -26,7 +26,7 @@ export function is_locked() {
 
 export function check_voice_locked(el) {
     if (nd.voices[el.voice].locked) {
-        alertify.error("Note editing is prohibited in this part. Please click part name and disable protection.", 10);
+        // alertify.error("Note editing is prohibited in this part. Please click part name and disable protection.", 10);
         // Redraw is needed because abcjs immediately moves note before redraw to improve user experience
         // We need to redraw to move note back to initial position
         async_redraw();

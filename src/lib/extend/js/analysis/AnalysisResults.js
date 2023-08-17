@@ -12,6 +12,7 @@ import { rules_paragraphs } from "../data/rules_paragraphs.js";
 import { mobileOrTablet } from "../core/mobileCheck.js";
 import { enableKeys } from "../ui/commands.js";
 import { saveState } from "../state/history.js";
+import bootbox from "../../plugin/bootbox/bootbox.js";
 const ARES_ENCODING_VERSION = 5;
 export const SEVERITY_RED = 80;
 export const SEVERITY_RED_COLOR = "red";
@@ -93,6 +94,24 @@ class AnalysisResults {
         for (let hs = 0; hs < hli_size; ++hs) {
             this.harm[b256_ui(st, pos, 2) + this.s_start] = b256_safeString(st, pos, 1);
         }
+        // blacklisted rules
+        const [D, F, G, A] = [2, 5, 7, 9];
+        if ([D, F, G, A].includes(this.mode)) {
+            nd.rules_blacklist = {
+                366: true,
+                369: true,
+            };
+        }
+        //     let indexToRemove = null;
+        //     this.errors.forEach((error, index) => {
+        //         if (error.message.includes("Specified key was") || error.message.includes("specified key was")) {
+        //             indexToRemove = index;
+        //         }
+        //     });
+        //     if (indexToRemove !== null) {
+        //         this.errors.splice(indexToRemove, 1);
+        //     }
+        // }
         for (let v = 0; v < this.av_cnt; ++v) {
             let va = b256_ui(st, pos, 1);
             this.vid2[va] = v;
@@ -131,6 +150,90 @@ class AnalysisResults {
                     }
                     this.flag[v][s + this.s_start].push(flag);
                 }
+            }
+        }
+        // My modifications on this.flag
+        let [v0, v1] = this.flag;
+        // // if "Note is not part of the mode" is in upper voice
+        // const [D, F, G, A] = [2, 5, 7, 9];
+        const upperV = Object.values(v1).flat();
+        const lowerV = Object.values(v0).flat();
+        const UNIT = 16;
+        const START_OF_PRE_LAST_BAR = this.c_len - 2 * UNIT;
+        const preLastElement = this.c_len - UNIT - 1;
+        let preLastElementHasDias = false;
+        const [upper, lower] = this.vsp;
+        if ([D, F, G, A].includes(this.mode)) {
+            const findCorrospendingFlag = (otherV, position) => {
+                otherV.forEach((flag) => {
+                    const possiblePosition =
+                        flag.s == position - 12 ||
+                        flag.s == position - 10 ||
+                        flag.s == position - 8 ||
+                        flag.s == position - 6 ||
+                        flag.s == position - 4 ||
+                        flag.s == position - 2 ||
+                        flag.s == position;
+                    if (possiblePosition) {
+                        flag.accept = -1;
+                    }
+                });
+            };
+            upperV.forEach((flag) => {
+                if (flag.name === "Note is not part of the mode") {
+                    flag.accept = -1;
+                    const position = flag.s;
+                    findCorrospendingFlag(lowerV, position);
+                    if (position >= START_OF_PRE_LAST_BAR) {
+                        preLastElementHasDias = true;
+                    }
+                }
+            });
+            lowerV.forEach((flag,index) => {
+                if (flag.name === "Note is not part of the mode") {
+                    flag.accept = -1;
+                    const position = flag.s;
+                    findCorrospendingFlag(upperV, position);
+                    // remove Harmony: Convoluted harmony that in the same time is not part of the mode
+                    const nextFlag = lowerV[index + 1];
+                    if (nextFlag && nextFlag.name === "Convoluted harmony") {
+                        nextFlag.accept = -1;
+                    }
+                    if (position >= START_OF_PRE_LAST_BAR) {
+                        preLastElementHasDias = true;
+                    }
+                }
+            });
+            let indexToRemove = null;
+            this.errors.forEach((error, index) => {
+                if (error.message.includes("Specified key was") || error.message.includes("specified key was")) {
+                    indexToRemove = index;
+                }
+            });
+            if (indexToRemove !== null) {
+                this.errors.splice(indexToRemove, 1);
+            }
+        }
+        if ([D, F, G].includes(this.mode)) {
+            const flagToBeAssined = {
+                s: 128,
+                v: 1,
+                fl: 521,
+                fvl: 1,
+                fsl: 128,
+                accept: 0,
+                severity: 100,
+                class: "Melody",
+                name: "",
+                subName: "/wrong alteration",
+                comment: "",
+                subComment: "",
+                debugSt: "",
+                paragraph_num: 27,
+            };
+            if (!preLastElementHasDias) {
+                if (upper) v1[preLastElement] = [flagToBeAssined];
+                else v0[preLastElement] = [flagToBeAssined];
             }
         }
     }
@@ -355,6 +458,7 @@ class AnalysisResults {
                 return false;
             });
         }
+        console.log(nd);
         if (!environment.startsWith("prod")) {
             $("#harmony_dev").click(() => {
                 if (window.location.href.includes("/exercise/")) {
@@ -410,10 +514,8 @@ class AnalysisResults {
         let red = 0;
         let yellow_slur = 0;
         let red_slur = 0;
-        let name = "";
         for (const fla of this.flag[va][pos]) {
             if (fla.accept !== 0) continue;
-            if (fla.name == "Note is not part of the mode") name = fla.name;
             if (fla.severity > SEVERITY_RED) {
                 if (glis_flag_ids.has(fla.fl)) {
                 } else if (slur_flag_ids.has(fla.fl)) red_slur++;
@@ -429,7 +531,6 @@ class AnalysisResults {
             yellow: yellow,
             red_slur: red_slur,
             yellow_slur: yellow_slur,
-            name: name,
         };
     }
 
@@ -444,7 +545,6 @@ class AnalysisResults {
             if (flags.yellow) total.yellow += flags.yellow;
             if (flags.red_slur) total.red_slur += flags.red_slur;
             if (flags.yellow_slur) total.yellow_slur += flags.yellow_slur;
-            if (flags.name == "Note is not part of the mode") total.notPart = true;
         }
         return total;
     }

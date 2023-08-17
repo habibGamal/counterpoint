@@ -25,7 +25,7 @@ interface RouterState {
 
 // Define the initial state using that type
 const initialState: RouterState = {
-    routeStack: ["Play"],
+    routeStack: ["Home"],
     routeParams: null,
 };
 
@@ -39,7 +39,7 @@ export const routerSlice = createSlice({
             window.scrollTo({ top: 0, behavior: "smooth" });
             state.routeStack.push(action.payload.tab);
             state.routeParams = action.payload.params;
-            console.log(state.routeStack);
+            console.log(state.routeStack,state.routeParams);
         },
         pop: (state) => {
             window.scrollTo({ top: 0, behavior: "smooth" });

@@ -49,7 +49,7 @@ function getEnvironment() {
   if (urlNoParams().includes("/harmony-dev")) return "dev";
   if (mgen_login.startsWith('rualark')) return "admin";
   if (urlNoParams().includes(".github.")) return "prod-serverless";
-  return "prod";
+  return "admin";
 }
 
 export const environment = getEnvironment();
