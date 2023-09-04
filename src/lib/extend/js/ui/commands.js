@@ -853,14 +853,14 @@ export let commands = [
     },
     name: 'Stop advancing edit',
   },
-  {
-    keys: ['Alt+H'],
-    command: () => { edit_exercise_name() },
-    name: 'Edit exercise header (name)',
-  },
-  {
-    keys: ['Alt+P'],
-    command: () => { showPublishModal() },
-    name: 'Publish exercise to ArtInfuser database',
-  },
+  // {
+  //   keys: ['Alt+H'],
+  //   command: () => { edit_exercise_name() },
+  //   name: 'Edit exercise header (name)',
+  // },
+  // {
+  //   keys: ['Alt+P'],
+  //   command: () => { showPublishModal() },
+  //   name: 'Publish exercise to ArtInfuser database',
+  // },
 ];

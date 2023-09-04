@@ -24,9 +24,9 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
                 // debug up
                 // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjE1EYASNOADkQDJHYYBSLAagCZEDOADZEAYkYBWIYzEwAFB0QByZTHaYBq5QAgAlNLbq1WgCzG4nYS25zjWgOyIeomAfUAqPYa2DFjLbsbgFWOn6ISmH09jBq0ZraccoACJIhdCnM8NhopACGAM6FMAC4KbQA-BWIAHg1ZQ0ABA0AhA3VtPW05YhwaADKAPYADgB0aABCRWNNYMSUpIT5-MQAJk2FRACuAOa7lJv4-YT4AJYAdrsAtGaOUnMLZMura9dbhHsHxO.Hp5c3O5SAAxtDBAGg1gApgATAG-gA___"
                 // with analisys
-                // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
+                "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
                 // // without analisys
-                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
+                // "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
             );
         window.onkeydown = onkeydownEvent;
         return () => {

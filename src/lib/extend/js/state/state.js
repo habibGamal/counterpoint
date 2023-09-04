@@ -184,7 +184,7 @@ export function plain2data(st, pos, target, full,controlState) {
     }
     target.decoded_time = timestamp2date(b256_ui(st, pos, 4));
     if(controlState){
-    //   controlState(target);
+      controlState(target);
     }
     
     // console.log(nd);

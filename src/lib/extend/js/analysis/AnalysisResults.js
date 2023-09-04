@@ -100,18 +100,11 @@ class AnalysisResults {
             nd.rules_blacklist = {
                 366: true,
                 369: true,
+                414: true,
+                135: true,
             };
         }
-        //     let indexToRemove = null;
-        //     this.errors.forEach((error, index) => {
-        //         if (error.message.includes("Specified key was") || error.message.includes("specified key was")) {
-        //             indexToRemove = index;
-        //         }
-        //     });
-        //     if (indexToRemove !== null) {
-        //         this.errors.splice(indexToRemove, 1);
-        //     }
-        // }
+        console.log(nd.abcString);
         for (let v = 0; v < this.av_cnt; ++v) {
             let va = b256_ui(st, pos, 1);
             this.vid2[va] = v;
@@ -156,6 +149,7 @@ class AnalysisResults {
         let [v0, v1] = this.flag;
         // // if "Note is not part of the mode" is in upper voice
         // const [D, F, G, A] = [2, 5, 7, 9];
+        if(!v0 && !v1) return;
         const upperV = Object.values(v1).flat();
         const lowerV = Object.values(v0).flat();
         const UNIT = 16;
@@ -179,11 +173,18 @@ class AnalysisResults {
                     }
                 });
             };
-            upperV.forEach((flag) => {
+            upperV.forEach((flag,index) => {
                 if (flag.name === "Note is not part of the mode") {
                     flag.accept = -1;
                     const position = flag.s;
+                    // remove Harmony: Convoluted harmony that previous is not part of the mode
+                    const previousFlag = upperV[index - 1];
+                    if (previousFlag && previousFlag.name === "Convoluted harmony") {
+                        previousFlag.accept = -1;
+                    }
                     findCorrospendingFlag(lowerV, position);
+                    // if Note is not part of the mode happen in the pre-last bar
+                    // this means that it has dias
                     if (position >= START_OF_PRE_LAST_BAR) {
                         preLastElementHasDias = true;
                     }
@@ -199,6 +200,13 @@ class AnalysisResults {
                     if (nextFlag && nextFlag.name === "Convoluted harmony") {
                         nextFlag.accept = -1;
                     }
+                    // remove Harmony: Convoluted harmony that previous is not part of the mode
+                    const previousFlag = lowerV[index - 1];
+                    if (previousFlag && previousFlag.name === "Convoluted harmony") {
+                        previousFlag.accept = -1;
+                    }
+                    // if Note is not part of the mode happen in the pre-last bar
+                    // this means that it has dias
                     if (position >= START_OF_PRE_LAST_BAR) {
                         preLastElementHasDias = true;
                     }
@@ -214,7 +222,7 @@ class AnalysisResults {
                 this.errors.splice(indexToRemove, 1);
             }
         }
-        if ([D, F, G].includes(this.mode)) {
+        if ([D, G].includes(this.mode)) {
             const flagToBeAssined = {
                 s: 128,
                 v: 1,
@@ -232,10 +240,28 @@ class AnalysisResults {
                 paragraph_num: 27,
             };
             if (!preLastElementHasDias) {
-                if (upper) v1[preLastElement] = [flagToBeAssined];
+                if (lower) v1[preLastElement] = [flagToBeAssined];
                 else v0[preLastElement] = [flagToBeAssined];
             }
         }
+        if ([A].includes(this.mode)) {
+            upperV.forEach((flag,index) => {
+                if (flag.name === "False chromatic relation: in outer voices") {
+                    flag.accept = -1;
+                }
+            });
+            lowerV.forEach((flag,index) => {
+                if (flag.name === "False chromatic relation: in outer voices") {
+                    flag.accept = -1;
+                }
+            });
+        }
+        // remove harmony
+        [...upperV,...lowerV].forEach((flag) => {
+            if (flag.name === "Six-four chord") {
+                flag.accept = -1;
+            }
+        });
     }
 
     getRuleString(fla, verbosity, showLinks) {
