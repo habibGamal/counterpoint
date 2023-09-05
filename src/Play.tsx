@@ -103,6 +103,8 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
                 </table>
                 <div id="jquery_jplayer" />
                 <div id="jplayer" />
+                
+                <div className="p-2" id="analysisConsole" />
             </div>
             <div>
                 <div className="modal bg-[#00000038]" id="Modal1" tabIndex={-1} role="dialog">
@@ -133,7 +135,6 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
                         </div>
                     </div>
                 </div>
-                <div className="p-2 hidden" id="analysisConsole" />
                 <div style={{ display: "none" }} id="console"></div>
             </div>
         </div>

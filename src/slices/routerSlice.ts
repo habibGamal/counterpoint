@@ -25,7 +25,7 @@ interface RouterState {
 
 // Define the initial state using that type
 const initialState: RouterState = {
-    routeStack: ["Home"],
+    routeStack: ["Play"],
     routeParams: null,
 };
 

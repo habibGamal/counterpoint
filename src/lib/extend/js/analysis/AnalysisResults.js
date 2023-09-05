@@ -13,6 +13,7 @@ import { mobileOrTablet } from "../core/mobileCheck.js";
 import { enableKeys } from "../ui/commands.js";
 import { saveState } from "../state/history.js";
 import bootbox from "../../plugin/bootbox/bootbox.js";
+import Interceptor  from "../../../../custom_analysis/Interceptor.ts";
 const ARES_ENCODING_VERSION = 5;
 export const SEVERITY_RED = 80;
 export const SEVERITY_RED_COLOR = "red";
@@ -94,17 +95,6 @@ class AnalysisResults {
         for (let hs = 0; hs < hli_size; ++hs) {
             this.harm[b256_ui(st, pos, 2) + this.s_start] = b256_safeString(st, pos, 1);
         }
-        // blacklisted rules
-        const [D, F, G, A] = [2, 5, 7, 9];
-        if ([D, F, G, A].includes(this.mode)) {
-            nd.rules_blacklist = {
-                366: true,
-                369: true,
-                414: true,
-                135: true,
-            };
-        }
-        console.log(nd.abcString);
         for (let v = 0; v < this.av_cnt; ++v) {
             let va = b256_ui(st, pos, 1);
             this.vid2[va] = v;
@@ -141,127 +131,15 @@ class AnalysisResults {
                         if (Object.keys(nd.rules_whitelist).length && !(flag.fl in nd.rules_whitelist)) continue;
                         if (flag.fl in nd.rules_blacklist) continue;
                     }
-                    this.flag[v][s + this.s_start].push(flag);
+                    // this.flag[v][s + this.s_start].push(flag);
                 }
             }
         }
-        // My modifications on this.flag
-        let [v0, v1] = this.flag;
-        // // if "Note is not part of the mode" is in upper voice
-        // const [D, F, G, A] = [2, 5, 7, 9];
-        if(!v0 && !v1) return;
-        const upperV = Object.values(v1).flat();
-        const lowerV = Object.values(v0).flat();
-        const UNIT = 16;
-        const START_OF_PRE_LAST_BAR = this.c_len - 2 * UNIT;
-        const preLastElement = this.c_len - UNIT - 1;
-        let preLastElementHasDias = false;
-        const [upper, lower] = this.vsp;
-        if ([D, F, G, A].includes(this.mode)) {
-            const findCorrospendingFlag = (otherV, position) => {
-                otherV.forEach((flag) => {
-                    const possiblePosition =
-                        flag.s == position - 12 ||
-                        flag.s == position - 10 ||
-                        flag.s == position - 8 ||
-                        flag.s == position - 6 ||
-                        flag.s == position - 4 ||
-                        flag.s == position - 2 ||
-                        flag.s == position;
-                    if (possiblePosition) {
-                        flag.accept = -1;
-                    }
-                });
-            };
-            upperV.forEach((flag,index) => {
-                if (flag.name === "Note is not part of the mode") {
-                    flag.accept = -1;
-                    const position = flag.s;
-                    // remove Harmony: Convoluted harmony that previous is not part of the mode
-                    const previousFlag = upperV[index - 1];
-                    if (previousFlag && previousFlag.name === "Convoluted harmony") {
-                        previousFlag.accept = -1;
-                    }
-                    findCorrospendingFlag(lowerV, position);
-                    // if Note is not part of the mode happen in the pre-last bar
-                    // this means that it has dias
-                    if (position >= START_OF_PRE_LAST_BAR) {
-                        preLastElementHasDias = true;
-                    }
-                }
-            });
-            lowerV.forEach((flag,index) => {
-                if (flag.name === "Note is not part of the mode") {
-                    flag.accept = -1;
-                    const position = flag.s;
-                    findCorrospendingFlag(upperV, position);
-                    // remove Harmony: Convoluted harmony that in the same time is not part of the mode
-                    const nextFlag = lowerV[index + 1];
-                    if (nextFlag && nextFlag.name === "Convoluted harmony") {
-                        nextFlag.accept = -1;
-                    }
-                    // remove Harmony: Convoluted harmony that previous is not part of the mode
-                    const previousFlag = lowerV[index - 1];
-                    if (previousFlag && previousFlag.name === "Convoluted harmony") {
-                        previousFlag.accept = -1;
-                    }
-                    // if Note is not part of the mode happen in the pre-last bar
-                    // this means that it has dias
-                    if (position >= START_OF_PRE_LAST_BAR) {
-                        preLastElementHasDias = true;
-                    }
-                }
-            });
-            let indexToRemove = null;
-            this.errors.forEach((error, index) => {
-                if (error.message.includes("Specified key was") || error.message.includes("specified key was")) {
-                    indexToRemove = index;
-                }
-            });
-            if (indexToRemove !== null) {
-                this.errors.splice(indexToRemove, 1);
-            }
-        }
-        if ([D, G].includes(this.mode)) {
-            const flagToBeAssined = {
-                s: 128,
-                v: 1,
-                fl: 521,
-                fvl: 1,
-                fsl: 128,
-                accept: 0,
-                severity: 100,
-                class: "Melody",
-                name: "",
-                subName: "/wrong alteration",
-                comment: "",
-                subComment: "",
-                debugSt: "",
-                paragraph_num: 27,
-            };
-            if (!preLastElementHasDias) {
-                if (lower) v1[preLastElement] = [flagToBeAssined];
-                else v0[preLastElement] = [flagToBeAssined];
-            }
-        }
-        if ([A].includes(this.mode)) {
-            upperV.forEach((flag,index) => {
-                if (flag.name === "False chromatic relation: in outer voices") {
-                    flag.accept = -1;
-                }
-            });
-            lowerV.forEach((flag,index) => {
-                if (flag.name === "False chromatic relation: in outer voices") {
-                    flag.accept = -1;
-                }
-            });
-        }
-        // remove harmony
-        [...upperV,...lowerV].forEach((flag) => {
-            if (flag.name === "Six-four chord") {
-                flag.accept = -1;
-            }
-        });
+        const interceptor = new Interceptor(nd.abcString,this.vsp,this.vid);
+        interceptor.applyRules();
+        this.flag = interceptor.getFlags();
+        console.log(interceptor.getFlags());
+        this.errors = [];
     }
 
     getRuleString(fla, verbosity, showLinks) {
@@ -329,7 +207,7 @@ class AnalysisResults {
             const paragraph = rules_paragraphs[fla.paragraph_num];
             const rules_url = AnalysisResults.getRulesPdfUrl();
             st += ` <a href=${rules_url}#page=${paragraph.page} title="${fla.paragraph_num}. ${paragraph.name}" target=_blank>`;
-            st += `<img class=imgmo2 src=img/book.png style='position:relative; top:-2px' height=18></a>`;
+            // st += `<img class=imgmo2 src=img/book.png style='position:relative; top:-2px' height=18></a>`;
         }
         return st;
     }
@@ -421,8 +299,9 @@ class AnalysisResults {
                     let htmlText = this.getRuleString(fla, settings.rule_verbose, true, false);
                     st += `<a data-html=true data-container=body data-bondary=window data-placement=bottom title="${encodeHtmlSpecialChars(
                         tooltipText
-                    )}" href=# class='ares ares_${vi}_${s}_${f}' style='color: ${col}'>\n`;
-                    st += "- " + encodeHtmlSpecialChars(htmlText);
+                    )}" href=# class='ares ares_${vi}_${s}_${f}' style='color:#f0f0f0'>\n`;
+                    // st += "- " + encodeHtmlSpecialChars(htmlText);
+                    st += "- " + fla.comment;
                     st += `</a> `;
                     st += paragraph_link;
                     st += `<br>\n`;
@@ -447,28 +326,28 @@ class AnalysisResults {
         st += `</table>`;
         let correct = "";
         if (!this.errors.length && !fcnt) {
-            correct = `<span class="rtl block w-fit mx-auto py-1 px-2 my-2 bg-white rounded-xl" style='color:green'><b>&#10004; لا توجد اخطاء في التمرين</b></span> `;
+            // correct = `<span class="rtl block w-fit mx-auto py-1 px-2 my-2 bg-white rounded-xl" style='color:green'><b>&#10004; لا توجد اخطاء في التمرين</b></span> `;
             // st += `<span class="absolute block top-0" style='color:green'><b>&#x2705; No mistakes</b></span> `;
-            st += AnalysisResults.getRulesPdfLink();
+            // st += AnalysisResults.getRulesPdfLink();
         }
         document.getElementById("customResults").innerHTML = correct;
         // if (this.previous_print_st !== st) {
         // this.previous_print_st = st;
-        if (!environment.startsWith("prod")) {
-            st += `<br>`;
-            if (window.location.href.includes("/exercise/")) {
-                st += `<a href=# id=harmony_dev><img class=imgmo2 alt='Go to development environment' src=img/sandbox.png height=24 /></a> `;
-            } else {
-                st += `<a href=# id=harmony_dev><img class=imgmo2 alt='Go to production environment' src=img/worker.png height=24 /></a> `;
-            }
-            st += `<a href=# id=rules_filter><img class=imgmo2 alt='Rules filter' src=img/filter.png height=24 /></a> `;
-            if (Object.keys(nd.rules_whitelist).length) {
-                st += ` Rules whitelist: ${Object.keys(nd.rules_whitelist).join(",")}`;
-            }
-            if (Object.keys(nd.rules_blacklist).length) {
-                st += ` Rules blacklist: <strike>${Object.keys(nd.rules_blacklist).join(",")}</strike)`;
-            }
-        }
+        // if (!environment.startsWith("prod")) {
+        //     st += `<br>`;
+        //     if (window.location.href.includes("/exercise/")) {
+        //         st += `<a href=# id=harmony_dev><img class=imgmo2 alt='Go to development environment' src=img/sandbox.png height=24 /></a> `;
+        //     } else {
+        //         st += `<a href=# id=harmony_dev><img class=imgmo2 alt='Go to production environment' src=img/worker.png height=24 /></a> `;
+        //     }
+        //     st += `<a href=# id=rules_filter><img class=imgmo2 alt='Rules filter' src=img/filter.png height=24 /></a> `;
+        //     if (Object.keys(nd.rules_whitelist).length) {
+        //         st += ` Rules whitelist: ${Object.keys(nd.rules_whitelist).join(",")}`;
+        //     }
+        //     if (Object.keys(nd.rules_blacklist).length) {
+        //         st += ` Rules blacklist: <strike>${Object.keys(nd.rules_blacklist).join(",")}</strike)`;
+        //     }
+        // }
         st += "<br><br>";
         document.getElementById("analysisConsole").innerHTML = st;
         for (const fc of noteClick) {
