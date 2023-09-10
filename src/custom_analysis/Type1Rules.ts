@@ -1,51 +1,135 @@
+import { allowed6ButLowerBy2, maxAllowedHorizontalDistances, restrictMaxAllowedHorizontalDistances } from "./Common";
 import Interceptor from "./Interceptor";
-import { Rule } from "./types";
-
-const allowedDistances = [
-    "-2T0.5",
-    "-2T1",
-    "-3T1.5",
-    "-3T2",
-    "-4T2.5",
-    "-5T3.5",
-    "-8T6",
-    "+2T0.5",
-    "+2T1",
-    "+3T1.5",
-    "+3T2",
-    "+4T2.5",
-    "+5T3.5",
-    "+8T6",
-    //----
-    "+6T4",
-];
-const allowedStart = [
-    "+8T0",
-    "+15T0",
-    "+22T0",
-    //----
-    "+5T3.5",
-    "+12T3.5",
-    "+19T3.5",
-];
+import { Location, Rule } from "./types";
+const allowedCrossDistances = ["3T1.5", "3T2", "5T3.5", "6T4", "6T4.5", "8T0", "_"];
+const allowedDistances = [3, 6, 5, 8, -1];
 export default class Type1Rules {
     rules(interceptor: Interceptor): Rule[] {
         const voices = interceptor.getVoices();
         const cpLocation = interceptor.getCPLocation();
-        const cp = voices[interceptor.getCPLocation()];
-        const cf = voices[interceptor.getCFLocation()];
-        const cpDistances = interceptor.getVoicesAsDistances()[cpLocation];
+        const cp = voices[cpLocation].map((arr) => arr[0]);
+        const cf = voices[interceptor.getCFLocation()].map((arr) => arr[0]);
+        const cpDistances = interceptor.getVoicesAsDistances()[cpLocation].map((arr) => arr[0]);
+
+        const crossAbsDistances = interceptor.meaturements.crossAbsDist(cp, cf);
+        const crossDistances = interceptor.meaturements.crossDist(cp, cf);
+        const isCPUpper = cpLocation === 1;
         return [
             {
-                className: "Type1Rules start-end same",
-                name: "start-end same",
-                comment: "البداية والنهاية يجب ان تكون نغمة المقام او خامسة المقام",
+                comment: "البداية يجب ان تكون نغمة المقام او خامسة المقام",
                 rule: () => {
-                    const distance = interceptor.meaturements.dist(cp[0], cf[0]);
-                    console.log(distance);
-                    return allowedStart.includes(distance) ? true : { voiceIndex: cpLocation, noteIndex: 0 };
+                    if (!isCPUpper) return true;
+                    const distance = interceptor.meaturements.absDist(cp[0], cf[0]);
+                    if ([8, 5].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 0 };
+                },
+            },
+            {
+                comment: "البداية يجب ان تكون نغمة المقام",
+                rule: () => {
+                    if (isCPUpper) return true;
+                    const distance = interceptor.meaturements.absDist(cp[0], cf[0]);
+                    if ([8].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 0 };
+                },
+            },
+
+            {
+                comment: "لقد تجاوزت المسافات المسموح بها ",
+                rule: () => {
+                    const succeseiveDistances = interceptor.meaturements.successivesDistances(cpDistances);
+                    return restrictMaxAllowedHorizontalDistances(interceptor, succeseiveDistances, 16, cpLocation);
+                },
+            },
+            {
+                comment: "مسموح بمسافة 6 صغيرة على ان تهبط 2 صغيرة",
+                rule: () => {
+                    const succeseiveDistances = interceptor.meaturements.successivesDistances(cpDistances);
+                    return allowed6ButLowerBy2(interceptor, succeseiveDistances, cpDistances, 16, cpLocation);
+                },
+            },
+            {
+                comment: "راجع المسافات المسموحة في النوع الاول",
+                rule: () => {
+                    const distances = interceptor.meaturements.crossDist(cp, cf);
+                    console.log(distances);
+                    for (let i = 0; i < distances.length; i++) {
+                        const distance = distances[i];
+                        if (!allowedCrossDistances.includes(distance)) {
+                            return { voiceIndex: cpLocation, noteIndex: i * 16 };
+                        }
+                    }
+                    return true;
+                },
+            },
+            {
+                comment: "ممنوع استخدام اكثر من 3 ثالثات او 3 سادسات متتالية",
+                rule: () => {
+                    let successivesRepeats = 1;
+                    for (let i = 1; i < crossAbsDistances.length - 1; i++) {
+                        const currentDistance = crossAbsDistances[i];
+                        const previousDistance = crossAbsDistances[i - 1];
+                        currentDistance === previousDistance ? successivesRepeats++ : (successivesRepeats = 1);
+                        if (successivesRepeats > 3) {
+                            return { voiceIndex: cpLocation, noteIndex: i * 16 };
+                        }
+                    }
+                    return true;
+                },
+            },
+            {
+                comment: "المسافات 5 او 8 مسموحة مرة واحدة فقط خلال التمرين",
+                rule: () => {
+                    console.log(crossAbsDistances);
+                    let fifths = 0;
+                    let eights = 0;
+                    for (let i = 1; i < crossAbsDistances.length - 1; i++) {
+                        const distance = crossAbsDistances[i];
+                        if (distance === 5) fifths++;
+                        if (distance === 8) eights++;
+                        if (fifths + eights > 1) {
+                            return { voiceIndex: cpLocation, noteIndex: i * 16 };
+                        }
+                    }
+                    return true;
+                },
+            },
+            {
+                comment: "في النوع الاول جميع النغمات يجب ان تكون روند",
+                rule: () => {
+                    let passed = true;
+                    const location = {
+                        voiceIndex: cpLocation,
+                        noteIndex: 0,
+                    };
+                    for (let i = 0; i < cf.length; i++) {
+                        if (!interceptor.meaturements.isRound(cp[i])) {
+                            location.noteIndex = i * 16;
+                            passed = false;
+                            break;
+                        }
+                    }
+                    return passed ? true : location;
+                },
+            },
+            {
+                comment: "النهاية يجب ان تكون نغمة المقام",
+                rule: () => {
+                    const distance = interceptor.meaturements.absDist(cp[cp.length - 1], cf[cf.length - 1]);
+                    if ([8].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
+                },
+            },
+            {
+                comment: "النغمة الاخيرة تسبق بالحساس",
+                rule: () => {
+                    const distance = interceptor.meaturements.dist(cp[cp.length - 2], cp[cp.length - 1]);
+                    const distanceWithoutTone = interceptor.meaturements.removeToneFormDist(distance);
+                    if (distanceWithoutTone === "-2") return true;
+                    return { voiceIndex: cpLocation, noteIndex: (cp.length - 2) * 16 };
                 },
             },
         ];
     }
 }
+// IgYAwgggzAAAgDGANhyAgaBAcBgAXAJwFMAjAGyJgBIAERGAYjsVvoDJnHOAKTgOh6cAVJwDUzOACg0JAIYBneTAC4nAHicA-J1X0AhFvWcAOEfq74aAMoB7AA580AIQV8ABGCIUSBWXiIAJm7yhACuAObhFMF4sgR4AJYAduEAtAAsAOwArB5epL7-AakhBBFRRCWx8clpWdkAMfTNOAEA38YAkUA__

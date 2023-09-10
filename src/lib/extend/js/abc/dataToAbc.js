@@ -62,8 +62,6 @@ export function dataToAbc(instrument) {
             nd.abc_charStarts[abc.length] = { voice: v, note: n };
             nt.abc_charStarts = abc.length;
             if (flags.red > 0) {
-                // console.log(flags);
-                // if (flags.notPart == false) 
                 abc += '"^⚑"';
             } else if (flags.yellow > 0) abc += '"^⚠"';
             // custom rules
@@ -120,6 +118,13 @@ export function dataToAbc(instrument) {
                 nd.styles.push({
                     style: `.abcjs-slur.abcjs-dotted.abcjs-start-m${m}-n${note_in_measure}.abcjs-v${v}`,
                     stroke: "blue",
+                });
+            } else if (flags?.custom_slur?.start > 0 && flags?.custom_slur?.end > 0) {
+                abc += ".(";
+                end_shape[flags.custom_slur.end] = ")";
+                nd.styles.push({
+                    style: `.abcjs-slur.abcjs-dotted.abcjs-start-m${m}-n${note_in_measure}.abcjs-v${v}`,
+                    stroke: "red",
                 });
             }
 

@@ -13,7 +13,7 @@ import { mobileOrTablet } from "../core/mobileCheck.js";
 import { enableKeys } from "../ui/commands.js";
 import { saveState } from "../state/history.js";
 import bootbox from "../../plugin/bootbox/bootbox.js";
-import Interceptor  from "../../../../custom_analysis/Interceptor.ts";
+import Interceptor from "../../../../custom_analysis/Interceptor.ts";
 const ARES_ENCODING_VERSION = 5;
 export const SEVERITY_RED = 80;
 export const SEVERITY_RED_COLOR = "red";
@@ -135,7 +135,7 @@ class AnalysisResults {
                 }
             }
         }
-        const interceptor = new Interceptor(nd.abcString,this.vsp,this.vid);
+        const interceptor = new Interceptor(nd.abcString, this.vsp, this.vid, this.mode);
         interceptor.applyRules();
         this.flag = interceptor.getFlags();
         console.log(interceptor.getFlags());
@@ -419,12 +419,17 @@ class AnalysisResults {
         let red = 0;
         let yellow_slur = 0;
         let red_slur = 0;
+        let custom_slur = 0;
+        let end_custom_slur = 0;
         for (const fla of this.flag[va][pos]) {
             if (fla.accept !== 0) continue;
             if (fla.severity > SEVERITY_RED) {
                 if (glis_flag_ids.has(fla.fl)) {
-                } else if (slur_flag_ids.has(fla.fl)) red_slur++;
-                else red++;
+                } else if (slur_flag_ids.has(fla.fl)) {
+                    // red_slur++;
+                    custom_slur++;
+                    end_custom_slur = fla.end_custom_slur;
+                } else red++;
             } else if (fla.severity >= settings.show_min_severity) {
                 if (glis_flag_ids.has(fla.fl)) {
                 } else if (slur_flag_ids.has(fla.fl)) yellow_slur++;
@@ -436,6 +441,8 @@ class AnalysisResults {
             yellow: yellow,
             red_slur: red_slur,
             yellow_slur: yellow_slur,
+            custom_slur,
+            end_custom_slur,
         };
     }
 
@@ -443,13 +450,15 @@ class AnalysisResults {
         if (this.vid2 == null || !(v in this.vid2)) return {};
         let va = this.vid2[v];
         if (!this.flag || va >= this.flag.length) return {};
-        let total = { red: 0, yellow: 0, red_slur: 0, yellow_slur: 0, notPart: false };
+        let total = { red: 0, yellow: 0, red_slur: 0, yellow_slur: 0, custom_slur: { start: 0, end: 0 } };
         for (let pos = pos1; pos < pos2; ++pos) {
             let flags = this.getFlags(va, pos);
             if (flags.red) total.red += flags.red;
             if (flags.yellow) total.yellow += flags.yellow;
             if (flags.red_slur) total.red_slur += flags.red_slur;
             if (flags.yellow_slur) total.yellow_slur += flags.yellow_slur;
+            if (flags.custom_slur) total.custom_slur.start += flags.custom_slur;
+            if (flags.end_custom_slur) total.custom_slur.end = flags.end_custom_slur;
         }
         return total;
     }

@@ -1,6 +1,9 @@
+export interface Location {
+    voiceIndex: number;
+    noteIndex: number;
+    end_slur?: number;
+}
 export interface Rule {
-    className: string;
-    name: string;
     comment: string;
-    rule: () => true | { voiceIndex: number; noteIndex: number };
+    rule: () => true | Location;
 }
