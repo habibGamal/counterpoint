@@ -18,7 +18,6 @@ export const maxAllowedHorizontalDistances = [
     "+8T6",
     //----
     "+6T4",
-    "-6T4",
     "EE",
 ];
 
@@ -32,7 +31,6 @@ export function restrictMaxAllowedHorizontalDistances(
     const location: Location = {
         voiceIndex: voiceIndex,
         noteIndex: 0,
-        end_slur: undefined,
     };
     let startBulkPosition = -unit;
     let endBulkPosition = -unit;
@@ -46,7 +44,7 @@ export function restrictMaxAllowedHorizontalDistances(
         if (!maxAllowedHorizontalDistances.includes(sum)) {
             console.log(sum);
             location.noteIndex = startBulkPosition;
-            location.end_slur = lastIndex - 1;
+            location.endSlur = lastIndex - 1;
             passed = false;
             break;
         }
@@ -71,16 +69,17 @@ export function allowed6ButLowerBy2(
     for (let i = 0; i < succeseiveDistances.length; i++) {
         const bulk = succeseiveDistances[i];
         lastIndex += bulk.length;
-        
+
         const violatesUp = interceptor.meaturements.contains(bulk, "+6T4");
-        const violatesDown = interceptor.meaturements.contains(bulk, "-6T4");
-        const violationPosition = violatesUp === false ? violatesDown : violatesUp;
-        console.log(violationPosition,violatesUp,violatesDown);
-        interceptor.meaturements.contains(bulk, "-6T4");
-        if (violationPosition !== false) {
-            const checkPosition = lastIndex - (bulk.length - violationPosition);
+        // const violatesDown = interceptor.meaturements.contains(bulk, "-6T4");
+        // const violationPosition = violatesUp === false ? violatesDown : violatesUp;
+
+        if (violatesUp !== false) {
+            const [_, rightPointer] = violatesUp;
+            const checkPosition = lastIndex - (bulk.length - rightPointer);
             const nextDistance = distances[checkPosition];
-            if (nextDistance !== "-2T0.5") {
+            const isLastNote = checkPosition == distances.length;
+            if (nextDistance !== "-2T0.5" && !isLastNote) {
                 location.noteIndex = checkPosition * unit;
                 passed = false;
                 break;
@@ -89,4 +88,4 @@ export function allowed6ButLowerBy2(
     }
     return passed ? true : location;
 }
-// IgYAwgggzAAAgDGANhyAgaBAmBgAXAJwFMAjAGyMQAhEYASGxAYkZgDJWByVgUlY9oAKXqwCUrYbW60-UiawBUYxawDUABERwAUGhIBDAM6GYAXE2IAOBZgA8G-drXaAdBvPEAbHcOLcNADKAPYADgB0aABCRmEABGBEFCQE-nhEACaxhoQArgDmeRRZePoEeACWAHZ5ALQALADsAKzxiaQpaek12QT5hUTdJWVVtY1NADG0WjA46QA.AGUNQA__
+// IgYAwgggzAAAgDGANhyAgaBAMBgAXAJwFMAjAGyJgCoAERGAajsQBpmYBadp-r-2-m37sApOwDk7AJTsB8GGhIBDAM4qYAHHYBsdlvoAsHewC4x-vsQA8U-yP0zF5nDQBlAPYAHAHRoAQqreAARgRBQkBEp4RAAmQSqEAK4A5skU8XhKBHgAlgB2yRwALADsAKwhYaSR0TEcCQQpaUT1mdn5haVlADH0fTgxAP9WAPRAA___

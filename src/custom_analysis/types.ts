@@ -1,7 +1,8 @@
 export interface Location {
     voiceIndex: number;
     noteIndex: number;
-    end_slur?: number;
+    endSlur?: number;
+    startLine?: number;
 }
 export interface Rule {
     comment: string;

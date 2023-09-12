@@ -15,11 +15,12 @@ V: V1 clef=bass name="Bas."
 
 import CFRules from "./CFRules";
 import CustomFlags from "./CustomFlags";
+import GeneralRules from "./GeneralRules";
 import Measurements from "./Measurements";
 import Type1Rules from "./Type1Rules";
 import Type2Rules from "./Type2Rules";
+import Type3Rules from "./Type3Rules";
 import Type4Rules from "./Type4Rules";
-import Type3Rules from "./Type4Rules";
 
 const [C, D, E, F, G, A, B] = [0, 2, 4, 5, 7, 9, 11];
 export default class Interceptor {
@@ -121,8 +122,12 @@ export default class Interceptor {
         return this.flags.getFlags();
     }
 
-    private pushFlag(comment: string, voiceIndex: number, noteIndex: number, end_slur?: number) {
-        this.flags.addFlag(this.flags.createFlag(comment, end_slur), voiceIndex, noteIndex);
+    private pushFlag(comment: string, voiceIndex: number, noteIndex: number, end_slur?: number, startLine?: number) {
+        this.flags.addFlag(
+            this.flags.createFlag(comment, this.getCPLocation(), end_slur, startLine, noteIndex),
+            voiceIndex,
+            noteIndex
+        );
     }
 
     public applyRules() {
@@ -131,8 +136,28 @@ export default class Interceptor {
         for (const rule of cFRules) {
             const location = rule.rule();
             if (location !== true) {
-                this.pushFlag(rule.comment, location.voiceIndex, location.noteIndex, location.end_slur);
-                break;
+                this.pushFlag(
+                    rule.comment,
+                    location.voiceIndex,
+                    location.noteIndex,
+                    location.endSlur,
+                    location.startLine
+                );
+                // break;
+            }
+        }
+        const generalRules = new GeneralRules().rules(this);
+        for (const rule of generalRules) {
+            const location = rule.rule();
+            if (location !== true) {
+                this.pushFlag(
+                    rule.comment,
+                    location.voiceIndex,
+                    location.noteIndex,
+                    location.endSlur,
+                    location.startLine
+                );
+                // break;
             }
         }
         if (type === 1) {
@@ -140,8 +165,14 @@ export default class Interceptor {
             for (const rule of rules) {
                 const location = rule.rule();
                 if (location !== true) {
-                    this.pushFlag(rule.comment, location.voiceIndex, location.noteIndex, location.end_slur);
-                    break;
+                    this.pushFlag(
+                        rule.comment,
+                        location.voiceIndex,
+                        location.noteIndex,
+                        location.endSlur,
+                        location.startLine
+                    );
+                    // break;
                 }
             }
         }
@@ -150,8 +181,30 @@ export default class Interceptor {
             for (const rule of rules) {
                 const location = rule.rule();
                 if (location !== true) {
-                    this.pushFlag(rule.comment, location.voiceIndex, location.noteIndex, location.end_slur);
-                    break;
+                    this.pushFlag(
+                        rule.comment,
+                        location.voiceIndex,
+                        location.noteIndex,
+                        location.endSlur,
+                        location.startLine
+                    );
+                    // break;
+                }
+            }
+        }
+        if (type === 3) {
+            const rules = new Type3Rules().rules(this);
+            for (const rule of rules) {
+                const location = rule.rule();
+                if (location !== true) {
+                    this.pushFlag(
+                        rule.comment,
+                        location.voiceIndex,
+                        location.noteIndex,
+                        location.endSlur,
+                        location.startLine
+                    );
+                    // break;
                 }
             }
         }
@@ -160,8 +213,14 @@ export default class Interceptor {
             for (const rule of rules) {
                 const location = rule.rule();
                 if (location !== true) {
-                    this.pushFlag(rule.comment, location.voiceIndex, location.noteIndex, location.end_slur);
-                    break;
+                    this.pushFlag(
+                        rule.comment,
+                        location.voiceIndex,
+                        location.noteIndex,
+                        location.endSlur,
+                        location.startLine
+                    );
+                    // break;
                 }
             }
         }

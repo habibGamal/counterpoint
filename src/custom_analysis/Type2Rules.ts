@@ -2,15 +2,7 @@ import { allowed6ButLowerBy2, restrictMaxAllowedHorizontalDistances } from "./Co
 import Interceptor from "./Interceptor";
 import { Rule } from "./types";
 
-const allowedCrossDistances = [
-    '3T1.5',
-    '3T2',
-    '5T3.5',
-    '6T4',
-    '6T4.5',
-    '8T0',
-    '_',
-]
+const allowedCrossDistances = ["3T1.5", "3T2", "5T3.5", "6T4", "6T4.5", "8T0", "_"];
 export default class Type2Rules {
     rules(interceptor: Interceptor): Rule[] {
         const voices = interceptor.getVoices();
@@ -39,18 +31,6 @@ export default class Type2Rules {
                 },
             },
             {
-                comment: "لقد تجاوزت المسافات المسموح بها ",
-                rule: () => {
-                    return restrictMaxAllowedHorizontalDistances(interceptor, succeseiveDistances, 8, cpLocation);
-                },  
-            },
-            {
-                comment: "مسموح بمسافة 6 صغيرة على ان تهبط 2 صغيرة",
-                rule: () => {
-                    return allowed6ButLowerBy2(interceptor, succeseiveDistances, cpFlatDistances, 8, cpLocation);
-                },
-            },
-            {
                 comment: "البداية البلانش الثاني مسموح مسافة 5 او 8",
                 rule: () => {
                     const crossDistance = crossAbsBlanceh2[0];
@@ -61,7 +41,6 @@ export default class Type2Rules {
             {
                 comment: "البلانش الاول يجب ان يكون متوافق",
                 rule: () => {
-                    console.log(crossBlanceh1);
                     for (let i = 0; i < crossBlanceh1.length; i++) {
                         if (!allowedCrossDistances.includes(crossBlanceh1[i])) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
@@ -108,7 +87,6 @@ export default class Type2Rules {
             {
                 comment: "مسموح في النوع الثاني بلانش فقط",
                 rule: () => {
-                    console.log(cpFlat);
                     for (let i = 0; i < cpFlat.length - 1; i++) {
                         const note = cpFlat[i];
                         if (note.includes("8")) continue;
@@ -120,7 +98,10 @@ export default class Type2Rules {
             {
                 comment: "النغمة الاخيرة تسبق بالحساس",
                 rule: () => {
-                    const distance = interceptor.meaturements.dist(cpFlat[cpFlat.length - 2], cpFlat[cpFlat.length - 1]);
+                    const distance = interceptor.meaturements.dist(
+                        cpFlat[cpFlat.length - 2],
+                        cpFlat[cpFlat.length - 1]
+                    );
                     const distanceWithoutTone = interceptor.meaturements.removeToneFormDist(distance);
                     if (distanceWithoutTone === "-2") return true;
                     return { voiceIndex: cpLocation, noteIndex: (cpFlat.length - 2) * 8 };

@@ -33,21 +33,6 @@ export default class Type1Rules {
                     return { voiceIndex: cpLocation, noteIndex: 0 };
                 },
             },
-
-            {
-                comment: "لقد تجاوزت المسافات المسموح بها ",
-                rule: () => {
-                    const succeseiveDistances = interceptor.meaturements.successivesDistances(cpDistances);
-                    return restrictMaxAllowedHorizontalDistances(interceptor, succeseiveDistances, 16, cpLocation);
-                },
-            },
-            {
-                comment: "مسموح بمسافة 6 صغيرة على ان تهبط 2 صغيرة",
-                rule: () => {
-                    const succeseiveDistances = interceptor.meaturements.successivesDistances(cpDistances);
-                    return allowed6ButLowerBy2(interceptor, succeseiveDistances, cpDistances, 16, cpLocation);
-                },
-            },
             {
                 comment: "راجع المسافات المسموحة في النوع الاول",
                 rule: () => {

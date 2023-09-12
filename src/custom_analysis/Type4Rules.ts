@@ -43,18 +43,6 @@ export default class Type4Rules {
                 },
             },
             {
-                comment: "لقد تجاوزت المسافات المسموح بها ",
-                rule: () => {
-                    return restrictMaxAllowedHorizontalDistances(interceptor, succeseiveDistances, 8, cpLocation);
-                },
-            },
-            {
-                comment: "مسموح بمسافة 6 صغيرة على ان تهبط 2 صغيرة",
-                rule: () => {
-                    return allowed6ButLowerBy2(interceptor, succeseiveDistances, cpFlatDistances, 8, cpLocation);
-                },
-            },
-            {
                 comment: "البلانش الرابع يجب ان يكون متوافق",
                 rule: () => {
                     for (let i = 0; i < crossBlanceh2.length; i++) {

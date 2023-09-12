@@ -1,4 +1,26 @@
 export default class Measurements {
+    private getNoteLength(note: string): number {
+        const [noteLength] = note.match(/2|4|8|16/g) as [string];
+        return parseInt(noteLength);
+    }
+
+    calcNotesLocations(voice: string[][]) {
+        const notesLocations: number[] = [];
+        for (let i = 0; i < voice.length; i++) {
+            const currentBar = voice[i];
+            for (let j = 0; j < currentBar.length; j++) {
+                if (j == 0) {
+                    notesLocations.push(i * 16);
+                    continue;
+                }
+                const currentNote = currentBar[j];
+                const currentNoteLength = this.getNoteLength(currentNote);
+                const lastLocation = notesLocations[notesLocations.length - 1];
+                notesLocations.push(lastLocation + currentNoteLength);
+            }
+        }
+        return notesLocations;
+    }
     /**
      * treating the charTones as a circle
      * cutting in the direction of the clock
@@ -41,7 +63,7 @@ export default class Measurements {
      * note formate is like "c16", "_d8", "^F4"
      */
     dist(note1: string, note2: string): string {
-        if (note1 == undefined || note2== undefined) return "_";
+        if (note1 == undefined || note2 == undefined) return "_";
         const [key1] = (note1.match(/[A-Ga-g]+'*,*/g) as string[]) ?? [];
         const [key2] = (note2.match(/[A-Ga-g]+'*,*/g) as string[]) ?? [];
         const [keyChar1] = (note2.match(/(\^|\_)*[A-Ga-g]/g) as string[]) ?? [];
@@ -117,6 +139,7 @@ export default class Measurements {
             const distance = distances[i];
             if (i == 0) {
                 currentSuccessiveDistances.push(distance);
+                if (distances.length == 1) succeseiveDistances.push(currentSuccessiveDistances);
                 continue;
             }
             const currentDirection = currentSuccessiveDistances[0][0];
@@ -157,14 +180,14 @@ export default class Measurements {
         if (removeZeros.length === 0) return "EE";
         const numberOfSteps = removeZeros.length - 1;
         const sum = removeZeros
-        .map((item) => parseInt(item.replace("-", "")))
-        .filter((item) => !isNaN(item))
-        .reduce((acc, current) => acc + current, 0);
+            .map((item) => parseInt(item.replace("-", "")))
+            .filter((item) => !isNaN(item))
+            .reduce((acc, current) => acc + current, 0);
         const totalDistance = sum - numberOfSteps;
         const sumOfTones = removeZeros
-        .map((item) => parseFloat(item.split("T")[1]))
-        .filter((item) => !isNaN(item))
-        .reduce((acc, current) => acc + current, 0);
+            .map((item) => parseFloat(item.split("T")[1]))
+            .filter((item) => !isNaN(item))
+            .reduce((acc, current) => acc + current, 0);
         const sign = removeZeros[0][0];
         return `${sign}${totalDistance}T${sumOfTones}`;
     }
@@ -189,7 +212,7 @@ export default class Measurements {
      * @returns true if search is in distances
      * false if search is not in distances
      */
-    contains(distances: string[], search: string): false | number {
+    contains(distances: string[], search: string): false | [number, number] {
         let leftPointer = 0;
         let rightPointer = 1;
         let result = false;
@@ -204,7 +227,7 @@ export default class Measurements {
                 leftPointer++;
             }
         }
-        return result ? rightPointer : false;
+        return result ? [leftPointer, rightPointer] : false;
     }
 
     isRound(note: string): boolean {
