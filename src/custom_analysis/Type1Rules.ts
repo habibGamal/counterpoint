@@ -14,22 +14,25 @@ export default class Type1Rules {
         const crossAbsDistances = interceptor.meaturements.crossAbsDist(cp, cf);
         const crossDistances = interceptor.meaturements.crossDist(cp, cf);
         const isCPUpper = cpLocation === 1;
+        const isCPLower = cpLocation === 0;
         return [
             {
-                comment: "البداية يجب ان تكون نغمة المقام او خامسة المقام",
+                comment: "البداية يجب ان تكون نغمة المقام او خامسة المقام او يونسون",
                 rule: () => {
-                    if (!isCPUpper) return true;
+                    // cp is upper
+                    if (isCPLower) return true;
                     const distance = interceptor.meaturements.absDist(cp[0], cf[0]);
-                    if ([8, 5].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    if ([8, 5, 0].includes(interceptor.meaturements.toBase8(distance))) return true;
                     return { voiceIndex: cpLocation, noteIndex: 0 };
                 },
             },
             {
-                comment: "البداية يجب ان تكون نغمة المقام",
+                comment: "البداية يجب ان تكون نغمة المقام  او يونسون",
                 rule: () => {
+                    // cp is lower
                     if (isCPUpper) return true;
                     const distance = interceptor.meaturements.absDist(cp[0], cf[0]);
-                    if ([8].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    if ([8, 0].includes(interceptor.meaturements.toBase8(distance))) return true;
                     return { voiceIndex: cpLocation, noteIndex: 0 };
                 },
             },
@@ -38,7 +41,7 @@ export default class Type1Rules {
                 rule: () => {
                     const distances = interceptor.meaturements.crossDist(cp, cf);
                     console.log(distances);
-                    for (let i = 0; i < distances.length; i++) {
+                    for (let i = 0; i < distances.length -1; i++) {
                         const distance = distances[i];
                         if (!allowedCrossDistances.includes(distance)) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
@@ -100,8 +103,13 @@ export default class Type1Rules {
             {
                 comment: "النهاية يجب ان تكون نغمة المقام",
                 rule: () => {
-                    const distance = interceptor.meaturements.absDist(cp[cp.length - 1], cf[cf.length - 1]);
-                    if ([8].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    const lastCPNote = cp[cp.length - 1];
+                    const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
+                    if (
+                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        interceptor.meaturements.isRound(lastCPNote)
+                    )
+                        return true;
                     return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
                 },
             },

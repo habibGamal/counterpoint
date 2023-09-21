@@ -24,7 +24,6 @@ export const maxAllowedHorizontalDistances = [
 export function restrictMaxAllowedHorizontalDistances(
     interceptor: Interceptor,
     succeseiveDistances: string[][],
-    unit: number,
     voiceIndex: number
 ): true | Location {
     let passed = true;
@@ -32,18 +31,18 @@ export function restrictMaxAllowedHorizontalDistances(
         voiceIndex: voiceIndex,
         noteIndex: 0,
     };
-    let startBulkPosition = -unit;
-    let endBulkPosition = -unit;
+    let startBulkPosition = -1;
+    let endBulkPosition = -1;
     let lastIndex = 0;
     for (let i = 0; i < succeseiveDistances.length; i++) {
         const bulk = succeseiveDistances[i];
         const sum = interceptor.meaturements.sumWithTones(bulk);
-        endBulkPosition += bulk.length * unit;
-        startBulkPosition = endBulkPosition - bulk.length * unit;
+        endBulkPosition += bulk.length;
+        startBulkPosition = endBulkPosition - bulk.length;
         lastIndex += bulk.length;
         if (!maxAllowedHorizontalDistances.includes(sum)) {
             console.log(sum);
-            location.noteIndex = startBulkPosition;
+            location.noteIndex = interceptor.voicesLocations[voiceIndex][startBulkPosition];
             location.endSlur = lastIndex - 1;
             passed = false;
             break;
@@ -56,7 +55,6 @@ export function allowed6ButLowerBy2(
     interceptor: Interceptor,
     succeseiveDistances: string[][],
     distances: string[],
-    unit: number,
     voiceIndex: number
 ): true | Location {
     console.log(succeseiveDistances);
@@ -80,7 +78,7 @@ export function allowed6ButLowerBy2(
             const nextDistance = distances[checkPosition];
             const isLastNote = checkPosition == distances.length;
             if (nextDistance !== "-2T0.5" && !isLastNote) {
-                location.noteIndex = checkPosition * unit;
+                location.noteIndex = interceptor.voicesLocations[voiceIndex][checkPosition] ;
                 passed = false;
                 break;
             }

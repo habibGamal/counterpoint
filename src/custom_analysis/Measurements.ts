@@ -21,6 +21,17 @@ export default class Measurements {
         }
         return notesLocations;
     }
+
+    calcNotesLocations2d(voice: string[][], locations: number[]) {
+        const notesLocations2d: number[][] = [];
+        let lastIndex = 0;
+        for (let i = 0; i < voice.length; i++) {
+            const currentBar = voice[i];
+            notesLocations2d.push(locations.slice(lastIndex, lastIndex + currentBar.length));
+            lastIndex += currentBar.length;
+        }
+        return notesLocations2d;
+    }
     /**
      * treating the charTones as a circle
      * cutting in the direction of the clock
@@ -130,6 +141,14 @@ export default class Measurements {
     toBase8(dist: number): number {
         if (dist <= 8) return dist;
         return this.toBase8(dist - 7);
+    }
+
+    noteHasDias(note: string): boolean {
+        return note.includes("^");
+    }
+
+    noteHasBMoll(note: string): boolean {
+        return note.includes("_");
     }
 
     successivesDistances(distances: string[]): string[][] {

@@ -58,16 +58,78 @@ export default class GeneralRules {
         const crossAbsNote2 = interceptor.meaturements.crossAbsDist(cpNote2, cf);
         const crossAbsNote3 = interceptor.meaturements.crossAbsDist(cpNote3, cf);
         const crossAbsNote4 = interceptor.meaturements.crossAbsDist(cpNote4, cf);
-        const crossBlanceh1 = interceptor.meaturements.crossDist(cpNote1, cf);
-        const crossBlanceh2 = interceptor.meaturements.crossDist(cpNote2, cf);
         const isCPUpper = cpLocation === 1;
         const cpSucceseiveDistances = interceptor.meaturements.successivesDistances(cpFlatDistances);
         const cfSucceseiveDistances = interceptor.meaturements.successivesDistances(cfFlatDistances);
         const unit = this.getUnit(interceptor);
 
-        console.log("cp",cp);
+        console.log("cp", cp);
 
         return [
+            {
+                comment: "النغمة يجب ان تكون (سي♭)",
+                rule: () => {
+                    let passed = true;
+                    const location: Location = {
+                        voiceIndex: cpLocation,
+                        noteIndex: 0,
+                    };
+                    console.log("mode", interceptor.getMode());
+                    if (!["D", "F"].includes(interceptor.getMode())) return true;
+                    const bNotes = cpFlat.map((note) => {
+                        if (note.includes("b") || note.includes("B"))
+                            return interceptor.meaturements.noteHasBMoll(note);
+                        return true;
+                    });
+                    console.log(bNotes);
+                    const noteIndex = bNotes.indexOf(false);
+                    if (noteIndex !== -1) {
+                        location.noteIndex = interceptor.voicesLocations[cpLocation][noteIndex];
+                        passed = false;
+                    }
+                    return passed ? true : location;
+                },
+            },
+            {
+                comment: "يستخدم (فا#) اذا سبقت الحساس",
+                rule: () => {
+                    let passed = true;
+                    const location: Location = {
+                        voiceIndex: cpLocation,
+                        noteIndex: 0,
+                    };
+                    console.log("mode", interceptor.getMode());
+                    if (interceptor.getMode() !== "A") return true;
+                    const thirdLastNote = cpFlat[cp.length - 3];
+                    if (
+                        (thirdLastNote.includes("F") || thirdLastNote.includes("f")) &&
+                        !interceptor.meaturements.noteHasDias(thirdLastNote)
+                    ) {
+                        location.noteIndex = interceptor.voicesLocations[cpLocation][cp.length - 3];
+                        passed = false;
+                    }
+                    return passed ? true : location;
+                },
+            },
+            {
+                comment: "يجب رفع الحساس في هذا المقام ",
+                rule: () => {
+                    let passed = true;
+                    const location: Location = {
+                        voiceIndex: cpLocation,
+                        noteIndex: 0,
+                    };
+                    console.log("mode", interceptor.getMode());
+                    if (!["D", "G", "A"].includes(interceptor.getMode())) return true;
+                    const cpPreLastNote = cpFlat[cpFlat.length - 2];
+                    console.log("cpFlat",cpFlat);
+                    if (!interceptor.meaturements.noteHasDias(cpPreLastNote)) {
+                        location.noteIndex = interceptor.voicesLocations[cpLocation][cpFlat.length - 2];
+                        passed = false;
+                    }
+                    return passed ? true : location;
+                },
+            },
             {
                 comment: "اربيج",
                 rule: () => {
@@ -86,7 +148,7 @@ export default class GeneralRules {
                         const bulk = cfDistancesNoTones.slice(start, end).join();
                         if (bulk == "+3,+3" || bulk == "-3,-3") {
                             location.voiceIndex = cfLocation;
-                            location.noteIndex = (end - 1) * 16;
+                            location.noteIndex = interceptor.voicesLocations[cfLocation][end - 1];
                             passed = false;
                             return location;
                         }
@@ -97,7 +159,7 @@ export default class GeneralRules {
                         const bulk = cpDistancesNoTones.slice(start, end).join();
                         if (bulk == "+3,+3" || bulk == "-3,-3") {
                             location.voiceIndex = cpLocation;
-                            location.noteIndex = (end - 1) * unit;
+                            location.noteIndex = interceptor.voicesLocations[cpLocation][end - 1];
                             passed = false;
                             return location;
                         }
@@ -121,7 +183,7 @@ export default class GeneralRules {
                         const bulk = cfDistancesNoTones.slice(start, end).join();
                         if (bulk == "+2,+2,-2,+2,+2") {
                             location.voiceIndex = cfLocation;
-                            location.noteIndex = (end - 1) * 16;
+                            location.noteIndex = interceptor.voicesLocations[cfLocation][end - 1];
                             passed = false;
                             return location;
                         }
@@ -132,7 +194,7 @@ export default class GeneralRules {
                         const bulk = cpDistancesNoTones.slice(start, end).join();
                         if (bulk == "+2,+2,-2,+2,+2") {
                             location.voiceIndex = cpLocation;
-                            location.noteIndex = (end - 1) * unit;
+                            location.noteIndex = interceptor.voicesLocations[cpLocation][end - 1];
                             passed = false;
                             return location;
                         }
@@ -149,14 +211,15 @@ export default class GeneralRules {
                         noteIndex: 0,
                     };
                     const crossDistances = [crossAbsNote1, crossAbsNote2, crossAbsNote3, crossAbsNote4];
-                    // console.log("crossAbsNote1", crossAbsNote1);
+                    console.log("crossDistances", crossDistances);
                     for (let i = 0; i < crossDistances.length; i++) {
                         const crossDistance = crossDistances[i];
                         const verticalParallelCheck = this.verticalParallelCheck(
                             crossDistance,
-                            (catchPosition) => 16 * catchPosition + i * unit
+                            (catchPosition) => interceptor.voicesLocations2d[cpLocation][catchPosition][i]
+                            // (catchPosition) => interceptor.voicesLocations[cpLocation][catchPosition * 4 + i]
                         );
-                        // console.log("verticalParallelCheck", verticalParallelCheck);
+                        console.log("verticalParallelCheck", verticalParallelCheck,interceptor.voicesLocations2d);
                         if (verticalParallelCheck !== false) {
                             location.noteIndex = verticalParallelCheck;
                             passed = false;
@@ -220,13 +283,13 @@ export default class GeneralRules {
             {
                 comment: "لقد تجاوزت المسافات المسموح بها افقيا ",
                 rule: () => {
-                    return restrictMaxAllowedHorizontalDistances(interceptor, cpSucceseiveDistances, unit, cpLocation);
+                    return restrictMaxAllowedHorizontalDistances(interceptor, cpSucceseiveDistances, cpLocation);
                 },
             },
             {
                 comment: "مسموح بمسافة 6 صغيرة صاعدة على ان تهبط 2 صغيرة",
                 rule: () => {
-                    return allowed6ButLowerBy2(interceptor, cpSucceseiveDistances, cpFlatDistances, unit, cpLocation);
+                    return allowed6ButLowerBy2(interceptor, cpSucceseiveDistances, cpFlatDistances, cpLocation);
                 },
             },
         ];

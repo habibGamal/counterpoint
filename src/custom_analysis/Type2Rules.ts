@@ -20,6 +20,7 @@ export default class Type2Rules {
         const crossBlanceh1 = interceptor.meaturements.crossDist(cpBlanch1, cf);
         const crossBlanceh2 = interceptor.meaturements.crossDist(cpBlanch2, cf);
         const isCPUpper = cpLocation === 1;
+        const isCPLower = cpLocation === 0;
         const succeseiveDistances = interceptor.meaturements.successivesDistances(cpFlatDistances);
         return [
             {
@@ -31,11 +32,37 @@ export default class Type2Rules {
                 },
             },
             {
-                comment: "البداية البلانش الثاني مسموح مسافة 5 او 8",
+                comment: "البداية البلانش الثاني مسموح مسافة 5 او 8 او يونسون",
                 rule: () => {
+                    if (isCPLower) return true;
                     const crossDistance = crossAbsBlanceh2[0];
-                    if ([8, 5].includes(crossDistance)) return true;
+                    if ([8, 5, 0].includes(crossDistance)) return true;
                     return { voiceIndex: cpLocation, noteIndex: 8 };
+                },
+            },
+            {
+                comment: "البداية البلانش الثاني مسموح مسافة 8 او يونسون",
+                rule: () => {
+                    if (isCPUpper) return true;
+                    const crossDistance = crossAbsBlanceh2[0];
+                    if ([8, 0].includes(crossDistance)) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 8 };
+                },
+            },
+            {
+                comment: "نغمة مكررة",
+                rule: () => {
+                    for (let i = 0; i < cpFlat.length; i++) {
+                        const currentBlanch = cpFlat[i];
+                        const nextBlanch = cpFlat[i + 1];
+                        const distance = interceptor.meaturements.dist(currentBlanch, nextBlanch);
+                        if (distance == "-0T0")
+                            return {
+                                voiceIndex: cpLocation,
+                                noteIndex: interceptor.voicesLocations[cpLocation][i + 1],
+                            };
+                    }
+                    return true;
                 },
             },
             {
@@ -93,6 +120,19 @@ export default class Type2Rules {
                         return { voiceIndex: cpLocation, noteIndex: i * 8 };
                     }
                     return true;
+                },
+            },
+            {
+                comment: "النهاية يجب ان تكون نغمة المقام",
+                rule: () => {
+                    const lastCPNote = cpFlat[cpFlat.length - 1];
+                    const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
+                    if (
+                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        interceptor.meaturements.isRound(lastCPNote)
+                    )
+                        return true;
+                    return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
                 },
             },
             {

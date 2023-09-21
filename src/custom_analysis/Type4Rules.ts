@@ -20,6 +20,7 @@ export default class Type4Rules {
         const crossBlanceh1 = interceptor.meaturements.crossDist(cpBlanch1, cf);
         const crossBlanceh2 = interceptor.meaturements.crossDist(cpBlanch2, cf);
         const isCPUpper = cpLocation === 1;
+        const isCPLower = cpLocation === 0;
         const succeseiveDistances = interceptor.meaturements.successivesDistances(cpFlatDistances);
         return [
             {
@@ -28,6 +29,24 @@ export default class Type4Rules {
                     const firstBlanch = cpBlanch1[0];
                     if (firstBlanch === "z8") return true;
                     return { voiceIndex: cpLocation, noteIndex: 0 };
+                },
+            },
+            {
+                comment: "البداية البلانش الثاني مسموح مسافة 5 او 8 او يونسون",
+                rule: () => {
+                    if (isCPLower) return true;
+                    const crossDistance = crossAbsBlanceh2[0];
+                    if ([8, 5, 0].includes(crossDistance)) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 8 };
+                },
+            },
+            {
+                comment: "البداية البلانش الثاني مسموح مسافة 8 او يونسون",
+                rule: () => {
+                    if (isCPUpper) return true;
+                    const crossDistance = crossAbsBlanceh2[0];
+                    if ([8, 0].includes(crossDistance)) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 8 };
                 },
             },
             {
@@ -43,7 +62,7 @@ export default class Type4Rules {
                 },
             },
             {
-                comment: "البلانش الرابع يجب ان يكون متوافق",
+                comment: "البلانش الثاني يجب ان يكون متوافق",
                 rule: () => {
                     for (let i = 0; i < crossBlanceh2.length; i++) {
                         if (!allowedCrossDistances.includes(crossBlanceh2[i])) {
@@ -109,6 +128,32 @@ export default class Type4Rules {
                         if (countNonTiedBlanch > 1) return { voiceIndex: cpLocation, noteIndex: (i * 2 + 1) * 8 };
                     }
                     return true;
+                },
+            },
+            {
+                comment: "يجب ان تكون نغمة المقام",
+                rule: () => {
+                    const lastCPNote = cpFlat[cpFlat.length - 1];
+                    const thirdLastCPNote = cpFlat[cpFlat.length - 3];
+                    const distance = interceptor.meaturements.absDist(lastCPNote, thirdLastCPNote);
+                    if ([8, 0].includes(interceptor.meaturements.toBase8(distance))) return true;
+                    return {
+                        voiceIndex: cpLocation,
+                        noteIndex: interceptor.voicesLocations[cpLocation][cpFlat.length - 3],
+                    };
+                },
+            },
+            {
+                comment: "النهاية يجب ان تكون نغمة المقام",
+                rule: () => {
+                    const lastCPNote = cpFlat[cpFlat.length - 1];
+                    const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
+                    if (
+                        [8, 0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        interceptor.meaturements.isRound(lastCPNote)
+                    )
+                        return true;
+                    return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
                 },
             },
             {

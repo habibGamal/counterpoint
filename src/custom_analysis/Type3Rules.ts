@@ -26,6 +26,7 @@ export default class Type3Rules {
         const crossNoar3 = interceptor.meaturements.crossDist(cpNoar3, cf);
         const crossNoar4 = interceptor.meaturements.crossDist(cpNoar4, cf);
         const isCPUpper = cpLocation === 1;
+        const isCPLower = cpLocation === 0;
         const succeseiveDistances = interceptor.meaturements.successivesDistances(cpFlatDistances);
         return [
             {
@@ -37,20 +38,20 @@ export default class Type3Rules {
                 },
             },
             {
+                comment: "النوار الثاني في اول مازورة يجب ان يكون يونسون او نغمة الاساس او خامسة",
+                rule: () => {
+                    if (isCPLower) return true;
+                    const crossDistance = crossAbsNoar2[0];
+                    if ([8, 5, 0].includes(crossDistance)) return true;
+                    return { voiceIndex: cpLocation, noteIndex: 4 };
+                },
+            },
+            {
                 comment: "النوار الثاني في اول مازورة يجب ان يكون يونسون او نغمة الاساس",
                 rule: () => {
                     if (isCPUpper) return true;
                     const crossDistance = crossAbsNoar2[0];
                     if ([8, 0].includes(crossDistance)) return true;
-                    return { voiceIndex: cpLocation, noteIndex: 4 };
-                },
-            },
-            {
-                comment: "النوار الثاني في اول مازورة يجب ان يكون يونسون او خامسة",
-                rule: () => {
-                    if (!isCPUpper) return true;
-                    const crossDistance = crossAbsNoar2[0];
-                    if ([8, 5, 0].includes(crossDistance)) return true;
                     return { voiceIndex: cpLocation, noteIndex: 4 };
                 },
             },
@@ -69,20 +70,9 @@ export default class Type3Rules {
             {
                 comment: "النوار الاول يجب ان يكون متوافق",
                 rule: () => {
-                    for (let i = 0; i < crossNoar1.length; i++) {
+                    for (let i = 0; i < crossNoar1.length -1; i++) {
                         if (!allowedCrossDistances.includes(crossNoar1[i])) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
-                        }
-                    }
-                    return true;
-                },
-            },
-            {
-                comment: "النوار الثالث يجب ان يكون متوافق",
-                rule: () => {
-                    for (let i = 0; i < crossNoar3.length; i++) {
-                        if (!allowedCrossDistances.includes(crossNoar3[i])) {
-                            return { voiceIndex: cpLocation, noteIndex: (i * 4 + 2) * 4 };
                         }
                     }
                     return true;
@@ -129,6 +119,18 @@ export default class Type3Rules {
                 },
             },
             {
+                comment: "النوار الثالث يجب ان يكون متوافق",
+                rule: () => {
+                    console.log("crossNoar3",crossNoar3)
+                    for (let i = 0; i < crossNoar3.length; i++) {
+                        if (!allowedCrossDistances.includes(crossNoar3[i])) {
+                            return { voiceIndex: cpLocation, noteIndex: (i * 4 + 2) * 4 };
+                        }
+                    }
+                    return true;
+                },
+            },
+            {
                 comment: "النوار الرابع يجب ان يكون متوافق او متنافر ياخذ صورة مرور",
                 rule: () => {
                     let stopRuleIn = 0;
@@ -141,8 +143,8 @@ export default class Type3Rules {
                         break;
                     }
                     for (let i = 0; i < stopRuleIn; i++) {
-                        const crossAbsDistance = crossAbsNoar2[i];
-                        const crossDistance = crossNoar2[i];
+                        const crossAbsDistance = crossAbsNoar4[i];
+                        const crossDistance = crossNoar4[i];
                         const locationInCP = i * 4 + 3;
                         if (allowedCrossDistances.includes(crossDistance)) {
                             continue;
@@ -178,6 +180,19 @@ export default class Type3Rules {
                         return { voiceIndex: cpLocation, noteIndex: i * 8 };
                     }
                     return true;
+                },
+            },
+            {
+                comment: "النهاية يجب ان تكون نغمة المقام",
+                rule: () => {
+                    const lastCPNote = cpFlat[cpFlat.length - 1];
+                    const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
+                    if (
+                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        interceptor.meaturements.isRound(lastCPNote)
+                    )
+                        return true;
+                    return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
                 },
             },
             {

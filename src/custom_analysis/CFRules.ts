@@ -33,14 +33,14 @@ export default class CFRules {
                 comment: "لقد تجاوزت المسافات المسموح بها افقيا ",
                 rule: () => {
                     const succeseiveDistances = interceptor.meaturements.successivesDistances(cfDistances);
-                    return restrictMaxAllowedHorizontalDistances(interceptor,succeseiveDistances,16,cfLocation);
+                    return restrictMaxAllowedHorizontalDistances(interceptor,succeseiveDistances,cfLocation);
                 },
             },
             {
                 comment: "مسموح بمسافة 6 صغيرة صاعدة على ان تهبط 2 صغيرة",
                 rule: () => {
                     const succeseiveDistances = interceptor.meaturements.successivesDistances(cfDistances);
-                    return allowed6ButLowerBy2(interceptor,succeseiveDistances,cfDistances,16,cfLocation);
+                    return allowed6ButLowerBy2(interceptor,succeseiveDistances,cfDistances,cfLocation);
                 },
             },
             {
