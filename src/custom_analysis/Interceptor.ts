@@ -23,13 +23,18 @@ import Type3Rules from "./Type3Rules";
 import Type4Rules from "./Type4Rules";
 import Type5Rules from "./Type5Rules";
 
-const [C, D, E, F, G, A, B] = [0, 2, 4, 5, 7, 9, 11];
 export default class Interceptor {
     public meaturements = new Measurements();
     private flags = new CustomFlags();
     public voicesLocations: number[][];
     public voicesLocations2d: number[][][];
-    constructor(private abcString: string, private vsp: number[], private vid: number[], private mode: number) {
+    constructor(
+        private abcString: string,
+        private vsp: number[],
+        private vid: number[],
+        private mode: number,
+        public clefs: [string, string]
+    ) {
         console.log(this.abcString);
         console.log("this.getVoicesAsDistances()", this.getVoicesAsDistances());
         this.voicesLocations = this.calcVoicesLocations();

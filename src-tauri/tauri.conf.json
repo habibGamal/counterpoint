@@ -7,7 +7,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "County Voice- totaa only",
+    "productName": "County Voice - totaa only",
     "version": "1.0.0"
   },
   "tauri": {

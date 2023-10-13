@@ -9,6 +9,7 @@ export const maxAllowedHorizontalDistances = [
     "-4T2.5",
     "-5T3.5",
     "-8T6",
+    "-8T0",
     "+2T0.5",
     "+2T1",
     "+3T1.5",
@@ -16,6 +17,7 @@ export const maxAllowedHorizontalDistances = [
     "+4T2.5",
     "+5T3.5",
     "+8T6",
+    "+8T0",
     //----
     "+6T4",
     "EE",
@@ -55,7 +57,8 @@ export function allowed6ButLowerBy2(
     interceptor: Interceptor,
     succeseiveDistances: string[][],
     distances: string[],
-    voiceIndex: number
+    voiceIndex: number,
+    cpFlat?: string[]
 ): true | Location {
     console.log(succeseiveDistances);
     let passed = true;
@@ -69,16 +72,16 @@ export function allowed6ButLowerBy2(
         lastIndex += bulk.length;
 
         const violatesUp = interceptor.meaturements.contains(bulk, "+6T4");
-        // const violatesDown = interceptor.meaturements.contains(bulk, "-6T4");
-        // const violationPosition = violatesUp === false ? violatesDown : violatesUp;
 
         if (violatesUp !== false) {
             const [_, rightPointer] = violatesUp;
-            const checkPosition = lastIndex - (bulk.length - rightPointer);
+            let checkPosition = lastIndex - (bulk.length - rightPointer);
+            const prevNoteHasTie = cpFlat ? cpFlat[checkPosition - 1].includes("-") : false;
+            prevNoteHasTie ? checkPosition++ : checkPosition;
             const nextDistance = distances[checkPosition];
             const isLastNote = checkPosition == distances.length;
             if (nextDistance !== "-2T0.5" && !isLastNote) {
-                location.noteIndex = interceptor.voicesLocations[voiceIndex][checkPosition] ;
+                location.noteIndex = interceptor.voicesLocations[voiceIndex][checkPosition];
                 passed = false;
                 break;
             }

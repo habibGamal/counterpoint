@@ -68,7 +68,7 @@ export default class Type2Rules {
             {
                 comment: "البلانش الاول يجب ان يكون متوافق",
                 rule: () => {
-                    for (let i = 0; i < crossBlanceh1.length; i++) {
+                    for (let i = 0; i < crossBlanceh1.length - 1; i++) {
                         if (!allowedCrossDistances.includes(crossBlanceh1[i])) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
                         }
@@ -77,10 +77,10 @@ export default class Type2Rules {
                 },
             },
             {
-                comment: "البلانش الثاني يجب ان يكون متوافق او متنافر ياخذ صورة مرور",
+                comment: "البلانش التانى إما يكون متوافق فيكون له حرية الحركة أو متنافر فيأخذ شكل مرور",
                 rule: () => {
                     let stopRuleIn = 0;
-                    for (let i = 0; i < cp.length; i++) {
+                    for (let i = 1; i < cp.length; i++) {
                         const bar = cp[i];
                         if (bar.length == 2) {
                             stopRuleIn++;
@@ -88,7 +88,8 @@ export default class Type2Rules {
                         }
                         break;
                     }
-                    for (let i = 0; i < stopRuleIn; i++) {
+                    console.log("crossBlanceh2",crossBlanceh2)
+                    for (let i = 1; i < stopRuleIn; i++) {
                         const crossAbsDistance = crossAbsBlanceh2[i];
                         const crossDistance = crossBlanceh2[i];
                         const locationInCP = i * 2 + 1;
@@ -128,7 +129,7 @@ export default class Type2Rules {
                     const lastCPNote = cpFlat[cpFlat.length - 1];
                     const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
                     if (
-                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        [8, 0].includes(interceptor.meaturements.toBase8(distance)) &&
                         interceptor.meaturements.isRound(lastCPNote)
                     )
                         return true;

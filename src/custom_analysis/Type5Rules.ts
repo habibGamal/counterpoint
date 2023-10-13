@@ -101,13 +101,12 @@ export default class Type5Rules {
                 comment: "يجب ان تكون نغمة المقام",
                 rule: () => {
                     const preLastBar = cpByTypes[cpByTypes.length - 2];
-                    if(preLastBar.type !== 4) return true;
+                    if (preLastBar.type !== 4) return true;
                     const lastCPNote = cpFlat[cpFlat.length - 1];
                     const thirdLastCPNote = cpFlat[cpFlat.length - 3];
                     const distance = interceptor.meaturements.absDist(lastCPNote, thirdLastCPNote);
                     if ([8, 0].includes(interceptor.meaturements.toBase8(distance))) return true;
                     return {
-                        
                         voiceIndex: cpLocation,
                         noteIndex: interceptor.voicesLocations[cpLocation][cpFlat.length - 3],
                     };
@@ -147,7 +146,7 @@ export default class Type5Rules {
                 rule: harmonic(2, 1, cpByTypes, crossNotes1, cpLocation, interceptor),
             },
             {
-                comment: "البلانش الثاني يجب ان يكون متوافق او متنافر ياخذ صورة مرور",
+                comment: "البلانش التانى إما يكون متوافق فيكون له حرية الحركة أو متنافر فيأخذ شكل مرور",
                 rule: harmonicOrNonHarmonicPass(
                     2,
                     2,
@@ -156,6 +155,7 @@ export default class Type5Rules {
                     crossNotes2,
                     cpFlatDistances,
                     cpLocation,
+                    cpFlat,
                     interceptor
                 ),
             },
@@ -174,6 +174,7 @@ export default class Type5Rules {
                     crossNotes2,
                     cpFlatDistances,
                     cpLocation,
+                    cpFlat,
                     interceptor
                 ),
             },
@@ -191,6 +192,7 @@ export default class Type5Rules {
                     crossNotes4,
                     cpFlatDistances,
                     cpLocation,
+                    cpFlat,
                     interceptor
                 ),
             },
@@ -209,8 +211,27 @@ export default class Type5Rules {
                     crossNotes1,
                     cpFlatDistances,
                     cpLocation,
+                    cpFlat,
                     interceptor
                 ),
+            },
+
+            {
+                comment: "نغمة مكررة",
+                rule: () => {
+                    for (let i = 0; i < cpFlat.length; i++) {
+                        const currentNoar = cpFlat[i];
+                        const nextNoar = cpFlat[i + 1];
+                        const hasTie = currentNoar.includes("-");
+                        const distance = interceptor.meaturements.dist(currentNoar, nextNoar);
+                        if (distance == "-0T0" && !hasTie)
+                            return {
+                                voiceIndex: cpLocation,
+                                noteIndex: interceptor.voicesLocations[cpLocation][i + 1],
+                            };
+                    }
+                    return true;
+                },
             },
         ];
     }
@@ -250,21 +271,26 @@ function harmonicOrNonHarmonicPass(
     crossNotes: string[],
     cpFlatDistances: string[],
     cpLocation: number,
+    cpFlat: string[],
     interceptor: Interceptor
 ): () => true | Location {
     return () => {
-        if (type == 3) console.log(crossNotes);
         let lastIndex = -1;
         for (let i = 0; i < cpByTypes.length; i++) {
             const cpSlice = cpByTypes[i];
             const locationInCP = lastIndex + noteNumber;
+            const startOfScale = locationInCP === 1;
             lastIndex += cpSlice.slice.length;
+            if (startOfScale) continue;
             if (cpSlice.type !== type) continue;
+            if (type == 2) console.log("crossDistance",crossNotes);
             const crossAbsDistance = crossAbsNotes[i];
             const crossDistance = crossNotes[i];
             if (allowedCrossDistances.includes(crossDistance)) {
                 continue;
             } else if ([2, 4, 7].includes(crossAbsDistance)) {
+                const previousNote = cpFlat[locationInCP - 1];
+                const nextNote = cpFlat[locationInCP + 1];
                 const distance = cpFlatDistances[locationInCP];
                 const nextDistance = cpFlatDistances[locationInCP + 1];
                 const direction = distance[0];
@@ -286,6 +312,17 @@ function harmonicOrNonHarmonicPass(
                             (direction == "-" && nextDistance.includes("-3")))
                     )
                         continue;
+                    if (type == 3) {
+                        const nextNextDistance = cpFlatDistances[locationInCP + 2];
+                        const diverge = nextNextDistance[0] != direction;
+                        if (previousNote === nextNote) continue;
+                        if (
+                            (direction == "+" && nextDistance.includes("+3") && diverge) ||
+                            (direction == "-" && nextDistance.includes("-3") && diverge)
+                        )
+                            continue;
+                    }
+
                     return {
                         voiceIndex: cpLocation,
                         noteIndex: interceptor.voicesLocations[cpLocation][locationInCP + 1],

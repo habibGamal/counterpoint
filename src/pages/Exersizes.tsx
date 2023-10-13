@@ -1,22 +1,11 @@
-import { faClipboardCheck } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
-import Modal from "../compontents/Modal";
+import { useState } from "react";
 import PageTitle from "../compontents/PageTitle";
 import { useAppDispatch } from "../hooks";
 import { routerSlice } from "../slices/routerSlice";
 import Container from "../compontents/Container";
 import { data } from "../Data";
+import ModalOptions from "../compontents/ModalOptions";
 
-const Option = ({ title, onClick }: { title: string; onClick: () => void }) => {
-    return (
-        <li
-            onClick={onClick}
-            className="p-2 my-2 border rounded hover:bg-secondary-400 hover:text-gray-100 cursor-pointer active:scale-95 transition-transform"
-        >
-            {title}
-        </li>
-    );
-};
 const ChooseCantusModal = ({
     state,
     close,
@@ -41,15 +30,15 @@ const ChooseCantusModal = ({
         );
     };
     return (
-        <Modal state={state} close={close}>
-            <div className="p-4 font-sans min-w-[300px]">
-                <h4 className="text-center text-2xl mb-4">Cantus firmus</h4>
-                <ul className="text-xl text-left">
-                    <Option onClick={() => play("up")} title="Soprano" />
-                    <Option onClick={() => play("down")} title="Bass" />
-                </ul>
-            </div>
-        </Modal>
+        <ModalOptions
+            title="Choose Cantus"
+            state={state}
+            close={close}
+            options={[
+                { onClick: () => play("up"), title: "Soprano" },
+                { onClick: () => play("down"), title: "Bass" },
+            ]}
+        />
     );
 };
 const ChooseStageModal = ({ state, close, examType }: { state: boolean; close: () => void; examType: number }) => {
@@ -64,20 +53,20 @@ const ChooseStageModal = ({ state, close, examType }: { state: boolean; close: (
     return (
         <>
             <ChooseCantusModal state={modalState} close={closeChooseModal} examType={examType} stage={stage} />
-            <Modal state={state} close={close}>
-                <div className="p-4 font-sans min-w-[300px]">
-                    <h4 className="text-center text-2xl mb-4">أختر المقام</h4>
-                    <ul className="text-xl">
-                        <Option onClick={() => open("dourian")} title="مقام دوريان" />
-                        <Option onClick={() => open("frigian")} title="مقام فريجيان" />
-                        <Option onClick={() => open("lydian")} title="مقام ليديان" />
-                        <Option onClick={() => open("maxolidian")} title="مقام مكسوليديان" />
-                        <Option onClick={() => open("iolian")} title="مقام الأيوليان" />
-                        <Option onClick={() => open("locrian")} title="مقام لوكريان" />
-                        <Option onClick={() => open("ionian")} title="مقام ايونيان" />
-                    </ul>
-                </div>
-            </Modal>
+            <ModalOptions
+                title="أختر المقام"
+                state={state}
+                close={close}
+                options={[
+                    { onClick: () => open("dourian"), title: "مقام دوريان" },
+                    { onClick: () => open("frigian"), title: "مقام فريجيان" },
+                    { onClick: () => open("lydian"), title: "مقام ليديان" },
+                    { onClick: () => open("maxolidian"), title: "مقام مكسوليديان" },
+                    { onClick: () => open("iolian"), title: "مقام الأيوليان" },
+                    { onClick: () => open("locrian"), title: "مقام لوكريان" },
+                    { onClick: () => open("ionian"), title: "مقام ايونيان" },
+                ]}
+            />
         </>
     );
 };
@@ -101,7 +90,7 @@ export default function Exersizes() {
     return (
         <div className="w-full bg-home-image">
             <PageTitle
-                title="تمارين محلولة"
+                title="نماذج استرشادية"
                 subTitle="هذه بعض التمارين المحلولة لمساعدتك"
                 iconSrc="icons/clipboard-tick.svg"
             />

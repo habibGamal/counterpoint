@@ -81,8 +81,24 @@ export default class GeneralRules {
                             return interceptor.meaturements.noteHasBMoll(note);
                         return true;
                     });
-                    console.log(bNotes);
-                    const noteIndex = bNotes.indexOf(false);
+                    const bNotesE = cp.map((arr) => {
+                        let barHasBMoll = false;
+                        arr.forEach((note) => {
+                            if (
+                                (note.includes("b") || note.includes("B")) &&
+                                interceptor.meaturements.noteHasBMoll(note)
+                            )
+                                barHasBMoll = true;
+                        });
+                        if (barHasBMoll) return arr.map((note) => true);
+                        return arr.map((note) => {
+                            if (note.includes("b") || note.includes("B"))
+                                return interceptor.meaturements.noteHasBMoll(note);
+                            return true;
+                        });
+                    });
+                    console.log("bNotesE", bNotesE);
+                    const noteIndex = bNotesE.flat().indexOf(false);
                     if (noteIndex !== -1) {
                         location.noteIndex = interceptor.voicesLocations[cpLocation][noteIndex];
                         passed = false;
@@ -122,7 +138,7 @@ export default class GeneralRules {
                     console.log("mode", interceptor.getMode());
                     if (!["D", "G", "A"].includes(interceptor.getMode())) return true;
                     const cpPreLastNote = cpFlat[cpFlat.length - 2];
-                    console.log("cpFlat",cpFlat);
+                    console.log("cpFlat", cpFlat);
                     if (!interceptor.meaturements.noteHasDias(cpPreLastNote)) {
                         location.noteIndex = interceptor.voicesLocations[cpLocation][cpFlat.length - 2];
                         passed = false;
@@ -219,7 +235,7 @@ export default class GeneralRules {
                             (catchPosition) => interceptor.voicesLocations2d[cpLocation][catchPosition][i]
                             // (catchPosition) => interceptor.voicesLocations[cpLocation][catchPosition * 4 + i]
                         );
-                        console.log("verticalParallelCheck", verticalParallelCheck,interceptor.voicesLocations2d);
+                        // console.log("verticalParallelCheck", verticalParallelCheck, interceptor.voicesLocations2d);
                         if (verticalParallelCheck !== false) {
                             location.noteIndex = verticalParallelCheck;
                             passed = false;
@@ -289,7 +305,47 @@ export default class GeneralRules {
             {
                 comment: "مسموح بمسافة 6 صغيرة صاعدة على ان تهبط 2 صغيرة",
                 rule: () => {
-                    return allowed6ButLowerBy2(interceptor, cpSucceseiveDistances, cpFlatDistances, cpLocation);
+                    return allowed6ButLowerBy2(interceptor, cpSucceseiveDistances, cpFlatDistances, cpLocation, cpFlat);
+                },
+            },
+            {
+                comment: "تخطيت النطاق الصوتي",
+                rule: () => {
+                    const crossNoteWithSign1 = interceptor.meaturements.crossDistWithSign(cpNote1, cf);
+                    const crossNoteWithSign2 = interceptor.meaturements.crossDistWithSign(cpNote2, cf);
+                    const crossNoteWithSign3 = interceptor.meaturements.crossDistWithSign(cpNote3, cf);
+                    const crossNoteWithSign4 = interceptor.meaturements.crossDistWithSign(cpNote4, cf);
+                    const buildInTop = (item: string) => item.includes("-") && !item.includes("-0");
+                    const buildInBottom = (item: string) => item.includes("+");
+                    const validator = isCPUpper ? buildInTop : buildInBottom;
+                    const note1 = crossNoteWithSign1.findIndex(validator);
+                    if (note1 !== -1)
+                        return {
+                            voiceIndex: cpLocation,
+                            noteIndex: interceptor.voicesLocations[cpLocation][note1],
+                        };
+
+                    const note2 = crossNoteWithSign2.findIndex(validator);
+                    if (note2 !== -1)
+                        return {
+                            voiceIndex: cpLocation,
+                            noteIndex: interceptor.voicesLocations[cpLocation][note2 + 1],
+                        };
+
+                    const note3 = crossNoteWithSign3.findIndex(validator);
+                    if (note3 !== -1)
+                        return {
+                            voiceIndex: cpLocation,
+                            noteIndex: interceptor.voicesLocations[cpLocation][note3 + 2],
+                        };
+
+                    const note4 = crossNoteWithSign4.findIndex(validator);
+                    if (note4 !== -1)
+                        return {
+                            voiceIndex: cpLocation,
+                            noteIndex: interceptor.voicesLocations[cpLocation][note4 + 3],
+                        };
+                    return true;
                 },
             },
         ];

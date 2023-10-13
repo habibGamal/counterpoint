@@ -120,7 +120,6 @@ function buildDom(parent, options) {
 	var hasProgress = !!options.progressHandler;
 	var hasWarp = !!options.warpHandler;
 	var hasClock = options.hasClock !== false;
-
 	var html = '<div class="abcjs-inline-audio">\n';
 	if (hasLoop) {
 		var repeatTitle = options.repeatTitle ? options.repeatTitle : "Click to toggle play once/repeat.";

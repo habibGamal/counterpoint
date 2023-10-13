@@ -1,10 +1,10 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import { init } from "./lib/extend/js/init";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import "./lib/abc/abcjs-audio.css";
 import { useAppDispatch } from "./hooks";
-import { routerSlice } from "./slices/routerSlice";
 import { onkeydownEvent } from "./lib/extend/js/ui/commands";
 import { synthControl } from "./lib/extend/js/audio/audio";
+import BackArrow from "./compontents/BackArrow";
 const controlState = (nd: any) => {
     nd.algo = "";
     nd.algoMode = 0;
@@ -15,7 +15,7 @@ const controlState = (nd: any) => {
 export default function PlayWithNoControls({ code }: { code: string }) {
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (code) init(code,controlState);
+        if (code) init(code, controlState);
         else
             init(
                 // with analisys
@@ -38,10 +38,7 @@ export default function PlayWithNoControls({ code }: { code: string }) {
     }, []);
     return (
         <div className="load-bootstrap ltr w-full relative">
-            <ArrowLeftOutlined
-                onClick={() => dispatch(routerSlice.actions.pop())}
-                className="absolute left-8 top-8 text-3xl text-white cursor-pointer transition hover:scale-110"
-            />
+            <BackArrow />
             <div className="flex flex-col gap-4 justify-center min-h-screen">
                 <div
                     id="toolbar"

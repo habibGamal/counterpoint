@@ -135,10 +135,13 @@ class AnalysisResults {
                 }
             }
         }
-        const interceptor = new Interceptor(nd.abcString, this.vsp, this.vid, this.mode);
+        console.log(nd);
+        const interceptor = new Interceptor(nd.abcString, this.vsp, this.vid, this.mode, [
+            nd.voices[0].clef,
+            nd.voices[1].clef,
+        ]);
         interceptor.applyRules();
         this.flag = interceptor.getFlags();
-        console.log(interceptor.getFlags());
         this.errors = [];
     }
 
@@ -326,7 +329,7 @@ class AnalysisResults {
         st += `</table>`;
         let correct = "";
         if (!this.errors.length && !fcnt) {
-            // correct = `<span class="rtl block w-fit mx-auto py-1 px-2 my-2 bg-white rounded-xl" style='color:green'><b>&#10004; لا توجد اخطاء في التمرين</b></span> `;
+            correct = `<span class="rtl block w-fit mx-auto py-1 px-2 my-2 bg-white rounded-xl" style='color:green'><b>&#10004; لا توجد اخطاء في التمرين</b></span> `;
             // st += `<span class="absolute block top-0" style='color:green'><b>&#x2705; No mistakes</b></span> `;
             // st += AnalysisResults.getRulesPdfLink();
         }

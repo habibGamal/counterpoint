@@ -40,7 +40,7 @@ export default class CFRules {
                 comment: "مسموح بمسافة 6 صغيرة صاعدة على ان تهبط 2 صغيرة",
                 rule: () => {
                     const succeseiveDistances = interceptor.meaturements.successivesDistances(cfDistances);
-                    return allowed6ButLowerBy2(interceptor,succeseiveDistances,cfDistances,cfLocation);
+                    return allowed6ButLowerBy2(interceptor,succeseiveDistances,cfDistances,cfLocation,);
                 },
             },
             {

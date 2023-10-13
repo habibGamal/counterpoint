@@ -71,6 +71,7 @@ export function launchAnalysis(modName, funcName, data, options) {
         workers[modName] = {};
         workers[modName].worker = createWorker();
         workers[modName].worker.addEventListener("message", workerMessageReceiver);
+        
     }
     //console.log('AnalyseL');
     let worker = workers[modName].worker;

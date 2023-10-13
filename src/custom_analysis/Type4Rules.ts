@@ -64,7 +64,7 @@ export default class Type4Rules {
             {
                 comment: "البلانش الثاني يجب ان يكون متوافق",
                 rule: () => {
-                    for (let i = 0; i < crossBlanceh2.length; i++) {
+                    for (let i = 1; i < crossBlanceh2.length; i++) {
                         if (!allowedCrossDistances.includes(crossBlanceh2[i])) {
                             return { voiceIndex: cpLocation, noteIndex: (i * 2 + 1) * 8 };
                         }

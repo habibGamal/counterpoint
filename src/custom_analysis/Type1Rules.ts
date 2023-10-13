@@ -1,8 +1,7 @@
 import { allowed6ButLowerBy2, maxAllowedHorizontalDistances, restrictMaxAllowedHorizontalDistances } from "./Common";
 import Interceptor from "./Interceptor";
-import { Location, Rule } from "./types";
+import { Rule } from "./types";
 const allowedCrossDistances = ["3T1.5", "3T2", "5T3.5", "6T4", "6T4.5", "8T0", "_"];
-const allowedDistances = [3, 6, 5, 8, -1];
 export default class Type1Rules {
     rules(interceptor: Interceptor): Rule[] {
         const voices = interceptor.getVoices();
@@ -41,7 +40,7 @@ export default class Type1Rules {
                 rule: () => {
                     const distances = interceptor.meaturements.crossDist(cp, cf);
                     console.log(distances);
-                    for (let i = 0; i < distances.length -1; i++) {
+                    for (let i = 1; i < distances.length - 1; i++) {
                         const distance = distances[i];
                         if (!allowedCrossDistances.includes(distance)) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
@@ -106,11 +105,23 @@ export default class Type1Rules {
                     const lastCPNote = cp[cp.length - 1];
                     const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
                     if (
-                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        [8, 0].includes(interceptor.meaturements.toBase8(distance)) &&
                         interceptor.meaturements.isRound(lastCPNote)
                     )
                         return true;
                     return { voiceIndex: cpLocation, noteIndex: (cf.length - 1) * 16 };
+                },
+            },
+            {
+                comment: "نغمة مكررة",
+                rule: () => {
+                    for (let i = 0; i < cp.length; i++) {
+                        const currentRound = cp[i];
+                        const nextRound = cp[i + 1];
+                        const distance = interceptor.meaturements.dist(currentRound, nextRound);
+                        if (distance == "-0T0") return { voiceIndex: cpLocation, noteIndex: interceptor.voicesLocations[cpLocation][i] };
+                    }
+                    return true;
                 },
             },
             {

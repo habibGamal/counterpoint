@@ -704,7 +704,7 @@ export let commands = [
     toolbar: {type: 'image', toolbar_id: 4},
     event: 'onclick',
     keys: ['Space'],
-    command: () => { togglePlay(false) },
+    command: () => { togglePlay(true) },
     name: 'Playback',
   },
   {

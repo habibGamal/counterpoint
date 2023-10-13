@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Container from "../compontents/Container";
 import AvatarTitle from "../compontents/AvatarTitle";
 import CardList from "../compontents/CardList";
 import Card from "../compontents/Card";
 import Illustration from "../compontents/Illustration";
 import PageTitle from "../compontents/PageTitle";
-import { Button, Form, Radio } from "antd";
+import Button from "../compontents/Button";
+// import { Button, Form, Radio } from "antd";
 const trueAndFalse = [
     "1.  استخدام اليونيسون في بداية لحن c.f ",
     "2.  مسموح استخدام اليونيسون في وسط اللحن الأفقي ",
     "3.  مسموح باستخدام المسافات الناقص والصغيرة في اللحن الأفقي ",
-    "4. تجنب حركة التوازي والتوازي المخفي من قواعد بناء اللحن في الكونتربوينت ",
+    "4. تجنب حركة التوازي والتوازي المخفي من قواعد بناء اللحن في الكنتربوينت ",
     "5. مسموح باستخدام مسافة 6 ك في اللحن الأفقي على أن تهبط مسافة 2 ص ",
     "6. مسموح باستخدام أكثر من 3 ثالثات متتالية في اللحن الأفقي ",
     "7. غير مسموح باستخدام الحركة العكسية بين صوتين  c.F – c.p ",
@@ -88,9 +89,106 @@ const answers = {
     "2-9": "2",
     "2-10": "2",
 };
+const questions = [
+    {
+        label: "1- المقام المسموح فيه رفع الحساس",
+        name: "2-1",
+        options: [
+            { label: "مقام فرجيان", value: "1" },
+            { label: "مقام مكسوليديان", value: "2" },
+            { label: "مقام ليديان", value: "3" },
+        ],
+    },
+    {
+        label: "2- المقام المسموح باستخدام فا # إذا سبقت الحساس",
+        name: "2-2",
+        options: [
+            { label: "مقام أيوليان", value: "1" },
+            { label: "مقام دوريان", value: "2" },
+            { label: "مقام أيونيان", value: "3" },
+        ],
+    },
+    {
+        label: "3- ماهي المسافات المسموحة عند بناء اللحن الافقي",
+        name: "2-3",
+        options: [
+            { label: "مسافة 4 تامة", value: "1" },
+            { label: "مسافة 7 صغيرة", value: "2" },
+            { label: "مسافة 6 كبيرة", value: "3" },
+        ],
+    },
+    {
+        label: "4- في اللحن الأفقي C.F يجب أن ينتهي بنغمة الأساس مسبوقة ب",
+        name: "2-4",
+        options: [
+            { label: "الحساس", value: "1" },
+            { label: "الدرجة الثالثة", value: "2" },
+            { label: "الدرجة الثانية", value: "3" },
+        ],
+    },
+    {
+        label: "5- المسافات الغير مسموحة عند بناء لحن الراسي C.P",
+        name: "2-5",
+        options: [
+            { label: "مسافة ثالثة بنوعيها", value: "1" },
+            { label: "مسافة ثالثة بنوعيها", value: "2" },
+            { label: "مسافة رابعة ناقصة", value: "3" },
+        ],
+    },
+    {
+        label: "6- ينتمي هذ اللحن للنوع",
+        name: "2-6",
+        options: [
+            { label: "النوع الاول", value: "1" },
+            { label: "النوع الرابع", value: "2" },
+            { label: "النوع الثاني", value: "3" },
+        ],
+        image: "notes/q6.jpg",
+    },
+    {
+        label: "7- يسمي هذ المقام باسم",
+        name: "2-7",
+        options: [
+            { label: "مقام ليديان", value: "1" },
+            { label: "مقام مكسوليديان", value: "2" },
+            { label: "مقام فريجيان", value: "3" },
+        ],
+        image: "notes/q7.jpg",
+    },
+    {
+        label: "8- تعتبر نوتة الكامبياتا",
+        name: "2-8",
+        options: [
+            { label: "قفزة لحنية", value: "1" },
+            { label: "مرور لحني", value: "2" },
+            { label: "نغمة متغيرة", value: "3" },
+        ],
+    },
+    {
+        label: "9- يسمي النوع الرابع باسم",
+        name: "2-9",
+        options: [
+            { label: "الكنتربوينت المزخرف", value: "1" },
+            { label: "السنكوب", value: "2" },
+            { label: "روند مقابل 2 بلانش", value: "3" },
+        ],
+    },
+    {
+        label: "10- يتميز مقام ....... بوجود نغمة سيb",
+        name: "2-10",
+        options: [
+            { label: "مقام مكسوليديان", value: "1" },
+            { label: "مقام ليديان", value: "2" },
+            { label: "مقام ايونيان", value: "3" },
+        ],
+    },
+];
 export default function Questions() {
     const [degree, setDegree] = useState<number | null>(null);
-    const onFinish = (values: any) => {
+    const [values, setValues] = useState<any>({});
+    const onFinish = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(values);
         const wrongAns: string[] = [];
         Object.keys(answers).forEach((key: string) => {
             if (values[key] !== answers[key as keyof typeof answers]) {
@@ -113,27 +211,49 @@ export default function Questions() {
         });
         setDegree(44 - wrongAns.length);
     };
+    const onChange = (e: any) => {
+        setValues({ ...values, [e.target.name]: e.target.value });
+    }
     return (
         <div className="w-full">
-            <PageTitle
-                title="أسئلة"
-                subTitle="هذه بعض الاسئلة للتقييم"
-                iconSrc="icons/document-text.svg"
-            />
+            <PageTitle title="أسئلة" subTitle="هذه بعض الاسئلة للتقييم" iconSrc="icons/document-text.svg" />
             <Container>
-                <Form onFinish={onFinish} layout="vertical">
-                    <AvatarTitle
-                        title="السؤال الأول: ضع علامة صح أو خطأ"
-                        avatar="illustrations/rules1.png"
-                    />
+                <form onSubmit={onFinish}>
+                    <AvatarTitle title="السؤال الأول: ضع علامة صح أو خطأ" avatar="illustrations/rules1.png" />
                     <Card>
                         {trueAndFalse.map((item, index) => (
-                            <Form.Item label={item} name={`1-${index + 1}`}>
-                                <Radio.Group>
-                                    <Radio value="true"> صح </Radio>
-                                    <Radio value="false"> خطأ </Radio>
-                                </Radio.Group>
-                            </Form.Item>
+                            // <Form.Item label={item} name={`1-${index + 1}`}>
+                            //     <Radio.Group>
+                            //         <Radio value="true"> صح </Radio>
+                            //         <Radio value="false"> خطأ </Radio>
+                            //     </Radio.Group>
+                            // </Form.Item>
+                            <div key={index} className="mb-2">
+                                <span id={`1-${index + 1}`}>{item}</span>
+                                <br />
+                                <input
+                                    className="px-1"
+                                    value="true"
+                                    type="radio"
+                                    id={`true${index}`}
+                                    name={`1-${index + 1}`}
+                                    onChange={onChange}
+                                />
+                                <label className="px-2 ml-2" htmlFor={`true${index}`}>
+                                    صح
+                                </label>
+                                <input
+                                    className="px-1"
+                                    value="false"
+                                    type="radio"
+                                    id={`false${index}`}
+                                    name={`1-${index + 1}`}
+                                    onChange={onChange}
+                                />
+                                <label className="px-2" htmlFor={`false${index}`}>
+                                    خطأ
+                                </label>
+                            </div>
                         ))}
                     </Card>
                     <AvatarTitle
@@ -141,123 +261,38 @@ export default function Questions() {
                         avatar="illustrations/rules2.png"
                     />
                     <Card>
-                        <Form.Item
-                            label="1-	المقام المسموح فيه رفع الحساس"
-                            name="2-1"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مقام فرجيان </Radio>
-                                <Radio value="2"> مقام مكسوليديان </Radio>
-                                <Radio value="3"> مقام ليديان </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="2-	المقام المسموح باستخدام فا # إذا سبقت الحساس "
-                            name="2-2"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مقام أيوليان </Radio>
-                                <Radio value="2"> مقام دوريان </Radio>
-                                <Radio value="3"> مقام أيونيان </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="3-	ماهي المسافات المسموحة عند بناء اللحن الافقي"
-                            name="2-3"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مسافة 4 تامة </Radio>
-                                <Radio value="2"> مسافة 7 صغيرة </Radio>
-                                <Radio value="3"> مسافة 6 كبيرة </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="4-	في اللحن الأفقي C.F يجب أن ينتهي بنغمة الأساس مسبوقة ب "
-                            name="2-4"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> الحساس </Radio>
-                                <Radio value="2"> الدرجة الثالثة </Radio>
-                                <Radio value="3"> الدرجة الثانية </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="5-	المسافات الغير مسموحة عند بناء لحن الراسي C.P"
-                            name="2-5"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مسافة ثالثة بنوعيها </Radio>
-                                <Radio value="2"> مسافة ثالثة بنوعيها </Radio>
-                                <Radio value="3"> مسافة رابعة ناقصة </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label={
-                                <div className="flex flex-col gap-4">
-                                    <span> 6- ينتمي هذ اللحن للنوع </span>
-                                    <img src="notes/q6.jpg" />
+                        {questions.map((question, index) => (
+                            <div className="mb-4">
+                                <div id={`2-${index + 1}`} className="flex flex-col gap-4">
+                                    <span>{question.label}</span>
+                                    <img className="w-[600px]" src={question.image} />
                                 </div>
-                            }
-                            name="2-6"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> النوع الاول </Radio>
-                                <Radio value="2"> النوع الرابع </Radio>
-                                <Radio value="3"> النوع الثاني </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label={
-                                <div className="flex flex-col gap-4">
-                                    <span>7- يسمي هذ المقام باسم </span>
-                                    <img src="notes/q7.jpg" />
-                                </div>
-                            }
-                            name="2-7"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مقام ليديان </Radio>
-                                <Radio value="2"> مقام مكسوليديان </Radio>
-                                <Radio value="3"> مقام فريجيان </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item label="8-	تعتبر نوتة الكامبياتا  " name="2-8">
-                            <Radio.Group>
-                                <Radio value="1">قفزة لحنية </Radio>
-                                <Radio value="2"> مرور لحني </Radio>
-                                <Radio value="3"> نغمة متغيرة </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item label="9-	يسمي النوع الرابع باسم " name="2-9">
-                            <Radio.Group>
-                                <Radio value="1"> الكنتربوينت المزخرف </Radio>
-                                <Radio value="2"> السنكوب </Radio>
-                                <Radio value="3"> روند مقابل 2 بلانش </Radio>
-                            </Radio.Group>
-                        </Form.Item>
-                        <Form.Item
-                            label="10- يتميز مقام ....... بوجود نغمة سيb"
-                            name="2-10"
-                        >
-                            <Radio.Group>
-                                <Radio value="1"> مقام مكسوليديان </Radio>
-                                <Radio value="2"> مقام ليديان </Radio>
-                                <Radio value="3"> مقام ايونيان </Radio>
-                            </Radio.Group>
-                        </Form.Item>
+                                {question.options.map((option) => (
+                                    <>
+                                        <input
+                                            className="mx-1"
+                                            type="radio"
+                                            id={`ans${index}${option.value}`}
+                                            value={option.value}
+                                            name={question.name}
+                                            onChange={onChange}
+                                        />
+                                        <label className="mx-2" htmlFor={`ans${index}${option.value}`}>
+                                            {option.label}
+                                        </label>
+                                    </>
+                                ))}
+                            </div>
+                        ))}
                     </Card>
 
                     <div className="p-8 flex items-center gap-8">
-                        <Button htmlType="submit" type="primary" size="large">
-                            تصحيح الاجابات
-                        </Button>
+                        <Button>تصحيح الاجابات</Button>
                         {degree !== null && (
-                            <span className="text-lg font-bold border-b-4 border-sky-900">
-                                {degree}/ 44
-                            </span>
+                            <span className="text-lg font-bold border-b-4 border-sky-900">{degree}/ 44</span>
                         )}
                     </div>
-                </Form>
+                </form>
             </Container>
         </div>
     );

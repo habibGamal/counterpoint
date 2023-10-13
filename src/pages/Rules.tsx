@@ -12,13 +12,13 @@ export default function Rules() {
     return (
         <div className="w-full ">
             <PageTitle
-                title="قواعد الكونتربوينت"
-                subTitle="قواعد الكونتربوينت التي يجب معرفتها اولا"
+                title="قواعد الكنتربوينت"
+                subTitle="قواعد الكنتربوينت التي يجب معرفتها اولا"
                 iconSrc="icons/ruler&pen.svg"
             />
             <Container>
                 <AvatarTitle
-                    title="قواعد اللحن الأساسي C.F أو لحن الكونتربوينت C.P الافقي"
+                    title="قواعد اللحن الأساسي C.F أو لحن الكنتربوينت C.P الافقي"
                     avatar="illustrations/rules1.png"
                 />
                 <div className="grid grid-cols-2 gap-x-8 gap-y-4">
@@ -75,7 +75,7 @@ export default function Rules() {
                     />
                 </div>
                 <AvatarTitle
-                    title="المقامات التي بنيت عليها قواعد وشروط الكتابة الكونتربوينت"
+                    title="المقامات التي بنيت عليها قواعد وشروط الكتابة الكنتربوينت"
                     avatar="illustrations/rules2.png"
                 />
                 <Card>

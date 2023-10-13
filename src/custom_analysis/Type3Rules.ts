@@ -70,7 +70,7 @@ export default class Type3Rules {
             {
                 comment: "النوار الاول يجب ان يكون متوافق",
                 rule: () => {
-                    for (let i = 0; i < crossNoar1.length -1; i++) {
+                    for (let i = 0; i < crossNoar1.length - 1; i++) {
                         if (!allowedCrossDistances.includes(crossNoar1[i])) {
                             return { voiceIndex: cpLocation, noteIndex: i * 16 };
                         }
@@ -91,7 +91,7 @@ export default class Type3Rules {
                         break;
                     }
                     console.log(crossNoar2);
-                    for (let i = 0; i < stopRuleIn; i++) {
+                    for (let i = 1; i < stopRuleIn; i++) {
                         const crossAbsDistance = crossAbsNoar2[i];
                         const crossDistance = crossNoar2[i];
                         const locationInCP = i * 4 + 1;
@@ -103,13 +103,19 @@ export default class Type3Rules {
                             const distance = cpFlatDistances[locationInCP];
                             const nextDistance = cpFlatDistances[locationInCP + 1];
                             const direction = distance[0];
+                            const nextNextDistance = cpFlatDistances[locationInCP + 2];
+                            const diverge = nextNextDistance[0] != direction;
                             if (
                                 (direction == "+" && nextDistance.includes("+2")) ||
                                 (direction == "-" && nextDistance.includes("-2"))
                             )
                                 continue;
+                            if (
+                                (direction == "+" && nextDistance.includes("+3") && diverge) ||
+                                (direction == "-" && nextDistance.includes("-3") && diverge)
+                            )
+                                continue;
                             if (previousNote === nextNote) continue;
-                            console.log(nextDistance);
                             return { voiceIndex: cpLocation, noteIndex: (locationInCP + 1) * 4 };
                         } else {
                             return { voiceIndex: cpLocation, noteIndex: locationInCP * 4 };
@@ -121,7 +127,7 @@ export default class Type3Rules {
             {
                 comment: "النوار الثالث يجب ان يكون متوافق",
                 rule: () => {
-                    console.log("crossNoar3",crossNoar3)
+                    console.log("crossNoar3", crossNoar3);
                     for (let i = 0; i < crossNoar3.length; i++) {
                         if (!allowedCrossDistances.includes(crossNoar3[i])) {
                             return { voiceIndex: cpLocation, noteIndex: (i * 4 + 2) * 4 };
@@ -188,7 +194,7 @@ export default class Type3Rules {
                     const lastCPNote = cpFlat[cpFlat.length - 1];
                     const distance = interceptor.meaturements.absDist(lastCPNote, cf[cf.length - 1]);
                     if (
-                        [8,0].includes(interceptor.meaturements.toBase8(distance)) &&
+                        [8, 0].includes(interceptor.meaturements.toBase8(distance)) &&
                         interceptor.meaturements.isRound(lastCPNote)
                     )
                         return true;

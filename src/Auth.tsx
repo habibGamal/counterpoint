@@ -1,4 +1,4 @@
-import { Button, Form, Input, message } from "antd";
+// import { Button, Form, Input, message } from "antd";
 import React, { useEffect, useState } from "react";
 import {
     doc,
@@ -28,40 +28,42 @@ export default function Auth() {
             await signInWithEmailAndPassword(auth, values.username + "@counterpoint.com", values.password);
             setCanAccess!(true);
         } catch (e) {
-            message.error("هذا المستخدم لا يمكنه استخدام البرنامج");
+            // message.error("هذا المستخدم لا يمكنه استخدام البرنامج");
         }
     };
     return (
-        <Form
-            name="basic"
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ minWidth: 600 }}
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            autoComplete="off"
-        >
-            <Form.Item
-                label="اسم المستخدم"
-                name="username"
-                rules={[{ required: true, message: "Please input your username!" }]}
-            >
-                <Input />
-            </Form.Item>
+        <>
+        </>
+        // <Form
+        //     name="basic"
+        //     labelCol={{ span: 8 }}
+        //     wrapperCol={{ span: 16 }}
+        //     style={{ minWidth: 600 }}
+        //     initialValues={{ remember: true }}
+        //     onFinish={onFinish}
+        //     autoComplete="off"
+        // >
+        //     <Form.Item
+        //         label="اسم المستخدم"
+        //         name="username"
+        //         rules={[{ required: true, message: "Please input your username!" }]}
+        //     >
+        //         <Input />
+        //     </Form.Item>
 
-            <Form.Item
-                label="كلمة المرور"
-                name="password"
-                rules={[{ required: true, message: "Please input your password!" }]}
-            >
-                <Input.Password />
-            </Form.Item>
+        //     <Form.Item
+        //         label="كلمة المرور"
+        //         name="password"
+        //         rules={[{ required: true, message: "Please input your password!" }]}
+        //     >
+        //         <Input.Password />
+        //     </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button className="h-auto" type="primary" htmlType="submit">
-                    دخول
-                </Button>
-            </Form.Item>
-        </Form>
+        //     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        //         <Button className="h-auto" type="primary" htmlType="submit">
+        //             دخول
+        //         </Button>
+        //     </Form.Item>
+        // </Form>
     );
 }

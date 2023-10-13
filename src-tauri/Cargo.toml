@@ -20,11 +20,6 @@ tauri = { version = "1.1", features = ["api-all"] }
 tauri-plugin-localhost = "0.1.0"
 portpicker = "0.1"
 
-[dependencies.tauri-plugin-sql]
-git = "https://github.com/tauri-apps/tauri-plugin-sql"
-#tag = "v0.1.0"
-features = ["sqlite"] # or "postgres", or "mysql"
-#branch = "main"
 
 [features]
 # by default Tauri runs in production mode

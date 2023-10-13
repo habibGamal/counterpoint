@@ -1,28 +1,14 @@
-import { faChalkboardUser } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 import Modal from "../compontents/Modal";
 import PageTitle from "../compontents/PageTitle";
 import { useAppDispatch } from "../hooks";
 import { routerSlice } from "../slices/routerSlice";
-import { motion } from "framer-motion";
-import { cardAnimation } from "../animation/card";
-import { data } from "../Data";
 import Container from "../compontents/Container";
+import ModalOptions from "../compontents/ModalOptions";
 
-const Option = ({ title, onClick }: { title: string; onClick: () => void }) => {
-    return (
-        <li
-            onClick={onClick}
-            className="p-2 my-2 border rounded hover:bg-sky-900 hover:text-gray-100 cursor-pointer active:scale-95 transition-transform"
-        >
-            {title}
-        </li>
-    );
-};
 const ChooseCantusModal = ({ state, close, stage }: { state: boolean; close: () => void; stage: string }) => {
     const dispatch = useAppDispatch();
     const play = (type: string, cantus: string) => {
-        // if (data[`type${exersizeType}`][stage][cantus] === undefined) return;
         dispatch(
             routerSlice.actions.pushTab({
                 tab: "Play",
@@ -35,19 +21,19 @@ const ChooseCantusModal = ({ state, close, stage }: { state: boolean; close: () 
         );
     };
     return (
-        <Modal state={state} close={close}>
-            <div className="p-4 font-sans min-w-[300px]">
-                <h4 className="text-center text-2xl mb-4">Cantus firmus</h4>
-                <ul className="text-xl text-left">
-                    <Option onClick={() => play("sop_bass","up")} title="Soprano" />
-                    <Option onClick={() => play("sop_bass","down")} title="Bass" />
-                    <Option onClick={() => play("doalto","up")} title="Alto - Up" />
-                    <Option onClick={() => play("doalto","down")} title="Alto - Down" />
-                    <Option onClick={() => play("tenor","up")} title="Tenor - Up" />
-                    <Option onClick={() => play("tenor","down")} title="Tenor - Down" />
-                </ul>
-            </div>
-        </Modal>
+        <ModalOptions
+            title="Choose Cantus"
+            state={state}
+            close={close}
+            options={[
+                { onClick: () => play("sop_bass", "up"), title: "Soprano" },
+                { onClick: () => play("sop_bass", "down"), title: "Bass" },
+                { onClick: () => play("doalto", "up"), title: "Alto - Up" },
+                { onClick: () => play("doalto", "down"), title: "Alto - Down" },
+                { onClick: () => play("tenor", "up"), title: "Tenor - Up" },
+                { onClick: () => play("tenor", "down"), title: "Tenor - Down" },
+            ]}
+        />
     );
 };
 const Exam = ({ name, stage }: { name: string; stage: string }) => {

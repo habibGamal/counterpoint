@@ -86,6 +86,8 @@ function stop() {
 function play(fromSelection) {
     console.log(abcjs);
     play_state.synth = new ABCJS.synth.CreateSynth();
+    // synthControl.pause();
+    play_state.synth.
     synthControl = new ABCJS.synth.SynthController()
     synthControl.load("#audio", cursorControl, {
         displayLoop: true,
@@ -94,7 +96,7 @@ function play(fromSelection) {
         displayProgress: true,
         displayWarp: true,
     });
-    synthControl.disable(true);
+    // synthControl.disable(true);
 
     let AudioContext =
         window.AudioContext || // Default
@@ -106,8 +108,6 @@ function play(fromSelection) {
             visualObj: abcjs[0],
             options: {
                 onEnded: stop,
-                // onabort: stop,
-                // on
             },
         })
         .then(() => {
@@ -119,7 +119,7 @@ function play(fromSelection) {
                     // console.log(synthControl.);
                     // synthControl.play();
                     // setPlayIcon("img/stop.png");
-                    // play_state.state = "playing";
+                    play_state.state = "playing";
                 })
                 .catch(function (error) {
                     console.warn("Audio problem:", error);

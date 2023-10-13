@@ -133,6 +133,20 @@ export default class Measurements {
         });
     }
 
+    crossDistWithSign(line1: string[], line2: string[]): string[] {
+        const distances = line1.map((note1, i) => {
+            if (note1 == undefined || line2[i] == undefined) return "_";
+            return this.dist(note1, line2[i]);
+        });
+        return distances.map((distance) => {
+            const trimSign = distance.replace(/[\+\-]/g, "");
+            if (distance == "_") return "_";
+            const sign = distance[0];
+            const [dist, tone] = trimSign.split("T");
+            return `${sign}${this.toBase8(parseInt(dist))}T${tone}`;
+        });
+    }
+
     /**
      *
      * @param dist 22
@@ -254,6 +268,21 @@ export default class Measurements {
         const [rest] = (note.match(/z/g) as string[]) ?? [];
         if (!len || rest) return false;
         return len === "16";
+    }
+
+    getRange(clef: string): [string, string] {
+        if (clef === "treble") return ["C", "a"];
+        if (clef === "bass") return ["F,,", "D"];
+        if(clef === "alto") return ["G,,", "E"];
+        if (clef === "tenor") return ["G,", "e"];
+        return ["", ""];
+    }
+
+    outOfRange(note: string, range: [string, string]): boolean {
+        const lower = this.dist(range[0], note);
+        const upper = this.dist(note, range[1]);
+        // console.log(note, lower, upper, range);
+        return lower.includes("+") || upper.includes("+");
     }
 }
 

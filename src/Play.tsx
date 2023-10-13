@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect } from "react";
+import "./lib/abc/abcjs-audio.css";
 import { init } from "./lib/extend/js/init";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeft2, EmojiHappy } from "iconsax-react";
 import { useAppDispatch } from "./hooks";
 import { routerSlice } from "./slices/routerSlice";
 import { onkeydownEvent } from "./lib/extend/js/ui/commands";
@@ -42,9 +43,14 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
     }, []);
     return (
         <div className="load-bootstrap ltr w-full relative">
-            <ArrowLeftOutlined
+            {/* <ArrowLeftOutlined
                 onClick={() => dispatch(routerSlice.actions.pop())}
+            /> */}
+            <ArrowLeft2
                 className="absolute left-8 top-8 text-3xl text-white cursor-pointer transition hover:scale-110"
+                size="32"
+                color="#fff"
+                onClick={() => dispatch(routerSlice.actions.pop())}
             />
             <div className="flex flex-col gap-4 justify-center min-h-screen">
                 <div
@@ -103,7 +109,7 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
                 </table>
                 <div id="jquery_jplayer" />
                 <div id="jplayer" />
-                
+
                 <div className="p-2" id="analysisConsole" />
             </div>
             <div>

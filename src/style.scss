@@ -98,16 +98,12 @@ body::-webkit-scrollbar-thumb {
 
 .bg-home-image {
     background-image: url("./assets/spikes.png");
-    // background-size: cover;
-    // background-position: center;
-    // background-repeat: no-repeat;
+    
 }
 .navigation-gradient {
-    // background: linear-gradient(166deg, #8573e2 30%, #49a3dc);
     background: linear-gradient(166deg, #0e3069 30%, #3580bd);
 }
 .card-gradient {
-    // background: linear-gradient(166deg,  #49a3dc 30%, #8573e2);
     background: linear-gradient(
         144deg,
         rgb(75, 156, 238) 0%,
@@ -119,7 +115,7 @@ body::-webkit-scrollbar-thumb {
 }
 .nav-item-active {
     @apply text-sky-900 font-medium bg-white pr-12  shadow;
-    > img {
+    > span.icon {
         filter: invert(56%) sepia(47%) saturate(6124%) hue-rotate(163deg) brightness(97%) contrast(104%);
     }
 }
@@ -131,16 +127,10 @@ body::-webkit-scrollbar-thumb {
 }
 /* .rules-ul li: */
 .ant-btn-primary {
-    // background-color: #6366f1;
     background-color: $primary-color;
     box-shadow: none;
 }
-// .ant-btn-primary:not(:disabled):hover {
-//     background-color: #9197ff;
-// }
-// .ant-btn-primary:not(:disabled):hover {
-//     background-color: #645699;
-// }
+
 .ant-btn-default {
     background-color: #ffffff;
 }
@@ -150,7 +140,7 @@ body::-webkit-scrollbar-thumb {
     font-size: 1.3rem !important;
 }
 
-.ant-radio-group.wrong > label {
+.wrong {
     color: red;
 }
 
