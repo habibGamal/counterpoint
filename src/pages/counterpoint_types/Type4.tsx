@@ -5,8 +5,17 @@ import AvatarTitle from "../../compontents/AvatarTitle";
 import CardList from "../../compontents/CardList";
 import Card from "../../compontents/Card";
 import Illustration from "../../compontents/Illustration";
+import IllustrationWithSound from "../../compontents/IllustrationWithSound";
 
 export default function Type4() {
+    const audio = new Audio("/staves/type4.mp3");
+    const toggle = () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
     return (
         <div className="w-full">
             <PageTitle title="انواع الكنتربوينت" subTitle="النوع الرابع (السنكوب)" iconSrc="icons/shapes.svg" />
@@ -35,7 +44,12 @@ export default function Type4() {
                             "هناك بعض الاستثناءات يمكن إتباعها فيجوز في بعض الحالات كسر الرباط لمرة واحدة فقط في التمرين فيمكن استعمال نغمتا بلانش مختلفتا وبدون ربط على أن تكونا نغمات متوافقة، ويتضح ذلك في الشكل التالي:",
                         ]}
                     />
-                    <Illustration src="notes/image019.jpg" desc="مثال النوع الرابع (السنكوب)" />
+                    <IllustrationWithSound
+                        src="notes/type4.png"
+                        audio={audio}
+                        onClick={toggle}
+                        desc="مثال يوضح النوع الرابع"
+                    />
                 </div>
             </Container>
         </div>

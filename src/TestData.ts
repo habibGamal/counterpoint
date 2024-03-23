@@ -156,11 +156,11 @@ const doalto = {
         down: "IgYAwgggzAAAgDGANhyAgaBAMBgAXAJwFMAjAGyMQARFraYbbG6n7mG3PX4Y0BDMngD2MANjMAuMwA4zAITMAeMwAE85gHxJM5uMRw0AZSEAHAHRoAQnwDOZlWCIUSBPniIATFTcIBXAOb-FN54fAR4AJYAdv4AtAAsAOwArA5OpK7uHrE-BAFBRDmh4dFxSckAMfQwAKBRNQCOAP-IHgBrAOMA6kA__",
     },
 };
-export const testData:any = {
+export const testData: any = {
     sop_bass,
     tenor,
-    doalto
-}
+    doalto,
+};
 // C  ionian
 // D  dorian
 // E  frigian

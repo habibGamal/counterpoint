@@ -40,6 +40,7 @@ export default class Type1Rules {
                 rule: () => {
                     const distances = interceptor.meaturements.crossDist(cp, cf);
                     console.log(distances);
+                    
                     for (let i = 1; i < distances.length - 1; i++) {
                         const distance = distances[i];
                         if (!allowedCrossDistances.includes(distance)) {
@@ -89,7 +90,7 @@ export default class Type1Rules {
                         voiceIndex: cpLocation,
                         noteIndex: 0,
                     };
-                    for (let i = 0; i < cf.length; i++) {
+                    for (let i = 0; i < cp.length; i++) {
                         if (!interceptor.meaturements.isRound(cp[i])) {
                             location.noteIndex = i * 16;
                             passed = false;

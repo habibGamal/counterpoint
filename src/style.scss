@@ -113,6 +113,16 @@ body::-webkit-scrollbar-thumb {
         rgb(221, 124, 202) 100%
     );
 }
+
+.nav-item {
+    @apply transition;
+    &:hover {
+        @apply text-sky-900 font-medium bg-white -translate-x-4  shadow;
+        > span.icon {
+            filter: invert(56%) sepia(47%) saturate(6124%) hue-rotate(163deg) brightness(97%) contrast(104%);
+        }
+    }
+}
 .nav-item-active {
     @apply text-sky-900 font-medium bg-white pr-12  shadow;
     > span.icon {

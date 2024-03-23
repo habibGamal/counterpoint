@@ -5,8 +5,17 @@ import AvatarTitle from "../../compontents/AvatarTitle";
 import CardList from "../../compontents/CardList";
 import Card from "../../compontents/Card";
 import Illustration from "../../compontents/Illustration";
+import IllustrationWithSound from "../../compontents/IllustrationWithSound";
 
 export default function Type3() {
+    const audio = new Audio("/staves/type3.mp3");
+    const toggle = () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
     return (
         <div className="w-full">
             <PageTitle
@@ -50,7 +59,12 @@ export default function Type3() {
                             "ويتضح ذلك في الشكل التالي:",
                         ]}
                     />
-                    <Illustration src="notes/image017.jpg" desc="مثال النوع الثالث (روند مقابل 4 نوار)" />
+                    <IllustrationWithSound
+                        src="notes/type3.png"
+                        audio={audio}
+                        onClick={toggle}
+                        desc="مثال يوضح النوع الثالث"
+                    />
                 </div>
             </Container>
         </div>

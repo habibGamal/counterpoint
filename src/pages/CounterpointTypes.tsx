@@ -7,7 +7,7 @@ import { routerSlice } from "../slices/routerSlice";
 export default function CounterpointTypes() {
     const dispatch = useAppDispatch();
     return (
-        <div className="w-full bg-home-image">
+        <div className="w-full">
             <PageTitle
                 title="قواعد الكنتربوينت"
                 subTitle="انواع الكنتربوينت الموجودة وهي خمس"

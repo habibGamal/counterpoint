@@ -5,8 +5,17 @@ import AvatarTitle from "../../compontents/AvatarTitle";
 import CardList from "../../compontents/CardList";
 import Card from "../../compontents/Card";
 import Illustration from "../../compontents/Illustration";
+import IllustrationWithSound from "../../compontents/IllustrationWithSound";
 
 export default function Type2() {
+    const audio = new Audio("/staves/type2.mp3");
+    const toggle = () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
     return (
         <div className="w-full">
             <PageTitle
@@ -31,7 +40,6 @@ export default function Type2() {
                             "باقي التمرين يجب أن يكون الضغط الأول من البلانش متوافقاً ويبني على أساس (3، 6، 5، 8). ",
                         ]}
                     />
-
                     <CardList
                         list={[
                             "البلانش الثاني من كل مازورة يمكن أن يكون على طريقتين هما:",
@@ -39,7 +47,12 @@ export default function Type2() {
                             "اما ان يكون متنافراً فياخد شكل مرور (Passing Note) على أن تكون متصلة بنغمتين مختلفتين ما قبلها وما بعدها. ويتضح ذلك في الشكل التالي: ",
                         ]}
                     />
-                    <Illustration src="notes/image015.png" desc="مثال النوع الثاني (روند مقابل 2 بلانش)" />
+                    <IllustrationWithSound
+                        src="notes/type2.png"
+                        audio={audio}
+                        onClick={toggle}
+                        desc="مثال يوضح النوع الثاني"
+                    />
                 </div>
             </Container>
         </div>

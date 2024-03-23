@@ -70,6 +70,12 @@ export default class Measurements {
         );
     }
 
+    reduceSign(mainSign: string, toneSign?: string) {
+        if (toneSign === undefined) return mainSign;
+        if (mainSign == "-" && toneSign == "-") return "+";
+        return mainSign;
+    }
+
     /**
      * note formate is like "c16", "_d8", "^F4"
      */
@@ -86,8 +92,13 @@ export default class Measurements {
         const difference = Math.abs(index1 - index2);
         const isSamePosition = difference === 0;
         const distance = isSamePosition ? difference : difference + 1;
-        const tones = this.measureTones(keyChar1.toLowerCase(), keyChar2.toLowerCase(), direction);
-        return (direction + distance).toString() + "T" + tones.toString();
+        const tones = this.measureTones(
+            keyChar1.toLowerCase(),
+            keyChar2.toLowerCase(),
+            direction,
+        );
+        const toneSign = tones < 0 ? "-" : "+";
+        return (this.reduceSign(direction, toneSign) + distance).toString() + "T" + Math.abs(tones).toString();
     }
 
     removeToneFormDist(dist: string): string {
@@ -273,7 +284,7 @@ export default class Measurements {
     getRange(clef: string): [string, string] {
         if (clef === "treble") return ["C", "a"];
         if (clef === "bass") return ["F,,", "D"];
-        if(clef === "alto") return ["G,,", "E"];
+        if (clef === "alto") return ["G,,", "E"];
         if (clef === "tenor") return ["G,", "e"];
         return ["", ""];
     }

@@ -424,6 +424,7 @@ function notation_redraw() {
 
 export function async_redraw() {
     state.state = "drawing";
+    console.log('async_redraw');
     // Update note steps synchronously, because it can be needed before redraw occurs
     nd.update_note_steps();
     setTimeout(notation_redraw, 0);

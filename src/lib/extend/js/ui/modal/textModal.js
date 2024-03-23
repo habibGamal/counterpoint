@@ -58,7 +58,7 @@ export function showTextModal(v, n, type) {
   let text, title;
   if (type === 'lyric') {
     text = nd.voices[v].notes[n].lyric;
-    title = 'Add lyric below note';
+    title = 'أضف اسفل فوق النغمة';
   } else {
     text = nd.voices[v].notes[n].text;
     title = 'أضف نص فوق النغمة';

@@ -6,17 +6,20 @@ export type Tab =
     | "MelodyHorizontalRules"
     | "Questions"
     | "ConterpointTypes"
+    | "UploadExersizes"
+    | "UploadExams"
     | "Exersizes"
     | "Play"
     | "PlayWithNoControls"
-    | "PlayOLD"
+    // | "PlayOLD"
     | "Exams"
     | "About"
     | "Type1"
     | "Type2"
     | "Type3"
     | "Type4"
-    | "Type5";
+    | "Type5"
+    | "ProgramKeys";
 // Define a type for the slice state
 interface RouterState {
     routeStack: Tab[];
@@ -25,7 +28,7 @@ interface RouterState {
 
 // Define the initial state using that type
 const initialState: RouterState = {
-    routeStack: ["Play"],
+    routeStack: ["Home"],
     routeParams: null,
 };
 

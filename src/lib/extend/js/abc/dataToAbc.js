@@ -8,7 +8,7 @@ export function dataToAbc(instrument) {
     nd.styles = [];
     let mlen = nd.timesig.measure_len;
     let abc = "";
-    abc += "%%barnumbers 1\n";
+    // abc += "%%barnumbers 1\n";
     abc += "%%printtempo 0\n";
     abc += "%%stretchlast 0\n";
     abc += "%%score {V0 *M| V1}\n";

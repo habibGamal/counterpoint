@@ -14,7 +14,7 @@ class Settings {
     this.show_nht = 0;
     this.show_harmony = 0;
     this.show_text = 1;
-    this.show_lyrics = 0;
+    this.show_lyrics = 1;
     this.alter_before_note = 0;
     this.harm_notation = 3;
     this.toolbarHints = 1;
@@ -70,7 +70,7 @@ class Settings {
     this.show_nht = b256_ui(st, pos, 1);
     this.show_harmony = b256_ui(st, pos, 1);
     this.show_text = b256_ui(st, pos, 1);
-    this.show_lyrics = b256_ui(st, pos, 1);
+    this.show_lyrics = 1 //b256_ui(st, pos, 1);
     this.reverb_mix = b256_ui(st, pos, 1);
     this.instruments = b256_safeString(st, pos, 1);
     this.autoLegato = b256_ui(st, pos, 1);

@@ -1,23 +1,35 @@
 import React, { useEffect, useLayoutEffect } from "react";
 import "./lib/abc/abcjs-audio.css";
 import { init } from "./lib/extend/js/init";
-import { ArrowLeft2, EmojiHappy } from "iconsax-react";
+import { ArrowLeft2 } from "iconsax-react";
 import { useAppDispatch } from "./hooks";
 import { routerSlice } from "./slices/routerSlice";
 import { onkeydownEvent } from "./lib/extend/js/ui/commands";
 import { synthControl } from "./lib/extend/js/audio/audio";
 import { testData as data } from "./TestData";
-export default function Play({ stage, type, cantus }: { stage?: string; type: string; cantus?: string }) {
+export default function Play({
+    voice,
+    location,
+    exersizeType,
+}: {
+    exersizeType?: string;
+    voice?: string;
+    location?: string;
+}) {
     const lockCF = (nd: any) => {
-        if (cantus == "up") {
-            nd.voices[0].locked = true;
-        } else if (cantus == "down") {
-            nd.voices[1].locked = true;
+        if (location == "up") {
+            nd.set_voiceLocked(0, true);
+            nd.set_species(0, 0);
+            nd.set_species(1, exersizeType);
+        } else if (location == "down") {
+            nd.set_voiceLocked(1, true);
+            nd.set_species(1, 0);
+            nd.set_species(0, exersizeType);
         }
     };
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (stage && type && cantus && data[type] && data[type][stage][cantus]) init(data[type][stage][cantus], lockCF);
+        if (voice) init(voice, lockCF);
         else
             init(
                 // debug down
@@ -25,9 +37,9 @@ export default function Play({ stage, type, cantus }: { stage?: string; type: st
                 // debug up
                 // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjE1EYASNOADkQDJHYYBSLAagCZEDOADZEAYkYBWIYzEwAFB0QByZTHaYBq5QAgAlNLbq1WgCzG4nYS25zjWgOyIeomAfUAqPYa2DFjLbsbgFWOn6ISmH09jBq0ZraccoACJIhdCnM8NhopACGAM6FMAC4KbQA-BWIAHg1ZQ0ABA0AhA3VtPW05YhwaADKAPYADgB0aABCRWNNYMSUpIT5-MQAJk2FRACuAOa7lJv4-YT4AJYAdrsAtGaOUnMLZMura9dbhHsHxO.Hp5c3O5SAAxtDBAGg1gApgATAG-gA___"
                 // with analisys
-                "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
-                // // without analisys
-                // "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
+                // "IgYAwgggzAAAgDGANhyAgaBAAoAYAFwCcBTAIwBtjEAERGumWup-5hlx9r-bNUgQwDOg1qM5sJYjtO5w0AZQD2ABwB0aAEJDVAAjDFKpQv3zEAJjsFEArgHNblS.n6F8ASwB2tgLQAWAOwArHoGZMamZt5WhHYOxFHOrp4-AYEAMQzwMAAQZgBdAAkA9EA__"
+                // without analisys
+                "IgABEAwDckoEHgIAFADAAuAnApgIwBscwAEMU8kM86imy2qh5-iFePAQwGdu7-mrAYxEthYcPADKAewAOAOngAhHgoAEAYRxE8WThhwATdd2wBXAOaWipjJywYAlgDtLAWgAsAdgCsWnXx9QyN3MywrGxww-0dXDx9fABjKCBAASCMAGgBQnKA__"
             );
         window.onkeydown = onkeydownEvent;
         return () => {

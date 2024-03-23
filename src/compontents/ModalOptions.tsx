@@ -13,9 +13,9 @@ type Props = {
 export default function ModalOptions({ title, state, close, options }: Props) {
     return (
         <Modal state={state} close={close}>
-            <div className="p-4 font-sans min-w-[300px]">
+            <div className="p-4  min-w-[300px]">
                 <h4 className="text-center text-2xl mb-4">{title}</h4>
-                <ul className="text-xl text-left">
+                <ul className="text-xl text-center">
                     {options.map((option, i) => (
                         <Option key={i} onClick={option.onClick} title={option.title} />
                     ))}

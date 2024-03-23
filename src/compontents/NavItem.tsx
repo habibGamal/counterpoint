@@ -13,7 +13,7 @@ const NavItem = ({
     return (
         <li
             onClick={onClick}
-            className={`flex gap-4 pr-10 ml-10 p-2 2xl:p-4 rounded-l-lg cursor-pointer hover:scale-105 transition ${activeClass}`}
+            className={`nav-item flex gap-4 pr-10 ml-10 p-2 2xl:p-4 rounded-l-lg cursor-pointer hover:scale-105 transition ${activeClass}`}
         >
             <span className="icon">{icon}</span>
             <span className="text-xl">{text}</span>

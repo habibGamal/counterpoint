@@ -57,7 +57,7 @@ class CursorControl {
         }
     }
 }
-const cursorControl = new CursorControl();
+let cursorControl = new CursorControl();
 export let synthControl = new ABCJS.synth.SynthController();
 function setPlayIcon(img) {
     if (document.getElementById("playi").src.endsWith(img)) return;
@@ -85,9 +85,9 @@ function stop() {
 
 function play(fromSelection) {
     console.log(abcjs);
+    cursorControl = new CursorControl();
     play_state.synth = new ABCJS.synth.CreateSynth();
     // synthControl.pause();
-    play_state.synth.
     synthControl = new ABCJS.synth.SynthController()
     synthControl.load("#audio", cursorControl, {
         displayLoop: true,
@@ -95,7 +95,7 @@ function play(fromSelection) {
         displayPlay: true,
         displayProgress: true,
         displayWarp: true,
-    });
+    }); 
     // synthControl.disable(true);
 
     let AudioContext =
@@ -114,10 +114,10 @@ function play(fromSelection) {
             synthControl
                 .setTune(abcjs[0], false)
                 .then(function (response) {
-                    const btn = document.querySelector("button.abcjs-midi-start.abcjs-btn");
-                    btn.click();
+                    // const btn = document.querySelector("button.abcjs-midi-start.abcjs-btn");
+                    // btn.click();
                     // console.log(synthControl.);
-                    // synthControl.play();
+                    synthControl.play();
                     // setPlayIcon("img/stop.png");
                     play_state.state = "playing";
                 })

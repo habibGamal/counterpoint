@@ -140,8 +140,29 @@ class AnalysisResults {
             nd.voices[0].clef,
             nd.voices[1].clef,
         ]);
-        interceptor.applyRules();
-        this.flag = interceptor.getFlags();
+        const bothVoicesWork = this.vsp.length == 2;
+        if (bothVoicesWork) {
+            interceptor.applyRules();
+            this.flag = interceptor.getFlags();
+        } else {
+            this.flag = [
+                {
+                    s: 0,
+                    v: 1,
+                    fl: flagType, // end_slur == undefined ? 521 : 281,
+                    fvl: 0,
+                    fsl:  16,
+                    accept: -1,
+                    severity: 100,
+                    class: "",
+                    name: "",
+                    subName: "/wrong alteration",
+                    subComment: "",
+                    debugSt: "",
+                    paragraph_num: 27,
+                },
+            ];
+        }
         this.errors = [];
     }
 

@@ -27,13 +27,24 @@ export default class GeneralRules {
         }
         return false;
     }
+    // verticalParallelCheck(crossAbsDist: number[], location: (catchPosition: number) => number): false | number {
+    //     for (let i = 0; i < crossAbsDist.length; i++) {
+    //         const currentDistance = crossAbsDist[i];
+    //         const nextDistance = crossAbsDist[i + 1];
+    //         if (currentDistance == nextDistance && (currentDistance == 8 || currentDistance == 5)) {
+    //             return location(i + 1);
+    //         }
+    //     }
+    //     return false;
+    // }
     verticalParallelCheck(crossAbsDist: number[], location: (catchPosition: number) => number): false | number {
-        for (let i = 0; i < crossAbsDist.length; i++) {
+        let occurenceOf8 = 0;
+        let occurenceOf5 = 0;
+        for (let i = 1; i < crossAbsDist.length - 1; i++) {
             const currentDistance = crossAbsDist[i];
-            const nextDistance = crossAbsDist[i + 1];
-            if (currentDistance == nextDistance && (currentDistance == 8 || currentDistance == 5)) {
-                return location(i + 1);
-            }
+            if (currentDistance == 8) occurenceOf8++;
+            if (currentDistance == 5) occurenceOf5++;
+            if (occurenceOf5 > 1 || occurenceOf8 > 1) return location(i);
         }
         return false;
     }
@@ -74,7 +85,6 @@ export default class GeneralRules {
                         voiceIndex: cpLocation,
                         noteIndex: 0,
                     };
-                    console.log("mode", interceptor.getMode());
                     if (!["D", "F"].includes(interceptor.getMode())) return true;
                     const bNotes = cpFlat.map((note) => {
                         if (note.includes("b") || note.includes("B"))
@@ -97,7 +107,6 @@ export default class GeneralRules {
                             return true;
                         });
                     });
-                    console.log("bNotesE", bNotesE);
                     const noteIndex = bNotesE.flat().indexOf(false);
                     if (noteIndex !== -1) {
                         location.noteIndex = interceptor.voicesLocations[cpLocation][noteIndex];
@@ -114,7 +123,6 @@ export default class GeneralRules {
                         voiceIndex: cpLocation,
                         noteIndex: 0,
                     };
-                    console.log("mode", interceptor.getMode());
                     if (interceptor.getMode() !== "A") return true;
                     const thirdLastNote = cpFlat[cp.length - 3];
                     if (
@@ -135,8 +143,9 @@ export default class GeneralRules {
                         voiceIndex: cpLocation,
                         noteIndex: 0,
                     };
-                    console.log("mode", interceptor.getMode());
-                    if (!["D", "G", "A"].includes(interceptor.getMode())) return true;
+                    if (!["D", "G", "A",
+                    //  "B", "E"
+                    ].includes(interceptor.getMode())) return true;
                     const cpPreLastNote = cpFlat[cpFlat.length - 2];
                     console.log("cpFlat", cpFlat);
                     if (!interceptor.meaturements.noteHasDias(cpPreLastNote)) {
@@ -156,8 +165,6 @@ export default class GeneralRules {
                     };
                     const cpDistancesNoTones = cpFlatDistances.map((distance) => distance.replace(/T.*/g, ""));
                     const cfDistancesNoTones = cfFlatDistances.map((distance) => distance.replace(/T.*/g, ""));
-                    // console.log("cpDistancesNoTones", cpDistancesNoTones);
-                    // console.log("cfDistancesNoTones", cfDistancesNoTones);
                     for (let i = 0; i < cfDistancesNoTones.length - 1; i++) {
                         const start = i;
                         const end = i + 2;
@@ -226,16 +233,14 @@ export default class GeneralRules {
                         voiceIndex: cpLocation,
                         noteIndex: 0,
                     };
-                    const crossDistances = [crossAbsNote1, crossAbsNote2, crossAbsNote3, crossAbsNote4];
+                    const crossDistances = [crossAbsNote1.slice(1), crossAbsNote2, crossAbsNote3, crossAbsNote4];
                     console.log("crossDistances", crossDistances);
                     for (let i = 0; i < crossDistances.length; i++) {
                         const crossDistance = crossDistances[i];
                         const verticalParallelCheck = this.verticalParallelCheck(
                             crossDistance,
                             (catchPosition) => interceptor.voicesLocations2d[cpLocation][catchPosition][i]
-                            // (catchPosition) => interceptor.voicesLocations[cpLocation][catchPosition * 4 + i]
                         );
-                        // console.log("verticalParallelCheck", verticalParallelCheck, interceptor.voicesLocations2d);
                         if (verticalParallelCheck !== false) {
                             location.noteIndex = verticalParallelCheck;
                             passed = false;

@@ -6,11 +6,9 @@ import { onkeydownEvent } from "./lib/extend/js/ui/commands";
 import { synthControl } from "./lib/extend/js/audio/audio";
 import BackArrow from "./compontents/BackArrow";
 const controlState = (nd: any) => {
-    nd.algo = "";
-    nd.algoMode = 0;
-    nd.voices.forEach((v: any) => {
-        v.locked = true;
-    });
+    nd.set_voiceLocked(0, true);
+    nd.set_voiceLocked(1, true);
+    nd.algo = '';
 };
 export default function PlayWithNoControls({ code }: { code: string }) {
     const dispatch = useAppDispatch();

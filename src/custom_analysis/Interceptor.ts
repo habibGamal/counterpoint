@@ -13,6 +13,7 @@ V: V1 clef=bass name="Bas."
 [V: V1]z16|z16|z16|z16|z16|z16|z16|z16|z16|z16|]
  */
 
+// import { state2url } from "../lib/extend/js/state/state";
 import CFRules from "./CFRules";
 import CustomFlags from "./CustomFlags";
 import GeneralRules from "./GeneralRules";
@@ -35,7 +36,7 @@ export default class Interceptor {
         private mode: number,
         public clefs: [string, string]
     ) {
-        console.log(this.abcString);
+        // console.log();
         console.log("this.getVoicesAsDistances()", this.getVoicesAsDistances());
         this.voicesLocations = this.calcVoicesLocations();
         this.voicesLocations2d = this.calcVoicesLocations2d(this.voicesLocations);
@@ -156,6 +157,7 @@ export default class Interceptor {
     public applyRules() {
         const type = this.getCPType();
         const cFRules = new CFRules().rules(this);
+        const extractInfoForTesting = [];
         for (const rule of cFRules) {
             const location = rule.rule();
             if (location !== true) {
@@ -188,6 +190,7 @@ export default class Interceptor {
             for (const rule of rules) {
                 const location = rule.rule();
                 if (location !== true) {
+                    extractInfoForTesting.push({ location, comment: rule.comment });
                     this.pushFlag(
                         rule.comment,
                         location.voiceIndex,
@@ -261,5 +264,14 @@ export default class Interceptor {
                 }
             }
         }
+        console.log({
+            // debug: state2url(),
+            abcString: this.abcString,
+            vsp: this.vsp,
+            vid: this.vid,
+            mode: this.mode,
+            clefs: this.clefs,
+            results: extractInfoForTesting,
+        });
     }
 }

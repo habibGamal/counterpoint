@@ -534,34 +534,34 @@ export let commands = [
     name: 'Input double sharp',
   },
   // { separator: true, toolbar: {toolbar_id: 1} },
-  // {
-  //   id: 'up8',
-  //   toolbar: {type: 'text', text: '+8', fullText: '+8ve', fontSize: 1.2, toolbar_id: 1},
-  //   event: 'onclick',
-  //   keys: ['Shift+UpArrow'],
-  //   command: () => {
-  //     if (selected.note && selected.note.n12) {
-  //       increment_selection(7);
-  //     } else {
-  //       increment_octave(1);
-  //     }
-  //   },
-  //   name: 'Move note up an octave',
-  // },
-  // {
-  //   id: 'down8',
-  //   toolbar: {type: 'text', text: '-8', fullText: '-8ve', fontSize: 1.2, toolbar_id: 1},
-  //   event: 'onclick',
-  //   keys: ['Shift+DownArrow'],
-  //   command: () => {
-  //     if (selected.note && selected.note.n12) {
-  //       increment_selection(-7);
-  //     } else {
-  //       increment_octave(-1);
-  //     }
-  //   },
-  //   name: 'Move note down an octave',
-  // },
+  {
+    id: 'up8',
+    toolbar: {type: 'text', text: '+8', fullText: '+8ve', fontSize: 1.2, toolbar_id: 1},
+    event: 'onclick',
+    keys: ['Shift+UpArrow'],
+    command: () => {
+      if (selected.note && selected.note.n12) {
+        increment_selection(7);
+      } else {
+        increment_octave(1);
+      }
+    },
+    name: 'Move note up an octave',
+  },
+  {
+    id: 'down8',
+    toolbar: {type: 'text', text: '-8', fullText: '-8ve', fontSize: 1.2, toolbar_id: 1},
+    event: 'onclick',
+    keys: ['Shift+DownArrow'],
+    command: () => {
+      if (selected.note && selected.note.n12) {
+        increment_selection(-7);
+      } else {
+        increment_octave(-1);
+      }
+    },
+    name: 'Move note down an octave',
+  },
   { separator: true, toolbar: {toolbar_id: 2} },
   {
     id: 'rest',
@@ -627,21 +627,21 @@ export let commands = [
   // { separator: true, toolbar: {toolbar_id: 4} },
   {
     id: 'add_text',
-    toolbar: {type: 'text', text: '4', fullText: 'Text', fontSize: 1.3, toolbar_id: 4},
+    toolbar: {type: 'text', text: '4', fullText: 'Text - up', fontSize: 1.3, toolbar_id: 4},
     event: 'onclick',
     keys: ['Alt+T'],
     command: () => { add_text() },
     name: 'Add text above note',
   },
   // { separator: true, toolbar: {toolbar_id: 1} },
-  // {
-  //   id: 'add_lyric',
-  //   toolbar: {type: 'text', text: 'L', fullText: 'Lyric', fontSize: 1.3, toolbar_id: 1},
-  //   event: 'onclick',
-  //   keys: ['Alt+L'],
-  //   command: () => { add_lyric() },
-  //   name: 'Add lyric below note',
-  // },
+  {
+    id: 'add_lyric',
+    toolbar: {type: 'text', text: 'L', fullText: 'Text - down', fontSize: 1.3, toolbar_id: 4},
+    event: 'onclick',
+    keys: ['Alt+L'],
+    command: () => { add_lyric() },
+    name: 'Add lyric below note',
+  },
   // { separator: true, toolbar: {toolbar_id: 1} },
   // {
   //   id: 'algo',
@@ -682,7 +682,7 @@ export let commands = [
   // { separator: true, toolbar: {toolbar_id: 3 } },
   // {
   //   id: 'instruments',
-  //   toolbar: {type: 'select', toolbar_id: 3, hintText: 'Play:'},
+  //   toolbar: {type: 'select', toolbar_id: 4, hintText: 'Play:'},
   //   event: 'onchange',
   //   keys: [],
   //   command: () => {

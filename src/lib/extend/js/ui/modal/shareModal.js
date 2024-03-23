@@ -38,6 +38,7 @@ export function showShareModal() {
     // st += `  </button>`;
     // st += ` </div>`;
     // st += `</div>`;
+    console.log(this);
     st += `
     <div class="flex text-center items-center justify-center">
         <div class="w-[40%]">

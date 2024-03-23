@@ -5,8 +5,17 @@ import AvatarTitle from "../../compontents/AvatarTitle";
 import CardList from "../../compontents/CardList";
 import Card from "../../compontents/Card";
 import Illustration from "../../compontents/Illustration";
+import IllustrationWithSound from "../../compontents/IllustrationWithSound";
 
 export default function Type5() {
+    const audio = new Audio("/staves/type5.mp3");
+    const toggle = () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
     return (
         <div className="w-full">
             <PageTitle
@@ -39,7 +48,12 @@ export default function Type5() {
                             " الحركة بين الكروشين يجب أن تكون متصلة بدون قفزات، ويتضح ذلك في الشكل التالي:",
                         ]}
                     />
-                    <Illustration src="notes/image021.jpg" desc="مثال النوع الخامس (الكنتربوينت المزخرف)" />
+                    <IllustrationWithSound
+                        src="notes/type5.png"
+                        audio={audio}
+                        onClick={toggle}
+                        desc="مثال يوضح النوع الخامس"
+                    />
                 </div>
             </Container>
         </div>

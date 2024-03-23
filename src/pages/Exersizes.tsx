@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageTitle from "../compontents/PageTitle";
 import { useAppDispatch } from "../hooks";
 import { routerSlice } from "../slices/routerSlice";
 import Container from "../compontents/Container";
-import { data } from "../Data";
 import ModalOptions from "../compontents/ModalOptions";
+import { collection, doc, getDoc } from "firebase/firestore";
+import firebase from "../firebase";
+import { offlineExersizesData } from "../OfflineExersizesData";
 
 const ChooseCantusModal = ({
     state,
     close,
-    examType,
+    examType: exersizeType,
     stage,
 }: {
     state: boolean;
@@ -17,26 +19,30 @@ const ChooseCantusModal = ({
     examType: number;
     stage: string;
 }) => {
+    // const [data, setData] = useState<any>({});
     const dispatch = useAppDispatch();
     const play = (cantus: string) => {
-        if (!data[`type${examType}`]?.[stage]?.[cantus]) return;
+        if (!(offlineExersizesData as any)[`Type ${exersizeType}`]?.[stage]?.[cantus]) return;
         dispatch(
             routerSlice.actions.pushTab({
                 tab: "PlayWithNoControls",
                 params: {
-                    code: data[`type${examType}`][stage][cantus],
+                    code: (offlineExersizesData as any)[`Type ${exersizeType}`][stage][cantus],
                 },
             })
         );
     };
+    
     return (
         <ModalOptions
             title="Choose Cantus"
             state={state}
             close={close}
             options={[
-                { onClick: () => play("up"), title: "Soprano" },
-                { onClick: () => play("down"), title: "Bass" },
+                { onClick: () => play("soprano"), title: "مفتاح صول" },
+                { onClick: () => play("Do Alto"), title: "مفتاح دو الطو" },
+                { onClick: () => play("tenor"), title: "مفتاح دو تينور" },
+                { onClick: () => play("fa"), title: "مفتاح فا" },
             ]}
         />
     );
@@ -58,13 +64,13 @@ const ChooseStageModal = ({ state, close, examType }: { state: boolean; close: (
                 state={state}
                 close={close}
                 options={[
-                    { onClick: () => open("dourian"), title: "مقام دوريان" },
-                    { onClick: () => open("frigian"), title: "مقام فريجيان" },
+                    { onClick: () => open("dorian"), title: "مقام دوريان" },
+                    { onClick: () => open("phrygian"), title: "مقام فريجيان" },
                     { onClick: () => open("lydian"), title: "مقام ليديان" },
-                    { onClick: () => open("maxolidian"), title: "مقام مكسوليديان" },
-                    { onClick: () => open("iolian"), title: "مقام الأيوليان" },
+                    { onClick: () => open("mixolydian"), title: "مقام مكسوليديان" },
+                    { onClick: () => open("aeolian"), title: "مقام الأيوليان" },
                     { onClick: () => open("locrian"), title: "مقام لوكريان" },
-                    { onClick: () => open("ionian"), title: "مقام ايونيان" },
+                    { onClick: () => open("aionian"), title: "مقام ايونيان" },
                 ]}
             />
         </>
@@ -88,7 +94,7 @@ const Exersize = ({ name, examType }: { name: string; examType: number }) => {
 };
 export default function Exersizes() {
     return (
-        <div className="w-full bg-home-image">
+        <div className="w-full">
             <PageTitle
                 title="نماذج استرشادية"
                 subTitle="هذه بعض التمارين المحلولة لمساعدتك"

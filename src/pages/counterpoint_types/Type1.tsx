@@ -5,8 +5,17 @@ import AvatarTitle from "../../compontents/AvatarTitle";
 import CardList from "../../compontents/CardList";
 import Card from "../../compontents/Card";
 import Illustration from "../../compontents/Illustration";
+import IllustrationWithSound from "../../compontents/IllustrationWithSound";
 
 export default function Type1() {
+    const audio = new Audio("/staves/type1.mp3");
+    const toggle = () => {
+        if (audio.paused) {
+            audio.play();
+        } else {
+            audio.pause();
+        }
+    };
     return (
         <div className="w-full">
             <PageTitle title="انواع الكنتربوينت" subTitle="النوع الأول (روند مقابل روند)" iconSrc="icons/shapes.svg" />
@@ -23,15 +32,19 @@ export default function Type1() {
                             "عدم استخدام نغمة الأساس (Unison) إلا في المأزورة الأولى والأخيرة.",
                             "يمكن استخدام الدرجة الخامسة أو الأوكتاف لمرة واحدة فقط داخل التمرين .",
                             "استخدام المسافات الثالثة والسادسة (3، 6) داخل التمرين.",
+                        ]}
+                    />
+                    <CardList
+                        list={[
                             "لا يجوز تكرار استخدام مسافة الثالثة أو السادسة أكثر من ثلاث مرات متتالية أو تكرار النغمات.",
                             "تحسب المسافات دائماً من الأسفل إلى الأعلى سواء كان اللحن المعطى في الأسفل أو الأعلى. ",
                         ]}
                     />
-                    <Illustration
-                        src="notes/image013.png"
-                        desc="تحسب المسافات دائماً من الأسفل إلى الأعلى سواء كان اللحن المعطى في الأسفل أو الأعلى. 
-            في المثال رقم (1) وفي الجزأين، Cantus firmus الجزء السفلي. 
-            "
+                    <IllustrationWithSound
+                        src="notes/type1.png"
+                        audio={audio}
+                        onClick={toggle}
+                        desc="مثال يوضح النوع الاول"
                     />
                 </div>
             </Container>
